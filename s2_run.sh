@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-export machines=(masdev0 masdev1 masdev2)
+export machines=(smsgtel0)
 
-export dockerImgTag=minah_struture
+export dockerImgTag=daominah/minah_struture
 export dockerCtnName=minah_struture
-
 
 # clean up old container
 for machine in ${machines[@]}; do
@@ -21,16 +20,16 @@ set -e
 for i in ${!machines[@]}; do
     eval $(docker-machine env ${machines[i]})
 
-    echo "preparing env vars for ${dockerCtnName} on node $(docker-machine active)"
-    export cfgFile=./conf/env.sh
-    dkrEnv=${PWD}/env_docker_run.list${i}; bash -x ${cfgFile} 2>${dkrEnv}
+    echo "preparing envs specific to node for ${dockerCtnName} on $(docker-machine active)"
+    dkrEnv=${PWD}/env_docker_run.list${i}; bash -x ./env.sh 2>${dkrEnv}
     sed -i 's/+ //' ${dkrEnv}; sed -i '/^export /d' ${dkrEnv}; sed -i "s/'//g" ${dkrEnv}
 
-    docker run -dit --name ${dockerCtnName} \
+    docker run -dit --restart always --name ${dockerCtnName} \
         --env-file ${dkrEnv} \
         --network host \
         ${dockerImgTag}
-    sleep 1
+    sleep 2
 
     eval $(docker-machine env --unset)
+    echo "ok run ${dockerCtnName} on ${machines[i]}"
 done
