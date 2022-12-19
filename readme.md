@@ -1,4 +1,4 @@
-# Project Name
+# Project name
 
 Project summary (╯°□°）╯︵ ┻━┻
 
@@ -6,8 +6,7 @@ Project summary (╯°□°）╯︵ ┻━┻
 
 ## Deployment
 
-Execute script [build_run.sh](build_run.sh) to build and run a local
-docker container. 
+Execute [build_run.sh](build_run.sh) to build and run a local docker container. 
 
 ## Code structure
 
@@ -20,8 +19,10 @@ Main executable: `cmd/example`
 Environment variables for initializing the app.
 
 ### `pkg/core`
+
 Business logic. Can be tested without external resources (database,
-HTTP, websocket, message queue, file, ..)
+HTTP, websocket, message queue, file, ..).
 
 ### `pkg/driver`
+
 Calls to external resources.

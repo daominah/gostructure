@@ -9,7 +9,11 @@ import (
 
 func main() {
 	mysqlHost := os.Getenv("MYSQL_HOST")
-	log.Printf("recognized and used env var MYSQL_HOST=%v", mysqlHost)
+	if mysqlHost != "" {
+		log.Printf("recognized and used env var MYSQL_HOST=%v", mysqlHost)
+	} else {
+		log.Printf("empty env var MYSQL_HOST")
+	}
 
 	for i := 0; true; i++ {
 		log.Printf("executable example is running: %v", i)
