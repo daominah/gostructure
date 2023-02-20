@@ -1,5 +1,4 @@
 .idea
 
-conf/env.sh
 conf/*ignore*.sh
 env_docker_run.list*

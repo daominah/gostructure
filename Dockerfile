@@ -1,7 +1,6 @@
 FROM daominah/go116
 
-COPY go.mod /go.mod
-COPY go.sum /go.sum
+COPY go.mod go.sum* /
 RUN cd / && go mod download
 
 ENV APP_DIR=/go/src/app
