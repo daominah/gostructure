@@ -1,4 +1,4 @@
-FROM daominah/go116
+FROM golang:1.21.3-bookworm
 
 COPY go.mod go.sum* /
 RUN cd / && go mod download

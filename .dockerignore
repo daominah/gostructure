@@ -1,4 +1,4 @@
 .idea
 
-conf/*ignore*.sh
-env_docker_run.list*
+configs/*ignore*.sh
+configs/.*

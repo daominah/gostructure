@@ -10,19 +10,26 @@ Execute [build_run.sh](build_run.sh) to build and run a local docker container.
 
 ## Code structure
 
+This project structure is inspired by <https://github.com/golang-standards/project-layout>.
+
 ### `cmd`
 
 Main executable: `cmd/example`
 
-### `conf`
+### `configs`
 
 Environment variables for initializing the app.
 
-### `pkg/core`
+### `internal/core`
 
-Business logic. Can be tested without external resources (database,
-HTTP, websocket, message queue, file, ..).
+This app core business logic. Can be tested locally without external connections.
 
-### `pkg/driver`
+### `internal/driver`
 
-Calls to external resources.
+This directory contains packages that implement interface with concrete
+connection (database, HTTP client, HTTP server, websocket, message queue,
+file storage, ..).
+
+### `web`
+
+User interface.
