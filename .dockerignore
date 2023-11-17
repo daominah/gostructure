@@ -1,4 +1,15 @@
+# IDE and OS files
 .idea
+.vscode
+.DS_Store
 
-configs/*ignore*.sh
-configs/.*
+
+# Go testing output
+*.out
+*.test
+profile*.pdf
+
+
+# config with real username, password...
+config/*ignore*.sh
+config/.env*

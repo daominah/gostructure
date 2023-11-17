@@ -1,4 +1,4 @@
-# `/docs`
+# `/doc`
 
 This project's documents, in addition to the root `README.md` and godoc
 generated documentation.

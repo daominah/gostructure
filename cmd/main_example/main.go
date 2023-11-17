@@ -15,6 +15,7 @@ func main() {
 	log.SetFlags(log.Lshortfile)
 	log.SetOutput(customLogger{})
 
+	var database core.Database
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	if mysqlHost != "" {
 		log.Printf("recognized and used env var MYSQL_HOST=%v", mysqlHost)
@@ -22,9 +23,9 @@ func main() {
 		log.Printf("empty env var MYSQL_HOST")
 	}
 
-	app := core.NewApp(core.NewMockDatabase())
+	app := core.NewApp(database)
 	go func() {
-		listenPort := ":8181"
+		listenPort := ":18282"
 		log.Printf("serving API on http://localhost%v", listenPort)
 		err := http.ListenAndServe(listenPort, httpsvr.NewHandlerAPI(app))
 		if err != nil {
@@ -33,7 +34,7 @@ func main() {
 	}()
 
 	go func() {
-		listenPort := ":8080"
+		listenPort := ":18181"
 		handler, err := httpsvr.NewHandlerGUI("")
 		if err != nil {
 			log.Fatalf("error NewHandlerGUI: %v", err)
