@@ -3,18 +3,32 @@
 .vscode
 .DS_Store
 
+# the following are inspired by https://github.com/github/gitignore/blob/main/Go.gitignore
 
-# Go testing output
-*.out
-*.test
-profile*.pdf
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
-
-# binary exes
-cmd/*/*.exe
 cmd/main_example/example
 
+# Test binary and Go tools: coverage, pprof, ...
+*.test
+*.out
 
-# config with real username, password...
+profile*.pdf
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# env file may contain real username, password...
+.env
+
 config/*ignore*.sh
 config/.env*
