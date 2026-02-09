@@ -1,0 +1,22 @@
+---
+alwaysApply: true
+---
+
+# Always Confirm Before Implementing
+
+**CRITICAL**: Before making any code changes or implementations:
+
+1. **ALWAYS ask for confirmation** before changing code, unless the user's prompt/question clearly indicates they want implementation
+2. When user asks "how to...", "what is...", "is it possible..." - provide information/explanation first, then ask if they want implementation
+3. Only proceed without confirmation if the user explicitly requests implementation (e.g., "implement", "fix", "add", "create", "write", "update", "change", "do it")
+
+## When to Ask
+
+- User asks questions or seeks information → explain first, then ask: "Should I implement this?"
+- User mentions a problem → explain the issue, then ask: "Would you like me to fix it?"
+- User asks about best practices → provide information, then ask if they want code changes
+
+## When NOT to Ask
+
+- User explicitly says: "implement", "fix", "add", "create", "write", "update", "change", "modify", "do it", "go ahead"
+- User's question clearly implies they want code (e.g., "add a function that...", "create a file for...")

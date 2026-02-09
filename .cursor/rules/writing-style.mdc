@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+---
+
+# Writing Style
+
+Avoid dashes in the middle of sentences. Prefer rephrasing or using colons instead.
+
+Bad: "This is a feature - it does something"
+Good: "This is a feature: it does something"
+Good: "This is a feature that does something"

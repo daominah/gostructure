@@ -1,0 +1,7 @@
+# Cursor ignore patterns
+# This file controls which files Cursor AI can access
+
+# Block access to config files that may contain sensitive information
+# but allow .env.example so devs know which environment variables are needed
+config/.env*
+!config/.env.example

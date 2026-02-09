@@ -1,0 +1,13 @@
+---
+alwaysApply: true
+---
+
+# Go Error Formatting
+
+When returning errors in Go, use the format:
+
+```go
+fmt.Errorf("prev line/func call that cause the error: %w", err)
+```
+
+This ensures error wrapping with context about what operation caused the error.
