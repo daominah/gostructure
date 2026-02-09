@@ -1,44 +1,67 @@
-# ProjectName
+# gostructure
 
-ProjectName is just a project template.
+This gostructure is my template repository for starting a new Go service, with an optional web UI.
+It is inspired by Clean Architecture and golang-standards/project-layout.
+
+To start a new project, copy this directory, rename it to your new project name,
+then go into the directory and remove the .git folder.
 
 ## Deployment
 
-Execute [build_run.sh](build_run.sh) to build and run a local docker container.
+### Running with Docker
 
-## API detail
+#### Local Development
 
-APIs request response format.
+For local development, you can run the database with docker compose,
+then run the application directly:
 
-Maybe a URL to OpenAPI Swagger.
+```bash
+# Start only the database service
+docker compose up -d database
 
-## Code structure
+# Run the application locally
+go run ./cmd/main
+```
 
-This project structure is inspired by <https://github.com/golang-standards/project-layout>.
-Some directories name are changed because I don't like plural as dir name.
+Environment variables are loaded from `config/.env` or `config/.env.example`.
+See `config/.env.example` for configuration details.
+
+#### Production
+
+Build and start both the database and application:
+
+```bash
+docker compose build
+docker compose up -d
+```
+
+The application will be available at `http://localhost:20808`.
+
+## Code Structure
 
 ### `cmd`
 
-Main executable: `cmd/main_example/main.go`
+Main executable: `cmd/main/main.go`
 
 ### `config`
 
-Environment variables for initializing the app.
+Environment variables for initializing the app. See `config/.env.example` for available options.
 
-### `internal/core`
+### `pkg/logic`
 
-This app core business logic. Can be tested locally without external connections.
+Business logic that can be tested without external resources.
+Mock interfaces are used to simulate external dependencies in tests.
 
-### `internal/driver`
+### `pkg/driver`
 
-This directory contains packages that implement interface with concrete
-connection (database, HTTP client, HTTP server, websocket, message queue,
-file storage, ..).
+Packages that implement interfaces with concrete connections
+(database, HTTP client, HTTP server, websocket, message queue, file storage, etc.).
 
-### `pkg`
+### `pkg/base`
 
-Package can be reused in other projects.
+Reusable base packages (logger, UUID, project root dir utilities).
 
 ### `web`
 
-Web application user interface.
+Web application user interface. Intended to be served by the same process as the API.
+The JavaScript code can call the API by relative paths.

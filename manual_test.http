@@ -1,0 +1,13 @@
+###
+POST http://localhost:20808/api/v1/product
+content-type: application/json
+
+{
+	"ID":    "test_product_manual_2026-02-09",
+	"Name":  "Test Product API on 2026-02-09",
+	"Price": 300
+}
+
+
+###
+GET http://localhost:20808/api/v1/product/test_product_manual_2026-02-09

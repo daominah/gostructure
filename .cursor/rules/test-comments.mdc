@@ -1,0 +1,13 @@
+---
+alwaysApply: true
+---
+
+# Unit Test Comments
+
+Use the GIVEN/WHEN/THEN format for unit test comments:
+
+- **GIVEN**: Setup/preconditions/base data
+- **WHEN**: Action/function being tested
+- **THEN**: Expected result/verification
+
+This format makes tests more readable and clearly structures the test flow.
