@@ -14,7 +14,7 @@ services:
       # To mount to a specific host directory, comment out the line above and uncomment one of these:
       # - ${HOME}/var/gostructure_db:/var/lib/postgresql  # should use this on Linux server to preserve data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
+      test: ["CMD-SHELL", "pg_isready -U user -d gostructure"]
       interval: 1s
       timeout: 1s
       retries: 20
