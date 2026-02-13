@@ -7,7 +7,14 @@ alwaysApply: true
 When returning errors in Go, use the format:
 
 ```go
-fmt.Errorf("prev line/func call that cause the error: %w", err)
+fmt.Errorf("previous line or function call that caused the error: %w", err)
+
+// example:
+testData, err := os.ReadFile("file_test.html")
+if err != nil {
+    return fmt.Errorf("error os.ReadFile: %w", err)
+}
 ```
 
-This ensures error wrapping with context about what operation caused the error.
+This ensures error wrapping with context about what operation caused the error,
+reading the log is enough to know what line of code caused the error.
