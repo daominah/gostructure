@@ -2,28 +2,19 @@
 
 **CRITICAL**: Before making any code changes or implementations:
 
-1. **ALWAYS ask for confirmation** before changing code, unless the user's prompt/question clearly indicates they want implementation
-2. When user asks "how to...", "what is...", "is it possible..." - provide information/explanation first, then ask if they want implementation
-3. Only proceed without confirmation if the user explicitly requests implementation (e.g., "implement", "fix", "add", "create", "write", "update", "change", "do it")
-
-## When to Ask
-
-- User asks questions or seeks information → explain first, then ask: "Should I implement this?"
-- User mentions a problem → explain the issue, then ask: "Would you like me to fix it?"
-- User asks about best practices → provide information, then ask if they want code changes
-
-## When NOT to Ask
-
-- User explicitly says: "implement", "fix", "add", "create", "write", "update", "change", "modify", "do it", "go ahead"
-- User's question clearly implies they want code (e.g., "add a function that...", "create a file for...")
-
+1. **ALWAYS ask for confirmation** before changing code,
+   unless the user's prompt/question clearly indicates they want implementation
+2. When user asks "how to do ...", "what is...", "is it possible...":
+   provide information/explanation first, then ask if they want implementation
+3. User's prompt/question clearly indicates they want implementation usually has
+   some words like "implement", "fix", "add", "change", "do it", ...
+   but not limited to these words.
 
 # Commit Messages
 
 Prefer concise commit messages without a lot of bullet points about code changes.
 
 Keep messages focused and to the point of main business logic changes.
-
 
 # Go Error Formatting
 
@@ -42,15 +33,15 @@ if err != nil {
 This ensures error wrapping with context about what operation caused the error,
 reading the log is enough to know what line of code caused the error.
 
-
-
 # SQL Formatting Rules
 
 When writing or formatting SQL code, follow these style guidelines:
 
 ## General Formatting
 
-- Use spaces around parentheses in CREATE statements: `CREATE INDEX idx_name ON table_name (col1, col2)` not `CREATE INDEX idx_name ON table_name(col1, col2)`
+- Use spaces around parentheses in CREATE statements:
+  `CREATE INDEX idx_name ON table_name (col1, col2)` not
+  `CREATE INDEX idx_name ON table_name(col1, col2)`
 - Align column definitions in CREATE TABLE statements for readability
 - Use consistent indentation (4 spaces)
 
@@ -92,12 +83,10 @@ When writing or formatting SQL code, follow these style guidelines:
                                        is_completed = FALSE;
   ```
 
-## Comments
+## SQL Comments
 
 - Keep comments concise and informative
 - Align comment formatting with code structure
-
-
 
 # Unit Test Comments
 
@@ -109,8 +98,6 @@ Use the GIVEN/WHEN/THEN format for unit test comments:
 
 This format makes tests more readable and clearly structures the test flow.
 
-
-
 # Writing Style
 
 Avoid dashes in the middle of sentences. Prefer rephrasing or using colons instead.
@@ -118,3 +105,18 @@ Avoid dashes in the middle of sentences. Prefer rephrasing or using colons inste
 Bad: "This is a feature - it does something"
 Good: "This is a feature: it does something"
 Good: "This is a feature that does something"
+
+# Markdown Writing Style
+
+I prefer the Markdown can be read without rendering too,
+my editor usually can show a line with 80 characters (max 100 characters)
+so try to break the line (in raw Markdown, does matter in rendered Markdown)
+at around 80 characters.
+Breaking line when a sentence ends or a comma that end a part of meaning
+is better than just break by character count.
+
+Table can be an exception, don't need to add line break for raw Markdown.
+
+This markdown file is also a good example of how to write markdown in this style.
+The previous lines can be written in a single line,
+but I break them into multiple lines to make it easier to read and edit without rendering.
