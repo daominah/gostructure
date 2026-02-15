@@ -8,7 +8,9 @@ When writing or formatting SQL code, follow these style guidelines:
 
 ## General Formatting
 
-- Use spaces around parentheses in CREATE statements: `CREATE INDEX idx_name ON table_name (col1, col2)` not `CREATE INDEX idx_name ON table_name(col1, col2)`
+- Use spaces around parentheses in CREATE statements:
+  `CREATE INDEX idx_name ON table_name (col1, col2)` not
+  `CREATE INDEX idx_name ON table_name(col1, col2)`
 - Align column definitions in CREATE TABLE statements for readability
 - Use consistent indentation (4 spaces)
 

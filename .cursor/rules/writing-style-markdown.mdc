@@ -1,0 +1,18 @@
+---
+alwaysApply: true
+---
+
+# Markdown Writing Style
+
+I prefer the Markdown can be read without rendering too,
+my editor usually can show a line with 80 characters (max 100 characters)
+so try to break the line (in raw Markdown, does matter in rendered Markdown)
+at around 80 characters.
+Breaking line when a sentence ends or a comma that end a part of meaning
+is better than just break by character count.
+
+Table can be an exception, don't need to add line break for raw Markdown.
+
+This markdown file is also a good example of how to write markdown in this style.
+The previous lines can be written in a single line,
+but I break them into multiple lines to make it easier to read and edit without rendering.
