@@ -13,7 +13,7 @@
 *.dylib
 
 cmd/main/main
-cmd/main/main.exe
+cmd/*/*.exe
 
 # Test binary and Go tools: coverage, pprof, ...
 *.test

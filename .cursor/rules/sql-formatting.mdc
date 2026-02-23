@@ -52,7 +52,7 @@ When writing or formatting SQL code, follow these style guidelines:
                                        is_completed = FALSE;
   ```
 
-## Comments
+## SQL Comments
 
 - Keep comments concise and informative
 - Align comment formatting with code structure

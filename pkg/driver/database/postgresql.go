@@ -30,11 +30,11 @@ func BuildConnectionString(host, port, dbName, user, password string) (string, e
 // Suitable for development, but consider this on production carefully.
 func RunDatabaseMigrations(db *sql.DB) error {
 	if err := goose.SetDialect("postgres"); err != nil {
-		return err
+		return fmt.Errorf("goose.SetDialect: %w", err)
 	}
 	goose.SetBaseFS(migrationFiles)
 	if err := goose.Up(db, "migration"); err != nil {
-		return err
+		return fmt.Errorf("goose.Up: %w", err)
 	}
 	return nil
 }

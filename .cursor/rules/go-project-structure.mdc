@@ -1,0 +1,46 @@
+---
+description: Go project structure and package organization
+globs: **/*.go
+alwaysApply: false
+---
+
+# Go Project Structure
+
+Follow this layout when adding or organizing code.
+
+## Directory Layout
+
+| Directory     | Purpose                                                                             |
+|---------------|-------------------------------------------------------------------------------------|
+| `cmd/{app}/`  | Wires dependencies and starts the app                                               |
+| `pkg/logic/`  | Business logic, interfaces, domain schemas. Testable without external dependencies. |
+| `pkg/driver/` | Implementations of logic interfaces (database, HTTP, etc.).                         |
+| `pkg/base/`   | Shared utilities (logger, uuid, helpers, ...)                                       |
+| `config/`     | Configuration files (e.g. `.env.example`)                                           |
+| `web/`        | Frontend assets (HTML, JS)                                                          |
+| `doc/`        | Design docs, user guides, API specs                                                 |
+
+## Package Conventions
+
+**`pkg/logic/`**
+
+- `interface.go`: Defines interfaces for infrastructure and external dependencies.
+- `interface_mock.go`: Mock implementations used to simulate external dependencies in tests.  
+  (We use the `MockSomething` naming convention for both stubs and mocks.)
+- `schema.go`: Defines domain data structures (models).
+- `app.go`: The `App` struct holds dependencies; its methods implement business logic.
+- This package must be testable without external setup.
+- It must not import any driver packages.
+- Depends on interfaces, not concrete implementations.
+
+**`pkg/driver/`**
+
+- Implements interfaces from `pkg/logic`.
+- One subpackage per external concern:
+  `database/`, `httpsvr/`, `external_provider/`, ...
+- The `database/` package additionally contains SQL migrations.
+
+**`pkg/base/`**
+
+- Pure utilities with no business logic.
+- Must not depend on `logic` or `driver`.

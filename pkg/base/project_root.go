@@ -15,7 +15,7 @@ func GetProjectRootDir() (string, error) {
 	const pivot = "go.mod"
 	workingDir, err := os.Getwd()
 	if err != nil {
-		return "", fmt.Errorf("os.Getwd: %v", err)
+		return "", fmt.Errorf("os.Getwd: %w", err)
 	}
 	for i := 0; i < 32; i++ {
 		pivotFilePath := filepath.Join(workingDir, pivot)
