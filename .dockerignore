@@ -1,15 +1,17 @@
+# This file ensures no secret config is accidentally baked into the image.
+# Images may be pushed to public registries, so exclude env files and sensitive config.
+
 # IDE and OS files
 .idea
 .vscode
 .DS_Store
-
 
 # Go testing output
 *.out
 *.test
 profile*.pdf
 
-
-# config with real username, password...
+# Config that may contain secrets (DB credentials, API keys, etc.)
+config/.env
+config/.env.*
 config/*ignore*.sh
-config/.env*

@@ -5,6 +5,8 @@ It is inspired by Clean Architecture and golang-standards/project-layout.
 
 To start a new project, copy this directory, rename it to your new project name,
 then go into the directory and remove the .git folder.
+Rename `cmd/main` to something meaningful (e.g. `cmd/api-server`) and update the
+Dockerfile build path and any scripts that reference it.
 
 ## Deployment
 
@@ -12,12 +14,13 @@ then go into the directory and remove the .git folder.
 
 #### Local Development
 
-For local development, you can run the database with docker compose,
-then run the application directly:
+For local development,
+you can run all services except the main app with docker compose,
+then run the application directly with Go run:
 
 ```bash
-# Start only the database service
-docker compose up -d database
+# Start all services except the main application
+docker compose up -d --scale application=0
 
 # Run the application locally
 go run ./cmd/main
@@ -41,7 +44,11 @@ The application will be available at `http://localhost:20808`.
 
 ### `cmd`
 
-Main executable: `cmd/main/main.go`
+Main executable: `cmd/main/main.go`.
+
+One-off scripts:
+
+- `cmd/script-import-data`: do something one-off, manually run when needed. 
 
 ### `config`
 
