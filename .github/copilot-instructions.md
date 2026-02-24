@@ -149,24 +149,46 @@ This format makes tests more readable and clearly structures the test flow.
 
 # Markdown Writing Style
 
+## Goal
+
 Keep raw Markdown readable in editors and source view without relying on soft wrap.
 Assume a typical view width of about 80 to 100 characters.
 
-Break lines in raw Markdown at around 80 characters (maximum 100).
-Rendered Markdown is not affected by line breaks in the source.
+## Rules to achieve the goal
+
+The target is the raw Markdown source, not rendered output in a browser or Markdown viewer.
+
+Generally break lines in raw Markdown at around 80 characters.
 
 Prefer breaking lines at semantic boundaries, such as the end of a sentence
 or after a logical clause, for example after a comma that ends a phrase,
 rather than strictly by character count.
 
-It is acceptable to exceed 80 characters slightly
-if a natural break point is close and readability is preserved.
+Prefer breaking lines at semantic boundaries; it is acceptable to exceed 80 characters slightly
+(as long as the length does not exceed 100 characters).
+This is more readable than strictly breaking by character count.
 
 Tables are an exception and do not require manual line breaks.
 
-This file itself is an example of this writing style.
-Some lines could be written as a single line,
-but they are intentionally broken to improve readability in raw form.
+## Example for line breaks at semantic boundaries
+
+For example, the next paragraph has **good** line breaks at semantic boundaries:
+
+The VAPID key pair we generate proves that the push request comes from your server.
+Each push request is signed with the private key,
+the push service verifies the signature before delivering.
+
+The following paragraph will produce the same rendered output,
+but the line breaks are chosen to strictly enforce the 80-character limit (**not as good**),
+which is not as readable in the raw Markdown:
+
+The VAPID key pair we generate proves that the push request comes from your
+server. Each push request is signed with the private key; the push service
+verifies the signature before delivering.
+
+And absolutely avoid **bad** (all in one long line):
+
+The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key; the push service verifies the signature before delivering.
 
 # Writing Style
 
