@@ -41,40 +41,41 @@ Follow this layout when adding or organizing code.
 
 ## Directory Layout
 
-| Directory     | Purpose                                                                             |
-|---------------|-------------------------------------------------------------------------------------|
-| `cmd/{app}/`  | Wires dependencies and starts the app                                               |
-| `pkg/logic/`  | Business logic, interfaces, domain schemas. Testable without external dependencies. |
-| `pkg/driver/` | Implementations of logic interfaces (database, HTTP, etc.).                         |
-| `pkg/base/`   | Shared utilities (logger, uuid, helpers, ...)                                       |
-| `config/`     | Configuration files (e.g. `.env.example`)                                           |
-| `web/`        | Frontend assets (HTML, JS)                                                          |
-| `doc/`        | Design docs, user guides, API specs                                                 |
+| Directory     | Purpose                                                                                  |
+|---------------|------------------------------------------------------------------------------------------|
+| `cmd/{app}/`  | Loads config from env, wires dependencies, starts the app                                |
+| `pkg/logic/`  | Business logic, interfaces, domain schemas. Testable without external dependencies.      |
+| `pkg/driver/` | Implements interfaces for external interactions (HTTP, database, third-party APIs, etc.) |
+| `pkg/base/`   | Shared pure utilities with no business logic (logger, uuid, ...)                         |
+| `config/`     | Configuration files. `.env.example` lists env vars to configure.                         |
+| `web/`        | Optional simple UI if needed. Served with the API. JS calls API by relative paths.       |
+| `doc/`        | Design docs, user guides, tech specs, algorithms, API specs                              |
 
-## Package Conventions
+## Conventions
 
-**`pkg/logic/`**
+### `cmd/{app}/`
+
+- Directory name determines the default binary name from `go build`.
+- Multi-word executable names use hyphens (e.g. `script-import-data`).
+- Source file names use `snake_case` (e.g. `script_import_data.go`).
+
+### `pkg/logic/`
 
 - `interface.go`: Defines interfaces for infrastructure and external dependencies.
-- `interface_mock.go`: Mock implementations used to simulate external dependencies in tests.  
-  (We use the `MockSomething` naming convention for both stubs and mocks.)
-- `schema.go`: Defines domain data structures (models).
+- `interface_mock.go`: Mock implementations for tests or interfaces not yet implemented  
+  (use `MockSomething` naming for both stubs and mocks).
+- `schema.go`: Domain data structures.
 - `app.go`: The `App` struct holds dependencies; its methods implement business logic.
-- This package must be testable without external setup.
-- It must not import any driver packages.
+- Must be testable without external setup.
+- Must not import any `driver` packages.
 - Depends on interfaces, not concrete implementations.
 
-**`pkg/driver/`**
+### `pkg/driver/`
 
-- Implements interfaces from `pkg/logic`.
+- Implements interfaces defined in `pkg/logic`.
 - One subpackage per external concern:
-  `database/`, `httpsvr/`, `external_provider/`, ...
-- The `database/` package additionally contains SQL migrations.
-
-**`pkg/base/`**
-
-- Pure utilities with no business logic.
-- Must not depend on `logic` or `driver`.
+  `database/`, `httpsvr/`, `external_provider/`, etc.
+- `database/` also contains SQL migrations.
 
 # SQL Formatting Rules
 

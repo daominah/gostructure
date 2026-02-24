@@ -49,3 +49,27 @@ func TestNewUUID(t *testing.T) {
 		}
 	}
 }
+
+func TestHashPassword(t *testing.T) {
+	// GIVEN a plain password
+	password := "test-secret-123"
+
+	// WHEN hashing the password
+	hash, err := HashPassword(password)
+	if err != nil {
+		t.Fatalf("HashPassword: %v", err)
+	}
+	if hash == "" {
+		t.Fatal("hash should not be empty")
+	}
+
+	// THEN VerifyPassword accepts the correct password
+	if !VerifyPassword(hash, password) {
+		t.Error("VerifyPassword should return true for correct password")
+	}
+
+	// AND rejects wrong password
+	if VerifyPassword(hash, "wrong") {
+		t.Error("VerifyPassword should return false for wrong password")
+	}
+}

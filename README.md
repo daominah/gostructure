@@ -29,16 +29,26 @@ go run ./cmd/main
 Environment variables are loaded from `config/.env` or `config/.env.example`.
 See `config/.env.example` for configuration details.
 
+To start fresh and remove all existing persistent data:
+
+```bash
+docker compose down -v
+# then compose up
+```
+
 #### Production
 
-Build and start both the database and application:
+Build and run all services including the main application:
 
 ```bash
 docker compose build
 docker compose up -d
 ```
 
-The application will be available at `http://localhost:20808`.
+The application will be available at `http://host:20808`.
+
+Consider using a secret management solution to securely store environment variables
+and inject them into containers, such as Bitwarden Secrets Manager.
 
 ## Code Structure
 
@@ -48,7 +58,7 @@ Main executable: `cmd/main/main.go`.
 
 One-off scripts:
 
-- `cmd/script-import-data`: do something one-off, manually run when needed. 
+- `cmd/script-import-data`: do something one-off, manually run when needed.
 
 ### `config`
 
