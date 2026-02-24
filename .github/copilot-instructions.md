@@ -44,7 +44,8 @@ Follow this layout when adding or organizing code.
 | Directory     | Purpose                                                                                  |
 |---------------|------------------------------------------------------------------------------------------|
 | `cmd/{app}/`  | Loads config from env, wires dependencies, starts the app                                |
-| `pkg/logic/`  | Business logic, interfaces, domain schemas. Testable without external dependencies.      |
+| `pkg/model/`  | Domain data structures and related errors (for cross-package error matching).            |
+| `pkg/logic/`  | Business logic, interfaces. Testable without external dependencies.                      |
 | `pkg/driver/` | Implements interfaces for external interactions (HTTP, database, third-party APIs, etc.) |
 | `pkg/base/`   | Shared pure utilities with no business logic (logger, uuid, ...)                         |
 | `config/`     | Configuration files. `.env.example` lists env vars to configure.                         |
@@ -59,12 +60,16 @@ Follow this layout when adding or organizing code.
 - Multi-word executable names use hyphens (e.g. `script-import-data`).
 - Source file names use `snake_case` (e.g. `script_import_data.go`).
 
+### `pkg/model/`
+
+- Keep everything in a single `model.go` file, or split into one file per entity if it grows
+  too large (e.g. `product.go` containing the `Product` struct and its related errors).
+
 ### `pkg/logic/`
 
 - `interface.go`: Defines interfaces for infrastructure and external dependencies.
-- `interface_mock.go`: Mock implementations for tests or interfaces not yet implemented  
+- `interface_mock.go`: Mock implementations for tests or interfaces not yet implemented
   (use `MockSomething` naming for both stubs and mocks).
-- `schema.go`: Domain data structures.
 - `app.go`: The `App` struct holds dependencies; its methods implement business logic.
 - Must be testable without external setup.
 - Must not import any `driver` packages.

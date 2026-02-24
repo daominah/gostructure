@@ -7,11 +7,12 @@ import (
 	"net/http"
 
 	"github.com/daominah/gostructure/pkg/logic"
+	"github.com/daominah/gostructure/pkg/model"
 )
 
 func CreateProductHandler(db logic.Database) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var product logic.Product
+		var product model.Product
 		if err := json.NewDecoder(r.Body).Decode(&product); err != nil {
 			http.Error(w, fmt.Sprintf("invalid request body: %v", err), http.StatusBadRequest)
 			return
@@ -19,7 +20,7 @@ func CreateProductHandler(db logic.Database) http.HandlerFunc {
 
 		err := db.CreateProduct(product)
 		if err != nil {
-			if errors.Is(err, logic.ErrDuplicateProductID) {
+			if errors.Is(err, model.ErrDuplicateProductID) {
 				http.Error(w, fmt.Sprintf("error CreateProduct: %v", err), http.StatusConflict)
 				return
 			}
@@ -42,7 +43,7 @@ func GetProductHandler(db logic.Database) http.HandlerFunc {
 
 		product, err := db.GetProduct(id)
 		if err != nil {
-			if errors.Is(err, logic.ErrProductNotFound) {
+			if errors.Is(err, model.ErrProductNotFound) {
 				http.Error(w, fmt.Sprintf("error GetProduct: %v", err), http.StatusNotFound)
 				return
 			}

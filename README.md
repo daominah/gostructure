@@ -64,6 +64,13 @@ One-off scripts:
 
 Environment variables for initializing the app. See `config/.env.example` for available options.
 
+### `pkg/model`
+
+Domain data structures and related errors (for cross-package error matching).
+
+Keep everything in a single `model.go` file, or split into one file per entity if it grows too large
+(e.g. `product.go` containing the `Product` struct and its related errors).
+
 ### `pkg/logic`
 
 Business logic that can be tested without external resources.

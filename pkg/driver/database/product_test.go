@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/daominah/gostructure/pkg/base"
-	"github.com/daominah/gostructure/pkg/logic"
+	"github.com/daominah/gostructure/pkg/model"
 )
 
 func TestPostgresStore_Product(t *testing.T) {
@@ -13,7 +13,7 @@ func TestPostgresStore_Product(t *testing.T) {
 
 	// GIVEN a product info
 	product0ID := "test_product_" + base.NewUUID()
-	product0 := logic.Product{ID: product0ID, Name: "Test Product 0", Price: 100}
+	product0 := model.Product{ID: product0ID, Name: "Test Product 0", Price: 100}
 	// WHEN creating the product THEN creation is successful
 	err := db.CreateProduct(product0)
 	if err != nil {
@@ -41,7 +41,7 @@ func TestPostgresStore_Product(t *testing.T) {
 
 	// GIVEN another product
 	product1ID := "test_product_" + base.NewUUID()
-	product1 := logic.Product{ID: product1ID, Name: "Another Test Product", Price: 200}
+	product1 := model.Product{ID: product1ID, Name: "Another Test Product", Price: 200}
 	err = db.CreateProduct(product1)
 	if err != nil {
 		t.Fatalf("error CreateProduct for product1: %v", err)
@@ -89,7 +89,7 @@ func TestPostgresStore_Product(t *testing.T) {
 	// Output: db.Exec INSERT duplicate product ID: ERROR: duplicate key value violates unique constraint "products_pkey" (SQLSTATE 23505)
 
 	// THEN an expected error is returned
-	if !errors.Is(err, logic.ErrDuplicateProductID) {
+	if !errors.Is(err, model.ErrDuplicateProductID) {
 		t.Fatalf("got %v, want ErrDuplicateProductID", err)
 	}
 }

@@ -1,8 +1,10 @@
 package logic
 
+import "github.com/daominah/gostructure/pkg/model"
+
 type Database interface {
-	CreateProduct(product Product) error
-	GetProduct(id string) (Product, error)
-	SearchProducts(query string) ([]Product, error)
-	UpdateProduct(product Product) error
+	CreateProduct(product model.Product) error
+	GetProduct(id string) (model.Product, error)
+	SearchProducts(query string) ([]model.Product, error)
+	UpdateProduct(product model.Product) error
 }

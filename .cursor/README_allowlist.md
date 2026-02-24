@@ -20,6 +20,7 @@ git diff
 git log
 git status
 go
+goimports
 grep
 head
 make
