@@ -14,13 +14,19 @@ import (
 )
 
 func main() {
-	// Load environment variables from config/.env or config/.env.example,
-	// func Load will not override existing envs, so priority is:
-	// envs from host/container > file .env > file .env.example.
-	if err := godotenv.Load("config/.env"); err != nil {
-		if err := godotenv.Load("config/.env.example"); err != nil {
-			log.Printf("no .env files found, using environment variables")
+	// Env priority: existing (host/container) > .env > .env.example,
+	// func godotenv.Load does not override, each call only sets unset vars.
+	var foundFiles []string
+	for _, cfgFile := range []string{"config/.env", "config/.env.example"} {
+		err := godotenv.Load(cfgFile)
+		if err == nil {
+			foundFiles = append(foundFiles, cfgFile)
 		}
+	}
+	if len(foundFiles) == 0 {
+		log.Printf("only using existing environment variables, no config file found")
+	} else {
+		log.Printf("loaded environment variables from files: %#v", foundFiles)
 	}
 
 	// Connect to external dependencies:
