@@ -9,13 +9,14 @@ import (
 
 	"github.com/daominah/gostructure/pkg/base"
 	"github.com/daominah/gostructure/pkg/logic"
+	"github.com/daominah/gostructure/pkg/model"
 )
 
 func TestAPICreateAndGetProduct(t *testing.T) {
 	// GIVEN the API server handler (with mock database)
 	apiHandler := NewHandlerAPI(logic.NewApp(logic.NewMockDatabase()))
 
-	product0 := logic.Product{
+	product0 := model.Product{
 		ID:    "test_product_API_" + base.NewUUID(),
 		Name:  "Test Product API",
 		Price: 300,
@@ -61,7 +62,7 @@ func TestAPICreateAndGetProduct(t *testing.T) {
 		if rsp.Code != http.StatusOK {
 			t.Fatalf("GetProductHandler returned status %d, want %d", rsp.Code, http.StatusOK)
 		}
-		var fetched logic.Product
+		var fetched model.Product
 		if err := json.NewDecoder(rsp.Body).Decode(&fetched); err != nil {
 			t.Fatalf("failed to decode get response: %v", err)
 		}

@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/daominah/gostructure/pkg/logic"
+	"github.com/daominah/gostructure/pkg/model"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // CreateProduct creates a new product in the database
-func (p *PostgresDatabase) CreateProduct(product logic.Product) error {
+func (p *PostgresDatabase) CreateProduct(product model.Product) error {
 	createdAt := product.CreatedAt
 	if createdAt.IsZero() {
 		createdAt = time.Now()
@@ -22,7 +22,7 @@ func (p *PostgresDatabase) CreateProduct(product logic.Product) error {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == ErrorCodeUniqueViolation {
 			return fmt.Errorf("%w: %v, db.Exec INSERT: %w",
-				logic.ErrDuplicateProductID, product.ID, err)
+				model.ErrDuplicateProductID, product.ID, err)
 		}
 		return fmt.Errorf("db.Exec INSERT: %w", err)
 	}
@@ -30,22 +30,22 @@ func (p *PostgresDatabase) CreateProduct(product logic.Product) error {
 }
 
 // GetProduct retrieves a product by ID
-func (p *PostgresDatabase) GetProduct(id string) (logic.Product, error) {
-	var product logic.Product
+func (p *PostgresDatabase) GetProduct(id string) (model.Product, error) {
+	var product model.Product
 	query := `SELECT id, name, price, created_at FROM products WHERE id = $1`
 	err := p.db.QueryRow(query, id).Scan(&product.ID, &product.Name, &product.Price, &product.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return logic.Product{}, fmt.Errorf("%w: %v, db.QueryRow SELECT: %w",
-				logic.ErrProductNotFound, id, err)
+			return model.Product{}, fmt.Errorf("%w: %v, db.QueryRow SELECT: %w",
+				model.ErrProductNotFound, id, err)
 		}
-		return logic.Product{}, fmt.Errorf("db.QueryRow SELECT: %w", err)
+		return model.Product{}, fmt.Errorf("db.QueryRow SELECT: %w", err)
 	}
 	return product, nil
 }
 
 // SearchProducts searches for products by name
-func (p *PostgresDatabase) SearchProducts(query string) ([]logic.Product, error) {
+func (p *PostgresDatabase) SearchProducts(query string) ([]model.Product, error) {
 	sqlQuery := `SELECT id, name, price, created_at FROM products WHERE name ILIKE $1 ORDER BY id DESC`
 	rows, err := p.db.Query(sqlQuery, "%"+query+"%")
 	if err != nil {
@@ -53,9 +53,9 @@ func (p *PostgresDatabase) SearchProducts(query string) ([]logic.Product, error)
 	}
 	defer rows.Close()
 
-	var products []logic.Product
+	var products []model.Product
 	for rows.Next() {
-		var product logic.Product
+		var product model.Product
 		if err := rows.Scan(&product.ID, &product.Name, &product.Price, &product.CreatedAt); err != nil {
 			return nil, fmt.Errorf("rows.Scan: %w", err)
 		}
@@ -68,7 +68,7 @@ func (p *PostgresDatabase) SearchProducts(query string) ([]logic.Product, error)
 }
 
 // UpdateProduct updates an existing product
-func (p *PostgresDatabase) UpdateProduct(product logic.Product) error {
+func (p *PostgresDatabase) UpdateProduct(product model.Product) error {
 	query := `UPDATE products SET name = $2, price = $3 WHERE id = $1`
 	result, err := p.db.Exec(query, product.ID, product.Name, product.Price)
 	if err != nil {
@@ -79,7 +79,7 @@ func (p *PostgresDatabase) UpdateProduct(product logic.Product) error {
 		return fmt.Errorf("result.RowsAffected: %w", err)
 	}
 	if rowsAffected == 0 {
-		return fmt.Errorf("%w: %v, db.Exec UPDATE 0 rowsAffected", logic.ErrProductNotFound, product.ID)
+		return fmt.Errorf("%w: %v, db.Exec UPDATE 0 rowsAffected", model.ErrProductNotFound, product.ID)
 	}
 	return nil
 }

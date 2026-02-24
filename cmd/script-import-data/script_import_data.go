@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/daominah/gostructure/pkg/base"
-	"github.com/daominah/gostructure/pkg/logic"
+	"github.com/daominah/gostructure/pkg/model"
 )
 
 func main() {
@@ -34,7 +34,7 @@ IDUniqueB,ProductNameProductB,200`)
 	// create products in database ...
 }
 
-func parseCSVProducts(csvData []byte) ([]logic.Product, error) {
+func parseCSVProducts(csvData []byte) ([]model.Product, error) {
 	csvReader := csv.NewReader(bytes.NewReader(csvData))
 	rows, err := csvReader.ReadAll()
 	if err != nil {
@@ -56,7 +56,7 @@ func parseCSVProducts(csvData []byte) ([]logic.Product, error) {
 		return nil, fmt.Errorf("CSV must have ID, Name and Price columns")
 	}
 
-	var products []logic.Product
+	var products []model.Product
 	for _, row := range rows[1:] {
 		if len(row) <= colID || len(row) <= colName || len(row) <= colPrice {
 			continue
@@ -71,7 +71,7 @@ func parseCSVProducts(csvData []byte) ([]logic.Product, error) {
 			return nil, fmt.Errorf("strconv.Atoi: %w", err)
 		}
 		products = append(products,
-			logic.Product{ID: id, Name: name, Price: price})
+			model.Product{ID: id, Name: name, Price: price})
 	}
 	return products, nil
 }
