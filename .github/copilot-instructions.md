@@ -37,7 +37,7 @@ reading the log is enough to know what line of code caused the error.
 
 # Go Project Structure
 
-Follow this layout when adding or organizing code.
+Follow this layout when adding or organizing code for Go services and applications.
 
 ## Directory Layout
 
@@ -54,11 +54,19 @@ Follow this layout when adding or organizing code.
 
 ## Conventions
 
-### `cmd/{app}/`
+### `cmd/`
 
-- Directory name determines the default binary name from `go build`.
-- Multi-word executable names use hyphens (e.g. `script-import-data`).
-- Source file names use `snake_case` (e.g. `script_import_data.go`).
+Contains the main service executable and any optional one-off scripts,
+one subdirectory each.
+
+The subdirectory name determines the default binary name from `go build`,
+so use a meaningful name rather than something generic like `main`.
+
+Multi-word executable names use hyphens, following common CLI conventions,
+for example `script-import-data`.
+
+Source file names use `snake_case`, following Go conventions,
+for example `script_import_data.go`.
 
 ### `pkg/model/`
 
@@ -77,7 +85,7 @@ Follow this layout when adding or organizing code.
 
 ### `pkg/driver/`
 
-- Implements interfaces defined in `pkg/logic`.
+- Implements the interfaces defined in `pkg/logic/interface.go`.
 - One subpackage per external concern:
   `database/`, `httpsvr/`, `external_provider/`, etc.
 - `database/` also contains SQL migrations.
