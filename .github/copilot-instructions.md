@@ -13,10 +13,10 @@
 # Commit Messages
 
 Prefer concise commit messages without a lot of bullet points about code changes.
-
 Keep messages focused and to the point of main business logic changes.
 
-Do not include AI co-author trailers (e.g. `Co-authored-by: Cursor`).
+Do not include AI co-author trailers or footers of any kind,
+such as `Co-authored-by: Cursor` or "Made with Cursor".
 
 # Go Error Formatting
 
