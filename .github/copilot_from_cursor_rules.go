@@ -3,7 +3,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -17,8 +17,7 @@ func main() {
 	// Read all Cursor rules from .cursor/rules
 	entries, err := os.ReadDir(rulesDir)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error os.ReadDir %s: %v\n", rulesDir, err)
-		os.Exit(1)
+		log.Fatalf("error os.ReadDir %s: %v", rulesDir, err)
 	}
 
 	// Collect all .mdc rule filenames and sort by name
@@ -32,26 +31,39 @@ func main() {
 
 	// Read each rule, strip frontmatter (--- ... alwaysApply ... ---), collect body
 	var parts []string
+	var ruleLengths = make(map[string]int)
+	var totalLength int
 	for _, name := range names {
 		path := filepath.Join(rulesDir, name)
 		content, err := os.ReadFile(path)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error os.ReadFile %s: %v\n", path, err)
-			os.Exit(1)
+			log.Fatalf("error os.ReadFile %s: %v", path, err)
 		}
 		body := stripFrontmatter(string(content))
 		if body != "" {
+			ruleLengths[name] = len(body)
+			totalLength += len(body)
 			parts = append(parts, body)
+		}
+	}
+
+	// Rules consume Language Model context, print lengths here, so we are aware
+	for _, name := range names {
+		if length, ok := ruleLengths[name]; ok {
+			pct := 0.0
+			if totalLength > 0 {
+				pct = 100 * float64(length) / float64(totalLength)
+			}
+			log.Printf("len: %4d, percent: %2.0f%%, rule: %s", length, pct, name)
 		}
 	}
 
 	// Combine all rule bodies and write to copilot-instructions.md
 	output := strings.Join(parts, "\n\n")
 	if err := os.WriteFile(outputPath, []byte(output), 0644); err != nil {
-		fmt.Fprintf(os.Stderr, "error os.WriteFile %s: %v\n", outputPath, err)
-		os.Exit(1)
+		log.Fatalf("error os.WriteFile %s: %v", outputPath, err)
 	}
-	fmt.Printf("Wrote %s\n", outputPath)
+	log.Printf("Wrote %v characters to %s", len(output), outputPath)
 }
 
 // stripFrontmatter removes the YAML frontmatter block (--- ... alwaysApply ... ---)
