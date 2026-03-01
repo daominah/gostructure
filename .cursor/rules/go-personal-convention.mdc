@@ -10,7 +10,7 @@ alwaysApply: false
 
 When returning errors in Go, use the following format:
 
-```go
+```
 fmt.Errorf("previous line or function call that caused the error: %w", err)
 
 // Example:

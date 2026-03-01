@@ -24,7 +24,7 @@ such as `Co-authored-by: Cursor` or "Made with Cursor".
 
 When returning errors in Go, use the following format:
 
-```go
+```
 fmt.Errorf("previous line or function call that caused the error: %w", err)
 
 // Example:
@@ -115,58 +115,36 @@ for example `script_import_data.go`.
 
 # SQL Formatting Rules
 
-When writing or formatting SQL code, follow these style guidelines:
-
-## General Formatting
-
-- Use spaces around parentheses in CREATE statements:
-  `CREATE INDEX idx_name ON table_name (col1, col2)` not
-  `CREATE INDEX idx_name ON table_name(col1, col2)`
-- Align column definitions in CREATE TABLE statements for readability
+- Use spaces around parentheses
 - Use consistent indentation (4 spaces)
+- If a clause is broken across lines, indent subordinate parts one additional level
+- Align columns and assignments within the same clause
+- Avoid vague or abbreviated column names.
+- If a column name may be unclear, clarify its meaning with a comment
+  (based on the definition in documentation or related code).
 
-## Index Definitions
+## Example
 
-- Format with spaces around parentheses and proper indentation:
-  ```sql
-  CREATE INDEX idx_name ON table_name (col1, col2)
-      WHERE condition;
-  ```
+```
+CREATE TABLE users
+(
+    id    INTEGER PRIMARY KEY,
+    email TEXT    NOT NULL,
+    ts    INTEGER NOT NULL -- created timestamp
+);
 
-## Trigger Definitions
+UPDATE users
+SET email = 'alice@example.com',
+    name  = 'Alice'
+WHERE id = 1
+    AND active = TRUE;
 
-- Split trigger clauses across multiple lines:
-  ```sql
-  CREATE TRIGGER trigger_name
-      AFTER INSERT
-      ON table_name
-      FOR EACH ROW
-  EXECUTE FUNCTION function_name();
-  ```
-
-## UPDATE Statements
-
-- Align SET clauses vertically:
-  ```sql
-  UPDATE table_name
-  SET col1   = value1,
-      col2   = value2,
-      col3   = value3
-  WHERE condition;
-  ```
-
-## ON CONFLICT Clauses
-
-- Format multi-line for readability:
-  ```sql
-  ON CONFLICT (batch_id) DO UPDATE SET queued_count = batch_stats.queued_count + 1,
-                                       is_completed = FALSE;
-  ```
-
-## SQL Comments
-
-- Keep comments concise and informative
-- Align comment formatting with code structure
+INSERT INTO users (email)
+VALUES ('alice@example.com')
+ON CONFLICT (email)
+    DO UPDATE
+    SET email = excluded.email;
+```
 
 # Unit Test Comments
 
@@ -180,20 +158,31 @@ This format makes tests more readable and clearly structures the test flow.
 
 # Markdown Writing Style
 
-## Goal
+## Lists: Prefer Bullet Points by Default
+
+Prefer bullet points over numbered lists.
+
+Bullet points are easier to edit and reorder.
+Numbered lists are harder to modify because inserting items
+requires renumbering and indentation can become awkward.
+
+Use numbered lists only when:
+
+- You must reference a specific step later.
+- Explicit numbering is required for clarity.
+
+## Breaking Lines at Semantic Boundaries
+
+### Goal
 
 Keep raw Markdown readable in editors and source view without relying on soft wrap.
 Assume a typical view width of about 80 to 100 characters.
 
-## Rules to achieve the goal
+### Rules
 
 The target is the raw Markdown source, not rendered output in a browser or Markdown viewer.
 
 Generally break lines in raw Markdown at around 80 characters.
-
-Prefer breaking lines at semantic boundaries, such as the end of a sentence
-or after a logical clause, for example after a comma that ends a phrase,
-rather than strictly by character count.
 
 Prefer breaking lines at semantic boundaries; it is acceptable to exceed 80 characters slightly
 (as long as the length does not exceed 100 characters).
@@ -201,25 +190,25 @@ This is more readable than strictly breaking by character count.
 
 Tables are an exception and do not require manual line breaks.
 
-## Example for line breaks at semantic boundaries
+### Example
 
-For example, the next paragraph has **good** line breaks at semantic boundaries:
+The following paragraph has **good** line breaks at semantic boundaries:
 
 The VAPID key pair we generate proves that the push request comes from your server.
 Each push request is signed with the private key,
 the push service verifies the signature before delivering.
 
-The following paragraph will produce the same rendered output,
-but the line breaks are chosen to strictly enforce the 80-character limit (**not as good**),
-which is not as readable in the raw Markdown:
+The next paragraph produces the same rendered output,
+but the line breaks strictly enforce the 80-character limit,
+which is less readable in raw Markdown:
 
 The VAPID key pair we generate proves that the push request comes from your
-server. Each push request is signed with the private key; the push service
+server. Each push request is signed with the private key, the push service
 verifies the signature before delivering.
 
-And absolutely avoid **bad** (all in one long line):
+Avoid writing everything on one long line:
 
-The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key; the push service verifies the signature before delivering.
+The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key, the push service verifies the signature before delivering.
 
 # Writing Style
 
