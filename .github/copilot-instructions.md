@@ -18,22 +18,45 @@ Keep messages focused and to the point of main business logic changes.
 Do not include AI co-author trailers or footers of any kind,
 such as `Co-authored-by: Cursor` or "Made with Cursor".
 
-# Go Error Formatting
+# Go Personal Conventions
 
-When returning errors in Go, use the format:
+## Go Error Formatting/Wrapping
+
+When returning errors in Go, use the following format:
 
 ```go
 fmt.Errorf("previous line or function call that caused the error: %w", err)
 
-// example:
+// Example:
 testData, err := os.ReadFile("file_test.html")
 if err != nil {
     return fmt.Errorf("error os.ReadFile: %w", err)
 }
 ```
 
-This ensures error wrapping with context about what operation caused the error,
-reading the log is enough to know what line of code caused the error.
+This ensures error wrapping with context about which operation caused the error.
+Reading the log should be enough to know which line of code triggered the error.
+
+## Enum-like Fields
+
+Define a named `string` type with constants for fields that hold one value from a fixed set.
+Do not use a DB enum type (adding a value requires a schema migration, etc.);
+store as `TEXT` instead. Enforce valid values in application code only.
+Prefer human-readable ALL_UPPERCASE string values instead of numeric codes.
+
+```go
+package model
+
+// TriBool is a three-state boolean: unset, false, or true.
+type TriBool string
+
+// TriBool enum values
+const (
+	TriBoolUnset TriBool = ""
+	TriBoolTrue  TriBool = "TRUE"
+	TriBoolFalse TriBool = "FALSE"
+)
+```
 
 # Go Project Structure
 
