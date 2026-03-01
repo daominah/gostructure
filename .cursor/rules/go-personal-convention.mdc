@@ -25,21 +25,28 @@ Reading the log should be enough to know which line of code triggered the error.
 
 ## Enum-like Fields
 
-Define a named `string` type with constants for fields that hold one value from a fixed set.
-Do not use a DB enum type (adding a value requires a schema migration, etc.);
-store as `TEXT` instead. Enforce valid values in application code only.
-Prefer human-readable ALL_UPPERCASE string values instead of numeric codes.
+Define a named `string` type with constants for fields that hold a value
+from a fixed set.
 
-```go
+Do not use a database enum type (adding a value requires a schema migration, etc.),
+store as `TEXT` instead. Enforce valid values in application code only.
+
+Constant names should not include the type prefix
+unless there are duplicate names in the same package.
+
+Prefer human-readable ALL_UPPERCASE string values instead of numeric
+codes.
+
+```
 package model
 
-// TriBool is a three-state boolean: unset, false, or true.
-type TriBool string
+// MessageIntent is the classified intent of a customer message.
+type MessageIntent string
 
-// TriBool enum values
+// MessageIntent enum values.
 const (
-	TriBoolUnset TriBool = ""
-	TriBoolTrue  TriBool = "TRUE"
-	TriBoolFalse TriBool = "FALSE"
+	Unknown  MessageIntent = ""
+	Greeting MessageIntent = "GREETING"
+	Purchase MessageIntent = "PURCHASE"
 )
 ```
