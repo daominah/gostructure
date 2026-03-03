@@ -124,6 +124,12 @@ for example `script_import_data.go`.
   `database/`, `httpsvr/`, `external_provider/`, etc.
 - `database/` also contains SQL migrations.
 
+# Slack Messaging
+
+For any Slack send/reply/post request, **always create a draft first**.
+After drafting, share the direct Slack channel link, then ask the user
+whether they want the AI to send it or prefer to send it themselves in the Slack app.
+
 # SQL Formatting Rules
 
 - Use spaces around parentheses
