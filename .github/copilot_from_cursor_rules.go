@@ -63,7 +63,10 @@ func main() {
 	if err := os.WriteFile(outputPath, []byte(output), 0644); err != nil {
 		log.Fatalf("error os.WriteFile %s: %v", outputPath, err)
 	}
+	log.Printf("========================================")
 	log.Printf("Wrote %v characters to %s", len(output), outputPath)
+	estimatedTokens := len(output) / 4
+	log.Printf("equivalent to %d tokens (assuming 1 token ≈ 4 characters)", estimatedTokens)
 }
 
 // stripFrontmatter removes the YAML frontmatter block (--- ... alwaysApply ... ---)

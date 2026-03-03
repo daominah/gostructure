@@ -1,0 +1,10 @@
+---
+description: Slack messaging behavior: default to draft, send only when explicitly told to
+alwaysApply: true
+---
+
+# Slack Messaging
+
+For any Slack send/reply/post request, **always create a draft first**.
+After drafting, share the direct Slack channel link, then ask the user
+whether they want the AI to send it or prefer to send it themselves in the Slack app.
