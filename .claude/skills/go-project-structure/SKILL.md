@@ -1,7 +1,6 @@
 ---
-description: Go project structure and package organization
-globs: **/*.go
-alwaysApply: false
+name: go-project-structure
+description: Go project directory layout and package conventions. Use when creating, organizing, or refactoring Go files, packages, features, or functions.
 ---
 
 # Go Project Structure

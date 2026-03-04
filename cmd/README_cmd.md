@@ -13,7 +13,7 @@ importing and invoking code from the `/pkg` directory.
 If an executable name contains multiple words, use hyphens to separate them.
 This follows common CLI naming conventions.
 But the source file names should still be in snake_case
-to align with Go’s file naming conventions.
+to align with Go's file naming conventions.
 
 Examples:
 

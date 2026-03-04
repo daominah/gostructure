@@ -1,5 +1,6 @@
 ---
-alwaysApply: true
+name: sql-formatting
+description: SQL formatting and style rules. Use when writing or editing SQL queries or migrations.
 ---
 
 # SQL Formatting Rules

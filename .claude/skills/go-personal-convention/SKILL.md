@@ -1,7 +1,6 @@
 ---
-description: Personal Go conventions
-globs: **/*.go
-alwaysApply: false
+name: go-personal-convention
+description: Personal Go conventions. Use when writing or reviewing Go code.
 ---
 
 # Go Personal Conventions

@@ -1,6 +1,6 @@
 ---
-description: Slack messaging behavior: default to draft, send only when explicitly told to
-alwaysApply: true
+name: slack-messaging
+description: Always draft Slack messages first, share the channel link, then ask the user whether to send. Use when asked to send, post, or reply in Slack.
 ---
 
 # Slack Messaging
