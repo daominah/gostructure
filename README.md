@@ -22,10 +22,10 @@ Inspired by Clean Architecture and golang-standards/project-layout
 See [.cursor/rules/go-project-structure.mdc](.cursor/rules/go-project-structure.mdc).
 The structure rules can be used as configuration for AI code generation.
 
-As we’re now in the AI era, I’ve been learning how to use AI more
-effectively and have documented what I’ve learned here:
+As we're now in the AI era, I've been learning how to use AI more
+effectively and have documented what I've learned here:
 
-[How to Use AI Effectively](README_use_ai_effectively.md)
+[Guidelines and practical tips for using AI effectively](doc/ai_usage_guidelines.md)
 
 ## Deployment
 

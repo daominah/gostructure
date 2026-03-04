@@ -1,0 +1,4 @@
+# Security Rules
+
+Never read, access, or suggest reading any files inside `.ssh` directories
+at any path level, including `~/.ssh/`, `/root/.ssh/`, or any `**/.ssh/` path.

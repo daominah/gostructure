@@ -1,5 +1,6 @@
 ---
-alwaysApply: true
+name: test-comments
+description: GIVEN/WHEN/THEN comment format for unit tests. Use when writing, editing, or reviewing unit tests.
 ---
 
 # Unit Test Comments

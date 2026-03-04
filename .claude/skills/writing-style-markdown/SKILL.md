@@ -1,5 +1,6 @@
 ---
-alwaysApply: true
+name: writing-style-markdown
+description: Markdown writing style conventions. Use when writing or editing Markdown files or variants (e.g. .mdc).
 ---
 
 # Markdown Writing Style
