@@ -21,7 +21,7 @@ Claude Code is a CLI-based AI coding agent made by Anthropic.
 It runs in your terminal and can read, write, and execute code across your project.
 
 It uses a flat subscription model,
-here is a usage limit that resets every few hours (and every week).
+there is a usage limit that resets every few hours (and every week).
 
 Currently transitioning to Claude Code as the primary AI coding tool.
 
@@ -36,48 +36,48 @@ It uses a fast model and small context window, not suitable to complicated tasks
 ## Configuring AI Agents
 
 Both Cursor and Claude Code support rules, skills, and settings
-that shape how the agent behaves in your project.
-This repo includes configurations for both tools.
+that shape the agent's behavior.
+These can be scoped to a user's home directory (affecting all projects)
+or to a specific project directory.
+This repo includes configurations that can be applied to either tool.
 
 ### Rules
 
 Rules are always-on instructions the agent follows in every session.
-Use them for non-negotiable constraints: coding conventions, security boundaries, workflow policies.
+Use them for non-negotiable constraints: security boundaries, workflow policies, ...
 
 - **Cursor**: place `.mdc` files in `.cursor/rules/`.
-  Rules with `alwaysApply: true` are injected into every chat automatically.
-- **Claude Code**: place instructions in `.claude/CLAUDE.md`.
-  The agent reads this file at the start of every session.
-
-Rules in this repo:
-
-| Rule                                   | Applies to          | Purpose                                                                       |
-|----------------------------------------|---------------------|-------------------------------------------------------------------------------|
-| `ask-before-implement-unless-explicit` | Cursor              | Ask for a plan before writing code unless the user explicitly says to proceed |
-| `forbid-read-ssh`                      | Cursor, Claude Code | Never access `.ssh` directories at any path                                   |
+  Rules are injected into every chat automatically.
+- **Claude Code**: place instructions in `.claude/CLAUDE.md` or `CLAUDE.md` at project root.
 
 ### Skills
 
-Skills are on-demand prompts the agent loads when you invoke them by name.
-Use them for repeatable tasks where you want consistent behavior without repeating instructions.
+Skills are reusable instruction packages that teach agents how to perform specific tasks
+(e.g. codebase visualization, Excel processing, coding conventions, etc.).
+
+Unlike rules, which are always loaded into every session,
+only each skill's **name** and **description** are loaded into context,
+while full instructions are loaded on demand
+when the agent decides, based on the description, that a skill is relevant.
+
+Long rules can be converted into skills to save context window space.
+
+A skill is a directory containing a `SKILL.md` (required)
+with a name, description, and prompt body.
+The directory can also include scripts, templates and reference files
+that the agent uses when the skill is active.
 
 - **Claude Code**: place skill directories under `.claude/skills/`.
-  Each skill has a `SKILL.md` with a name, description, and prompt body.
-  Invoke with `/skill-name` in the chat.
-- **Cursor**: skills are not natively supported; use rules or chat snippets instead.
+  Let the agent load it automatically when relevant
+  or invoke with `/skill-name` in the chat.
+- **Cursor**: also can load skills from `.claude/skills/`,
+  so skills in this repo work in both tools.
 
-Skills in this repo:
+References:
 
-| Skill                    | Purpose                                                              |
-|--------------------------|----------------------------------------------------------------------|
-| `commit-messages`        | Concise commit messages focused on business logic, no AI attribution |
-| `go-personal-convention` | Personal Go style conventions                                        |
-| `go-project-structure`   | Go directory layout and package conventions                          |
-| `slack-messaging`        | Draft Slack messages and confirm before sending                      |
-| `sql-formatting`         | SQL formatting and style                                             |
-| `test-comments`          | GIVEN/WHEN/THEN comment format for unit tests                        |
-| `writing-style`          | Prose style: no mid-sentence dashes, straight quotes                 |
-| `writing-style-markdown` | Markdown conventions                                                 |
+- [Open standard Agent Skills](https://agentskills.io/home)
+- [Claude Code Skills](https://code.claude.com/docs/en/skills#extend-claude-with-skills)
+- [Cursor Skills](https://cursor.com/docs/context/skills)
 
 ### Settings
 
