@@ -5,7 +5,7 @@ description: SQL formatting and style rules. Use when writing or editing SQL que
 
 # SQL Formatting Rules
 
-- Use spaces around parentheses
+- Use a space before opening and after closing parentheses
 - Use consistent indentation (4 spaces)
 - If a clause is broken across lines, indent subordinate parts one additional level
 - Align columns and assignments within the same clause

@@ -20,6 +20,7 @@ Use numbered lists only when:
 
 ## Breaking Lines at Semantic Boundaries
 
+
 ### Goal
 
 Keep raw Markdown readable in editors and source view without relying on soft wrap.
@@ -41,18 +42,24 @@ Tables are an exception and do not require manual line breaks.
 
 The following paragraph has **good** line breaks at semantic boundaries:
 
+```
 The VAPID key pair we generate proves that the push request comes from your server.
 Each push request is signed with the private key,
 the push service verifies the signature before delivering.
+```
 
 The next paragraph produces the same rendered output,
 but the line breaks strictly enforce the 80-character limit,
 which is less readable in raw Markdown:
 
+```
 The VAPID key pair we generate proves that the push request comes from your
 server. Each push request is signed with the private key, the push service
 verifies the signature before delivering.
+```
 
 Avoid writing everything on one long line:
 
+```
 The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key, the push service verifies the signature before delivering.
+```

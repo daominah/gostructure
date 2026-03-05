@@ -91,3 +91,53 @@ See `.cursor/readme_cursor_settings.md` for details on:
 
 **Claude Code** is configured via `~/.claude/` globally and `.claude/` per project.
 Project-level `CLAUDE.md` is the main entry point for per-repo instructions.
+
+MCP servers for Claude Code use three scopes:
+
+| Scope             | Stored in                   | Shared?            | Use case                                       |
+|-------------------|-----------------------------|--------------------|------------------------------------------------|
+| `local` (default) | `~/.claude.json`            | No                 | Personal servers for a specific project        |
+| `user`            | `~/.claude.json`            | No                 | Personal servers available across all projects |
+| `project`         | `.mcp.json` at project root | Yes, commit to git | Team-shared servers                            |
+
+`~/.claude.json` is not meant for manual editing (it also stores OAuth sessions, caches, and other state).
+For `local` and `user` scopes, use the CLI to add servers:
+
+```bash
+claude mcp add <name> -- <command> [args...]                 # local scope (default)
+claude mcp add --scope user <name> -- <command> [args...]    # user scope
+claude mcp add --scope project <name> -- <command> [args...]  # writes to .mcp.json
+claude mcp list                                               # list configured servers
+claude mcp remove <name>                                      # remove a server
+```
+
+For `project` scope, you can also edit `.mcp.json` directly at the project root.
+Note: `.mcp.json` must be at the project root, not inside `.claude/`.
+
+```json
+{
+	"mcpServers": {
+		"linear": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@linear/mcp-server"
+			],
+			"env": {
+				"LINEAR_API_KEY": "${LINEAR_API_KEY}"
+			}
+		}
+	}
+}
+```
+
+Environment variable expansion (`${VAR}` and `${VAR:-default}`) is supported in `.mcp.json`,
+so the team can share the file while each member supplies their own API keys via shell env.
+
+For general Claude Code settings (permissions, env vars, hooks), edit these files directly:
+
+| File                          | Scope           | Purpose                                       |
+|-------------------------------|-----------------|-----------------------------------------------|
+| `~/.claude/settings.json`     | User global     | Permissions, env vars, hooks for all projects |
+| `.claude/settings.json`       | Project, shared | Team-wide settings, committed to git          |
+| `.claude/settings.local.json` | Project local   | Personal overrides, gitignored                |

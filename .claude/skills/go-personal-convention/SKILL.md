@@ -24,17 +24,17 @@ Reading the log should be enough to know which line of code triggered the error.
 
 ## Enum-like Fields
 
-Define a named `string` type with constants for fields that hold a value
-from a fixed set.
+In Go, define a named `string` type with constants for
+fields that hold a value from a fixed set.
 
-Do not use a database enum type (adding a value requires a schema migration, etc.),
-store as `TEXT` instead. Enforce valid values in application code only.
+In the database, store these fields as `TEXT` rather than a database enum type
+(adding an enum value requires a schema migration, etc.).
+Enforce valid values in application code only.
 
 Constant names should not include the type prefix
 unless there are duplicate names in the same package.
 
-Prefer human-readable ALL_UPPERCASE string values instead of numeric
-codes.
+Prefer human-readable ALL_UPPERCASE string values instead of numeric codes.
 
 ```
 package model
