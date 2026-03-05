@@ -10,8 +10,6 @@ description: Markdown writing style conventions. Use when writing or editing Mar
 Prefer bullet points over numbered lists.
 
 Bullet points are easier to edit and reorder.
-Numbered lists are harder to modify because inserting items
-requires renumbering and indentation can become awkward.
 
 Use numbered lists only when:
 
@@ -19,7 +17,6 @@ Use numbered lists only when:
 - Explicit numbering is required for clarity.
 
 ## Breaking Lines at Semantic Boundaries
-
 
 ### Goal
 
