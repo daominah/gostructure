@@ -7,9 +7,7 @@ description: Markdown writing style conventions. Use when writing or editing Mar
 
 ## Lists: Prefer Bullet Points by Default
 
-Prefer bullet points over numbered lists.
-
-Bullet points are easier to edit and reorder.
+Prefer bullet points over numbered lists (easier to edit and reorder).
 
 Use numbered lists only when:
 
@@ -29,9 +27,11 @@ The target is the raw Markdown source, not rendered output in a browser or Markd
 
 Generally break lines in raw Markdown at around 80 characters.
 
-Prefer breaking lines at semantic boundaries; it is acceptable to exceed 80 characters slightly
-(as long as the length does not exceed 100 characters).
-This is more readable than strictly breaking by character count.
+Prefer breaking at semantic boundaries to strictly breaking by character count.
+Lines may exceed 80 characters but must not exceed 100.
+
+Do not split a short sentence or separate a parenthetical from its phrase
+just to stay under 80 characters. Keep the semantic unit on one line.
 
 Tables are an exception and do not require manual line breaks.
 

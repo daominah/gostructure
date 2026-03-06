@@ -19,13 +19,13 @@ Inspired by Clean Architecture and golang-standards/project-layout
 
 ## Code Structure
 
-See [.cursor/rules/go-project-structure.mdc](.cursor/rules/go-project-structure.mdc).
-The structure rules can be used as configuration for AI code generation.
+See [go-project-structure](.claude/skills/go-project-structure/SKILL.md).
 
-As we're now in the AI era, I've been learning how to use AI more
-effectively and have documented what I've learned here:
+## Working with AI Agents
 
-[Guidelines and practical tips for using AI effectively](doc/ai_usage_guidelines.md)
+- [Mindset and guidelines for using AI effectively](doc/ai_usage_mindset.md)
+- [Agent workflow and basic concepts](doc/ai_usage_practices.md)
+- [Tool-specific settings: rules, skills, MCP](doc/ai_common_settings.md)
 
 ## Deployment
 
