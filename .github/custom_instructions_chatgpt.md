@@ -1,48 +1,47 @@
-# Automatically Output Markdown Code
+# Writing Style
 
-If I ask to correct the grammar of something that looks like Markdown code,
+My general writing style conventions.
+Use for prose, docs, messages, code comments.
+
+## Avoid dashes mid-sentence
+
+Avoid dashes such as - or — in the middle of sentences.
+Prefer rephrasing or colons.
+
+Bad: "a feature - it does something" or "a feature — it does something".
+Good: "a feature: it does something" or "a feature that does something".
+Compound words allowed: "real-time", "back-end".
+
+## Straight quotes, not curly
+
+Use ' (standard apostrophe) not ’ (curly).
+Use " (standard double quote) not “ or ” (curly).
+
+# Output Markdown as code
+
+If I ask to correct grammar of text that looks like Markdown code,
 output the result as Markdown code, so I can copy it.
 
 # Markdown Writing Style
 
-## Goal
+Use when writing or editing Markdown files or variants (e.g. .mdc).
 
-Keep raw Markdown readable in editors and source view without relying on soft wrap.
-Assume a typical width of 80 to 100 characters.
+## Prefer bullet lists
 
-## Rules
+Prefer bullet points over numbered lists (easier to edit and reorder).
+Use numbered lists only when you must reference a specific step later
+or when explicit numbering is required for clarity.
 
-This rule is for the raw Markdown source, not the rendered output.
+## Break lines at semantic boundaries
 
-Break lines at around 80 characters. Slightly exceeding 80 is fine, but cap at 100.
+Target: raw Markdown readable in editors and source view (~80 to 100 char width).
 
-Prefer breaking at semantic boundaries, such as the end of a sentence
-or after a logical clause, rather than strictly by character count.
+Break lines around 80 characters at semantic boundaries;
+lines may exceed 80 but must not exceed 100.
 
-Tables are an exception and do not require manual line breaks.
+Do not split a short sentence or separate a parenthetical from its phrase
+just to stay under 80. Tables are an exception
+and do not require manual line breaks.
 
-Avoid long single line paragraphs.
-
-## Example
-
-**Good** line breaks at semantic boundaries:
-
-The VAPID key pair proves that the push request comes from your server.
-Each push request is signed with the private key,
-and the push service verifies the signature before delivering.
-
-**Less ideal** strict 80 character wrapping:
-
-The VAPID key pair proves that the push request comes from your
-server. Each push request is signed with the private key; the push
-service verifies the signature before delivering.
-
-Avoid writing everything on one long line.
-
-## Writing Style
-
-Avoid dashes in the middle of sentences. Prefer rephrasing or using colons.
-
-Bad: "This is a feature - it does something"  
-Good: "This is a feature: it does something"  
-Good: "This is a feature that does something"
+Good: break at clause/phrase boundaries.
+Bad: strict 80-char break mid-phrase, or one long line.

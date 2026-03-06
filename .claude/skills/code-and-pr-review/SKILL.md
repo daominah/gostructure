@@ -9,53 +9,66 @@ description: Review code change and pull request (PR) for correctness, impact, a
 
 ## Code Meets Business Need
 
-The business intent comes from a ticket (Linear/Jira), a Slack message, or a spec/plan.
-The PR must link to these sources so the reviewer can verify:
+- The PR must link to its ticket, Slack thread, plan, etc. if available.
+- Verify the PR describes the client pain point or use case being solved.
+- Verify the sources (ticket, Slack, plan) are clear,
+  self-consistent, and consistent with each other.
+- For bugs: how do we reproduce it? How do we confirm the root cause?
+  Is there a test that reproduces the bug?
+  Optional: symptom of a deeper issue? Check similar past bugs.
 
-**Is the business intent clear?**
+## Code Works as Intended
 
-- Is each source clear and internally consistent
-  (e.g. ticket title, description, and acceptance criteria match)?
-- Are the sources consistent with each other (ticket, Slack message, spec/plan)?
-- What is the user experiencing vs what should they experience?
-- Who is affected and how urgently?
-- For bugs: can we reproduce it? Is it a symptom of a deeper issue?
-- If anything is vague or contradictory, clarify with the requester first.
+- Every new, modified, or affected function must have a test proving it works.
+- For bug fixes: a test that reproduces the bug and passes after the fix.
+- For new features: tests must cover the main use case.
+  Edge cases are optional but encouraged.
+- Test comments use GIVEN (precondition) / WHEN (action) / THEN (result)
+  to describe business behavior, readable by non-technical stakeholders.
 
-**Technical clarity:**
+## Do Not Break Existing Behavior
 
-- What is the root cause or the right solution approach?
-- What is the fix/change scope? Are there side effects?
-- If a plan or spec exists, does it match the business request? Flag gaps first.
+- Existing tests may not cover all behaviors.
+  Check for changes that could break untested code paths.
+- Additive changes can still degrade performance.
+  Check for slow queries, missing indexes, or unnecessary load on shared resources.
+- If the PR is too large to review confidently,
+  note it as process feedback to prefer smaller PRs in future work.
 
-Avoid the anti-pattern: code first, discover unclear requirements in review, then major rework.
+## Observable Output
 
-## Building It the Right Way
+- Check that the change has observable output the user can verify,
+  for example through the UI or a public API response.
+- Long-running functions or background jobs provide a way to inspect
+  progress through metrics, a dashboard, a status endpoint, logs, or database records.
+- Support for cancellation is a nice to have.
 
-- A pull request (PR) should be small so it can be reviewed quickly and merged safely.
-- Confirm existing callers and dependent code still work:
-  do not silently change behavior that other code relies on.
-- Improve the codebase where you touch it,
-  but keep improvements in separate commits from feature work.
+## Security Considerations
 
-## Code Works as Expected
+- Check for hardcoded secrets, credentials, or real customer data in the code.
+- Review risks from user inputs: is validation sufficient?
+- Check if the change exposes sensitive data in API responses or error messages.
 
-- Every new or modified function must have a test covering its primary behavior.
-- Tests follow the GIVEN/WHEN/THEN comment format (see `test-comments` skill).
-- One behavior per test case.
-  No dead test code, unused helpers, or copy-pasted blocks.
+## Code Quality
 
-## End-User Verifiability
+- Code should be easy to read, change, and debug by someone who didn't write it.
+- Improve the codebase where you touch it.
+  Keep cleanup in separate commits from feature work for easier review and revert.
+- Label nitpicks clearly so the author knows what is blocking vs optional.
 
-- How can the end user confirm this change works in production or staging?
-- If there is no observable output (UI, API response, log line, metric), add one.
-- Prefer something the user can trigger and check without reading code.
+## Process Feedback
 
-## Logging and Monitoring for Long-Running Features
+If the review finds serious problems
+(vague requirements, contradictory sources, wrong approach),
+comment as process feedback:
 
-- Background jobs, queues, workers, and scheduled tasks must log:
-  - Start and end of each run
-  - Key counts (items processed, errors, skipped)
-  - Any unexpected states or retries
-- Expose metrics or a status endpoint if the feature runs continuously.
-- Do not silently swallow errors. Log them with enough context to debug.
+- Requirements should be clear and agreed on before coding starts.
+- Solution approach should be confirmed before implementation.
+- This prevents misalignment earlier in future work.
+
+# Human Reviewer Mindset (AI can ignore)
+
+- Code review is a chance to share knowledge about the code and the product.
+- The reviewer should be able to explain the change to others after reviewing.
+- If the PR solves the business need and improves the codebase,
+  approve it even if minor improvements remain. Track those as follow-ups.

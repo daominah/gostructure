@@ -1,20 +1,26 @@
 ---
 name: test-comments
-description: GIVEN/WHEN/THEN comment format for unit tests. Use when writing, editing, or reviewing unit tests.
+description: GIVEN/WHEN/THEN comment format for tests. Use when writing, editing, or reviewing tests.
 ---
 
-# Unit Test Comments
+# Test Comments
 
-Use the GIVEN/WHEN/THEN comment format in unit tests
-so a reviewer can understand what the test does by reading only the comments.
+Use the GIVEN/WHEN/THEN comment format in tests.
+Comments describe business behavior, not implementation,
+so even non-technical stakeholders can understand them.
 
 - **GIVEN** (optional): Setup/preconditions/base data
-- **WHEN**: Action/function being tested
+- **WHEN**: Action being tested
 - **THEN**: Expected result/verification
 
 ```
-// WHEN hashing the plain password
-hash, err := HashPassword(password)
-// THEN the hash matches the original password
-ok := VerifyPassword(hash, password)
+// GIVEN the system has the hash of a user's plain password
+hash, err := HashPassword("s3cret")
+require.NoError(t, err)
+
+// WHEN the user logs in with the correct password
+ok := VerifyPassword(hash, "s3cret")
+
+// THEN the system confirms the password is correct
+require.True(t, ok)
 ```
