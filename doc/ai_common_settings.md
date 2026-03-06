@@ -67,6 +67,15 @@ that the agent uses when the skill is active.
 - **Cursor**: also can load skills from `.claude/skills/`,
   so skills in this repo work in both tools.
 
+Copy this repo's skills to your home directory (so they apply to all projects):
+
+```bash
+# make sure target directory exists
+mkdir -p ~/.claude/skills
+# overwrites existing skills with the same name, run from this repo's root
+cp -r .claude/skills/* ~/.claude/skills/
+```
+
 References:
 
 - [Open standard Agent Skills](https://agentskills.io/home)
