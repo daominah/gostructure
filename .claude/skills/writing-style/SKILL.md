@@ -1,6 +1,7 @@
 ---
 name: writing-style
-description: General writing style conventions. Use when writing any prose, documentation, messages, or code comments.
+description: General writing style conventions.
+  Use when writing any prose, documentation, messages, or code comments.
 ---
 
 # Writing Style
