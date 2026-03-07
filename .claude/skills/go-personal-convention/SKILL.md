@@ -22,6 +22,17 @@ if err != nil {
 This ensures error wrapping with context about which operation caused the error.
 Reading the log should be enough to know which line of code triggered the error.
 
+## Bool Naming
+
+Prefix bool variables and fields with `Is` or `is`.
+
+```
+var IsActive  bool  // Exported field or variable
+type Something struct {
+    isDeleted bool  // Unexported field or variable
+}
+```
+
 ## Enum-like Fields
 
 In Go, define a named `string` type with constants for
