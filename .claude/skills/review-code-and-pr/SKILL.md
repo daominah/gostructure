@@ -13,7 +13,7 @@ Output the review with these sections in order:
 
 - Verdict: APPROVE or REQUEST_CHANGES.
 - Summary: one paragraph describing what the change does
-  and whether it meets the business need.
+  and how it meets the review criteria.
 - Blockers: issues that must be resolved before merging.
   Only present when verdict is REQUEST_CHANGES.
 - Suggestions: improvements worth tracking as follow-ups.
