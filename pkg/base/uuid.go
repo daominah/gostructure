@@ -4,7 +4,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// NewUUID generates UUIDv7 strings that are lexicographically sortable by creation time.
+// NewUUID generates a unique string in UUIDv7 format that is
+// lexicographically sortable by creation time.
 //
 // UUIDv7 starts with a 48-bit Unix timestamp (milliseconds since epoch),
 // followed by version/variant bits and random bits (the remaining 80 bits).

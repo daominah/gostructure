@@ -47,7 +47,9 @@ for example `script_import_data.go`.
 - `interface.go`: Defines interfaces for infrastructure and external dependencies.
 - `interface_mock.go`: Mock implementations for tests or interfaces not yet implemented
   (use `MockSomething` naming for both stubs and mocks).
-- `app.go`: The `App` struct holds dependencies; its methods implement business logic.
+- `app.go`: The `App` struct holds all dependencies.
+  Business logic is implemented as methods on `App`,
+  or as methods on smaller structs that contain only the dependencies they need from `App`.
 - Must be testable without external setup.
 - Must not import any `driver` packages.
 - Depends on interfaces, not concrete implementations.

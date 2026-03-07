@@ -1,5 +1,5 @@
 ---
-name: code-and-pr-review
+name: review-code-and-pr
 description: Review code change and pull request (PR) for correctness, impact, and safety.
   Use when implementing a feature, fixing a bug, reviewing a PR,
   or reviewing code changes before committing.

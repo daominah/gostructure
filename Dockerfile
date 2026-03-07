@@ -1,5 +1,5 @@
 # Build stage: compile the Go application
-FROM golang:1.23.12-bookworm AS builder
+FROM golang:1.26-bookworm AS builder
 
 WORKDIR /build
 COPY go.mod go.sum* ./
@@ -15,8 +15,5 @@ RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/
 WORKDIR /app
 # Copy the compiled Go binary into the runtime image.
 COPY --from=builder /app/main .
-# Copy the project files if needed for runtime,
-# in this example repo, we need the web assets and go.mod file.
-COPY --from=builder /build .
 EXPOSE 20808
 CMD ["./main"]

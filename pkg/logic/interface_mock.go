@@ -2,6 +2,7 @@ package logic
 
 import (
 	"strings"
+	"sync"
 
 	"github.com/daominah/gostructure/pkg/model"
 )
@@ -9,6 +10,7 @@ import (
 // MockDatabase is a mock in-memory implementation of the Database interface,
 // useful for testing logic without setting up a real database.
 type MockDatabase struct {
+	mu       sync.Mutex
 	products map[string]model.Product
 }
 
@@ -18,6 +20,8 @@ func NewMockDatabase() *MockDatabase {
 }
 
 func (m *MockDatabase) CreateProduct(product model.Product) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	if _, exists := m.products[product.ID]; exists {
 		return model.ErrDuplicateProductID
 	}
@@ -26,6 +30,8 @@ func (m *MockDatabase) CreateProduct(product model.Product) error {
 }
 
 func (m *MockDatabase) GetProduct(id string) (model.Product, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	product, exists := m.products[id]
 	if !exists {
 		return model.Product{}, model.ErrProductNotFound
@@ -34,6 +40,8 @@ func (m *MockDatabase) GetProduct(id string) (model.Product, error) {
 }
 
 func (m *MockDatabase) SearchProducts(query string) ([]model.Product, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	var results []model.Product
 	for _, product := range m.products {
 		if strings.Contains(strings.ToLower(product.Name), strings.ToLower(query)) {
@@ -44,6 +52,8 @@ func (m *MockDatabase) SearchProducts(query string) ([]model.Product, error) {
 }
 
 func (m *MockDatabase) UpdateProduct(product model.Product) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	if _, exists := m.products[product.ID]; !exists {
 		return model.ErrProductNotFound
 	}

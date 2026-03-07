@@ -1,7 +1,8 @@
-# IDE and OS files
+# user-specific IDE, tool, and OS files
 .idea
 .vscode
 .DS_Store
+.claude/settings.local.json
 
 # the following are inspired by https://github.com/github/gitignore/blob/main/Go.gitignore
 

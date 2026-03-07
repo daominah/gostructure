@@ -21,7 +21,7 @@ func (p *PostgresDatabase) CreateProduct(product model.Product) error {
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == ErrorCodeUniqueViolation {
-			return fmt.Errorf("%w: %v, db.Exec INSERT: %w",
+			return fmt.Errorf("%w: %v, db.Exec INSERT: %v",
 				model.ErrDuplicateProductID, product.ID, err)
 		}
 		return fmt.Errorf("db.Exec INSERT: %w", err)
@@ -36,7 +36,7 @@ func (p *PostgresDatabase) GetProduct(id string) (model.Product, error) {
 	err := p.db.QueryRow(query, id).Scan(&product.ID, &product.Name, &product.Price, &product.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.Product{}, fmt.Errorf("%w: %v, db.QueryRow SELECT: %w",
+			return model.Product{}, fmt.Errorf("%w: %v, db.QueryRow SELECT: %v",
 				model.ErrProductNotFound, id, err)
 		}
 		return model.Product{}, fmt.Errorf("db.QueryRow SELECT: %w", err)
