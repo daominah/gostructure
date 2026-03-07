@@ -10,7 +10,7 @@ import (
 	"github.com/daominah/gostructure/pkg/model"
 )
 
-func CreateProductHandler(db logic.Database) http.HandlerFunc {
+func CreateProductHandler(app *logic.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var product model.Product
 		if err := json.NewDecoder(r.Body).Decode(&product); err != nil {
@@ -18,7 +18,7 @@ func CreateProductHandler(db logic.Database) http.HandlerFunc {
 			return
 		}
 
-		err := db.CreateProduct(product)
+		err := app.CreateValidProduct(product)
 		if err != nil {
 			if errors.Is(err, model.ErrDuplicateProductID) {
 				http.Error(w, fmt.Sprintf("error CreateProduct: %v", err), http.StatusConflict)
@@ -33,7 +33,7 @@ func CreateProductHandler(db logic.Database) http.HandlerFunc {
 	}
 }
 
-func GetProductHandler(db logic.Database) http.HandlerFunc {
+func GetProductHandler(app *logic.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		if id == "" {
@@ -41,7 +41,7 @@ func GetProductHandler(db logic.Database) http.HandlerFunc {
 			return
 		}
 
-		product, err := db.GetProduct(id)
+		product, err := app.GetProduct(id)
 		if err != nil {
 			if errors.Is(err, model.ErrProductNotFound) {
 				http.Error(w, fmt.Sprintf("error GetProduct: %v", err), http.StatusNotFound)
@@ -56,11 +56,11 @@ func GetProductHandler(db logic.Database) http.HandlerFunc {
 	}
 }
 
-func SearchProductsHandler(db logic.Database) http.HandlerFunc {
+func SearchProductsHandler(app *logic.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query().Get("query")
 
-		products, err := db.SearchProducts(query)
+		products, err := app.SearchProducts(query)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("error SearchProducts: %v", err), http.StatusInternalServerError)
 			return

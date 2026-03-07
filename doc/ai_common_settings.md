@@ -18,7 +18,7 @@ Cursor charges per token, and costs can grow quickly. Budget carefully if you us
 Claude Code is a CLI-based AI coding agent made by Anthropic.
 It runs in your terminal and can read, write, and execute code across your project.
 
-It uses a flat subscription model, there is a usage limit that resets every few hours (and every week).
+It uses a flat subscription model with a usage limit that resets every 5 hours and every week.
 
 Currently transitioning to Claude Code as the primary AI coding tool.
 
@@ -43,6 +43,18 @@ Use them for non-negotiable constraints: security boundaries, workflow policies,
 - **Cursor**: place `.mdc` files in `.cursor/rules/`.
   Rules are injected into every chat automatically.
 - **Claude Code**: place instructions in `.claude/CLAUDE.md` or `CLAUDE.md` at project root.
+
+For user rules (apply it across all your projects),
+copy this repo's `CLAUDE.md` to your home directory:
+
+```bash
+# this will overwrite existing user home CLAUDE.md,
+# run this command from the root of this repo
+mkdir -p ~/.claude
+cp ".claude/CLAUDE.md" ~/.claude/CLAUDE.md
+```
+
+Cursor user rules need to be copied manually to the IDE settings.
 
 ## Skills
 

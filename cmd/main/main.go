@@ -64,15 +64,12 @@ func main() {
 
 	app := logic.NewApp(postgresDB)
 
-	// Set up HTTP server
-
-	webHandler, err := httpsvr.NewHandlerWeb("")
-	if err != nil {
-		log.Fatalf("failed to create web handler: %v", err)
-	}
+	// Register web UI and API routes
 	mux := http.NewServeMux()
+	// healthz indicates this service is still alive (commonly used with Kubernetes)
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
 	mux.Handle("/api/v1/", httpsvr.NewHandlerAPI(app))
-	mux.Handle("/", webHandler)
+	mux.Handle("/", httpsvr.NewHandlerWeb())
 
 	port := os.Getenv("LISTENING_PORT")
 	if port == "" {
