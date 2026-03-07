@@ -28,12 +28,11 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 ### Code Meets Business Need
 
 - The PR must link to its ticket (Linear/Jira), Slack thread, plan, etc.
-  if not linked:
+  if not linked: ask to link as a blocker.
 - Verify the PR describes the client pain point or use case being solved.
 - Verify the sources (ticket, report message, plan) are clear,
   self-consistent, and consistent with each other.
-- For bugs: how do we reproduce it? How do we confirm the root cause?
-  Is there a test that reproduces the bug?
+- For bugs: check whether we know how to reproduce it, How confirmed the root cause, is there a test that reproduces the bug. if not: blocker.
   Optional: symptom of a deeper issue? Check similar past bugs.
 
 ### Code Works as Intended
