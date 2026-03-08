@@ -47,9 +47,11 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 ### Do Not Break Existing Behavior
 
 - Existing tests may not cover all behaviors.
-  Check for changes that could break untested code paths.
+  Check callers of modified functions and shared state for unintended side effects.
 - Purely additive changes can still degrade performance.
-  Check for slow queries, missing indexes, or unnecessary load on shared resources.
+  Check new queries for table scans, missing indexes, and queries inside loops.
+  Check for unbounded resource growth, such as goroutines, channels, maps, or slices.
+  Check for code that causes excessive load on external infrastructure.
 - If the PR is too large to review confidently,
   note it as process feedback to prefer smaller PRs in future work.
 
@@ -64,15 +66,29 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 ### Security Considerations
 
 - Check for hardcoded secrets, credentials, or real customer data in the code.
-- Review risks from user inputs: is validation sufficient?
+- Check that user inputs are sanitized before use in queries,
+  file paths, shell commands, and rendered output.
 - Check if the change exposes sensitive data in API responses or error messages.
 
 ### Code Quality
 
-- Code should be easy to read, change, and debug by someone who didn't write it.
+- Label nitpicks clearly so the author knows what is blocking vs optional.
+- Use descriptive names for wide-scope identifiers.
+  Short names only for variables used within a few nearby lines.
+- Handle errors early and return immediately to keep the main path simple and avoid nesting.
+- If a function returns an error, always check it. Ignore it only explicitly.
+- Function signatures should clearly show inputs, outputs, and side effects.
+  No hidden mutations of inputs or global state.
+- Define interfaces where they are used
+  so the interface consumer depends only on the required behavior,
+  not the implementation package.
+- Control concurrency: every goroutine must have a clear lifetime and termination condition.
+- Comments should explain intent and non-obvious behavior, not just repeat the function name.
+- Persist inputs and outputs for external service interactions for debugging and auditing.
+  Estimate storage growth and required capacity.
+- Check retryable operations are idempotent and produce the same result if retried.
 - Improve the codebase where you touch it.
   Keep cleanup in separate commits from feature work for easier review and revert.
-- Label nitpicks clearly so the author knows what is blocking vs optional.
 
 ### Process Feedback
 
