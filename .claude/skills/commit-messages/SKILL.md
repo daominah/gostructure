@@ -1,6 +1,7 @@
 ---
 name: commit-messages
-description: No AI attribution in git commits; keep messages concise and focused on business logic. Use when creating git commits.
+description: No AI attribution in git commits; keep messages concise and focused on business logic.
+  Use when creating git commits or suggesting commit message.
 ---
 
 # Commit Messages
