@@ -5,7 +5,7 @@ description: Markdown writing style conventions. Use when writing or editing Mar
 
 # Markdown Writing Style
 
-## Lists: Prefer Bullet Points by Default
+## Lists: Use Bullet Points by Default
 
 Prefer bullet points over numbered lists (easier to edit and reorder).
 
@@ -13,6 +13,20 @@ Use numbered lists only when:
 
 - You must reference a specific step later.
 - Explicit numbering is required for clarity.
+
+## Diagrams: Use Mermaid by Default
+
+Always use Mermaid syntax for diagrams.
+
+Prefer sequence diagrams when they fit the purpose instead of other diagram types.
+
+Example:
+
+```mermaid
+sequenceDiagram
+    Client ->> Server: Request
+    Server -->> Client: Response
+```
 
 ## Breaking Lines at Semantic Boundaries
 
