@@ -12,8 +12,7 @@ description: Review code changes and pull requests for business fit,
 Output the review with these sections in order:
 
 - Verdict: APPROVE or REQUEST_CHANGES.
-- Summary: one paragraph describing what the change does
-  and whether it meets the business need.
+- Summary: describing what the change does and how it meets the review criteria.
 - Blockers: issues that must be resolved before merging.
   Only present when verdict is REQUEST_CHANGES.
 - Suggestions: improvements worth tracking as follow-ups.
@@ -30,10 +29,10 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 - The PR must link to its problem source: ticket (Linear/Jira), Slack thread, plan, etc.
   If no source is linked, the PR description must state the problem being solved.
   If neither is provided, flag as blocker and ask to provide one.
-- Verify the sources (ticket, PR description, plan) are self-consistent
-  and consistent with each other.
-- For bugs: how do we reproduce it? How do we confirm the root cause?
-  Is there a test that reproduces the bug?
+- Verify the sources (ticket, report message, plan) are clear,
+  self-consistent, and consistent with each other.
+- For bugs: check whether we know how to reproduce it, how the root cause was confirmed,
+  and whether a test reproduces the bug. If not: blocker.
   Optional: symptom of a deeper issue? Check similar past bugs.
 
 ### Code Works as Intended
