@@ -86,6 +86,8 @@ Copy this repo's skills to your home directory (so they apply to all projects):
 mkdir -p ~/.claude/skills
 # overwrites existing skills with the same name, run from this repo's root
 cp -r .claude/skills/* ~/.claude/skills/
+# sql-schema-placeholder is just a skill template that needs user-specific content
+rm -rf ~/.claude/skills/sql-schema-placeholder
 ```
 
 References:
@@ -123,4 +125,11 @@ Added servers are stored in `~/.claude.json` (not meant for manual editing).
 
 For project-shared servers, edit `.mcp.json` at the project root.
 
+## Status Line (Claude Code)
+
+Claude Code can display a status line at the bottom of the terminal.
+Request it to display your preferred information, example:
+
+```
+/statusline use this format `Model: Opus 4.6, Context: 24% used 48k/200k tokens`
 ```
