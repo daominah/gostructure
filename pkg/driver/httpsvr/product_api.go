@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/daominah/gostructure/pkg/logic"
@@ -52,7 +53,9 @@ func GetProductHandler(app *logic.App) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(product)
+		if err := json.NewEncoder(w).Encode(product); err != nil {
+			log.Printf("error encoding response: %v", err)
+		}
 	}
 }
 
@@ -67,6 +70,8 @@ func SearchProductsHandler(app *logic.App) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(products)
+		if err := json.NewEncoder(w).Encode(products); err != nil {
+			log.Printf("error encoding response: %v", err)
+		}
 	}
 }
