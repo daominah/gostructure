@@ -20,7 +20,7 @@ It runs in your terminal and can read, write, and execute code across your proje
 
 It uses a flat subscription model with a usage limit that resets every 5 hours and every week.
 
-Currently transitioning to Claude Code as the primary AI coding tool.
+Claude Code is my primary AI coding tool.
 
 ### GitHub Copilot
 
@@ -132,4 +132,10 @@ Request it to display your preferred information, example:
 
 ```
 /statusline use this format `Model: Opus 4.6, Context: 24% used 48k/200k tokens`
+```
+
+The default statusline script uses `jq`. On Windows, install it via:
+
+```bash
+winget install jqlang.jq  # jq is automatically added to PATH after install
 ```

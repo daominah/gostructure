@@ -32,7 +32,7 @@ func TestNewUUID(t *testing.T) {
 	// GIVEN: Generate multiple UUIDs with 10ms sleep between each
 	const numUUIDs = 5
 	uuids := make([]string, numUUIDs)
-	for i := 0; i < numUUIDs; i++ {
+	for i := range numUUIDs {
 		uuids[i] = NewUUID()
 		time.Sleep(10 * time.Millisecond)
 	}
@@ -43,7 +43,7 @@ func TestNewUUID(t *testing.T) {
 	sort.Strings(sortedUUIDs)
 
 	// THEN: Verify the order stays the same after sorting
-	for i := 0; i < len(uuids); i++ {
+	for i := range uuids {
 		if uuids[i] != sortedUUIDs[i] {
 			t.Errorf("UUID order changed after sorting: expected %s at index %d, got %s", uuids[i], i, sortedUUIDs[i])
 		}
