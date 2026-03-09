@@ -1,10 +1,6 @@
 ---
-name: review-code-and-pr
-description: Review code changes and pull requests for business fit,
-  implementation approach, regressions, observability, security, and code quality.
-  Use when reviewing uncommitted local code changes,
-  reviewing the latest commit against the previous commit,
-  or reviewing a pull request.
+name: reviewing-code-and-pr
+description: Review code changes and pull requests for business fit, implementation approach, regressions, observability, security, and code quality. Use when reviewing uncommitted local code changes, reviewing the latest commit against the previous commit, or reviewing a pull request.
 ---
 
 ## Output Format
@@ -32,7 +28,7 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 - Verify the sources (ticket, report message, plan) are clear,
   self-consistent, and consistent with each other.
 - For bugs: check whether we know how to reproduce it, how the root cause was confirmed,
-  and whether a test reproduces the bug. If not: blocker.
+  and whether a test reproduces the bug. If not, flag as blocker.
   Optional: symptom of a deeper issue? Check similar past bugs.
 
 ### Code Works as Intended
@@ -57,11 +53,10 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 
 ### Observable Output
 
-- Check that the change has observable output the user can verify,
-  for example through the UI or a public API response.
-- Long-running functions or background jobs provide a way to inspect
-  progress through metrics, a dashboard, a status endpoint, logs, or database records.
-- Support for cancellation is a nice to have.
+- Batch operations (e.g. bulk data imports, bulk updates, send group emails, etc.)
+  should provide a way to inspect progress
+  through metrics, a dashboard, a status API, a summary table, periodic logs, etc.
+  If progress inspection or cancellation is missing, flag as suggestion.
 
 ### Security Considerations
 
@@ -89,7 +84,7 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 - Check retryable operations are idempotent and produce the same result if retried.
 - Improve the codebase where you touch it.
   Keep cleanup in separate commits from feature work for easier review and revert.
-- For Go code, run available analysis tools to detect issues early.
+- For Go code, run available analysis tools on the changed code:
   - `go vet`: detect suspicious or likely incorrect Go code.
   - `go fix`: automatically update code to modern Go APIs and patterns.
   - `staticcheck`: advanced static analysis for bugs, performance issues,

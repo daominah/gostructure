@@ -5,6 +5,8 @@ description: Markdown writing style conventions. Use when writing or editing Mar
 
 # Markdown Writing Style
 
+Also apply all rules from the `writing-style` skill.
+
 ## Lists: Use Bullet Points by Default
 
 Prefer bullet points over numbered lists (easier to edit and reorder).
@@ -47,7 +49,10 @@ Lines may exceed 80 characters but must not exceed 100.
 Do not split a short sentence or separate a parenthetical from its phrase
 just to stay under 80 characters. Keep the semantic unit on one line.
 
-Tables are an exception and do not require manual line breaks.
+Exceptions:
+
+- Markdown tables.
+- Agent Skill frontmatter.
 
 ### Example
 

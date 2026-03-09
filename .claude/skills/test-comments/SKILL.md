@@ -9,9 +9,9 @@ Use the GIVEN/WHEN/THEN comment format in tests.
 Comments describe business behavior, not implementation,
 so even non-technical stakeholders can understand them.
 
-- **GIVEN** (optional): Setup/preconditions/base data
+- **GIVEN** (optional): Setup or preconditions
 - **WHEN**: Action being tested
-- **THEN**: Expected result/verification
+- **THEN**: Expected result
 
 ```
 // GIVEN the system has the hash of a user's plain password
