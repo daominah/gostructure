@@ -5,7 +5,7 @@ description: Markdown writing style conventions. Use when writing or editing Mar
 
 # Markdown Writing Style
 
-Also apply all rules from the `writing-style` skill.
+Also apply all rules from the `writing-style` skill (if available).
 
 ## Lists: Use Bullet Points by Default
 
@@ -51,7 +51,8 @@ just to stay under 80 characters. Keep the semantic unit on one line.
 
 Exceptions:
 
-- Markdown tables.
+- Markdown table.
+- Code block.
 - Agent Skill frontmatter.
 
 ### Example
@@ -66,7 +67,7 @@ the push service verifies the signature before delivering.
 
 The next paragraph produces the same rendered output,
 but the line breaks strictly enforce the 80-character limit,
-which is less readable in raw Markdown:
+which is **less readable** in raw Markdown:
 
 ```
 The VAPID key pair we generate proves that the push request comes from your
@@ -74,7 +75,7 @@ server. Each push request is signed with the private key, the push service
 verifies the signature before delivering.
 ```
 
-Avoid writing everything on one long line:
+**Avoid** writing everything on one long line:
 
 ```
 The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key, the push service verifies the signature before delivering.
