@@ -6,7 +6,7 @@
 
 Cursor is an IDE built around AI models.
 It supports chat, inline edits, and agentic workflows directly inside the editor,
-which makes it easy to get started for devs new to AI Agents.
+which makes it easy to get started for devs new to AI agents.
 
 Good for beginners: the setup is minimal and the AI assistance is visible at every step.
 
@@ -37,15 +37,13 @@ This repo includes configurations that can be applied to either tool.
 
 ## Rules
 
-Rules are always-on instructions the agent follows in every session.
-Use them for non-negotiable constraints: security boundaries, workflow policies, ...
+Rules are persistent context that the agent always includes in every session.
+Use them for security boundaries, personal preferences, project conventions, etc.
 
-- **Cursor**: place `.mdc` files in `.cursor/rules/`.
-  Rules are injected into every chat automatically.
-- **Claude Code**: place instructions in `.claude/CLAUDE.md` or `CLAUDE.md` at project root.
+- **Cursor**: place `.mdc` files in `.cursor/rules/`
+- **Claude Code**: `.claude/CLAUDE.md` or `CLAUDE.md`
 
-For user rules (apply it across all your projects),
-copy this repo's `CLAUDE.md` to your home directory:
+Place rules in project root or user home directory.
 
 ```bash
 # this will overwrite existing user home CLAUDE.md,
@@ -70,13 +68,13 @@ Long rules can be converted into skills to save context window space.
 
 A skill is a directory containing a `SKILL.md` (required)
 with a name, description, and prompt body.
-The directory can also include scripts, templates and reference files
+The directory can also include scripts, templates, and reference files
 that the agent uses when the skill is active.
 
 - **Claude Code**: place skill directories under `.claude/skills/`.
   Let the agent load it automatically when relevant (based on the description)
   or invoke with `/skill-name` in the chat.
-- **Cursor**: also can load skills from `.claude/skills/`,
+- **Cursor**: can also load skills from `.claude/skills/`,
   so skills in this repo work in both tools.
 
 Copy this repo's skills to your home directory (so they apply to all projects):
@@ -98,7 +96,8 @@ References:
 
 ## MCP Servers
 
-MCP (Model Context Protocol) is an open standard for connecting AI agents to external data sources.
+MCP (Model Context Protocol) is an open standard
+for connecting AI agents to external data sources.
 
 This reduces time spent switching between tools and manually gathering context.
 With MCP, agents can read design docs in Google Drive, update tickets in Jira,
@@ -109,8 +108,8 @@ Some common MCP endpoints:
 [Atlassian](https://support.atlassian.com/atlassian-rovo-mcp-server/docs/setting-up-ides/#Cursor),
 [Slack](https://docs.slack.dev/ai/mcp-server), etc.
 
-(GitHub integration works by default via the `gh` CLI, no MCP needed.
-It handles git operations, creating pull requests with proper descriptions.)
+GitHub's integration works by default via the `gh` CLI, no MCP needed.
+It handles git operations and creating pull requests with proper descriptions.
 
 **Cursor** stores MCP server lists in `mcp.json`:
 
@@ -128,7 +127,7 @@ For project-shared servers, edit `.mcp.json` at the project root.
 ## Status Line (Claude Code)
 
 Claude Code can display a status line at the bottom of the terminal.
-Request it to display your preferred information, example:
+Request it to display your preferred information. Example:
 
 ```
 /statusline use this format `Model: Opus 4.6, Context: 24% used 48k/200k tokens`
@@ -139,3 +138,43 @@ The default statusline script uses `jq`. On Windows, install it via:
 ```bash
 winget install jqlang.jq  # jq is automatically added to PATH after install
 ```
+
+## Plugins (Claude Code)
+
+Plugins are community-built extensions that add capabilities to Claude Code,
+such as new skills, MCP servers, and hooks.
+
+Some common plugins:
+
+| Plugin            | Type      | Usage                                                                              |
+|-------------------|-----------|------------------------------------------------------------------------------------|
+| claude-code-setup | Skill     | Answers questions about Claude Code features and recommends tools and automations. |
+| skill-creator     | Skill     | Helps create, modify, and evaluate skills.                                         |
+| gopls-lsp         | Passive   | Go language server for code intelligence. No need for user or Claude invocation.   |
+| superpowers       | Skill set | Skills for dev: brainstorm ideas, writing-plans, TDD, systematic-debugging, etc.   |
+| context7          | MCP       | Retrieves up-to-date documentation for libraries via MCP.                          |
+
+Export installed plugins as a reinstall script:
+
+```bash
+# run the following commands from the root of this repo
+PLUGINS=$(jq -r '.plugins | keys[]' ~/.claude/plugins/installed_plugins.json)
+echo "# Auto-generated with the script in ai_common_settings.md" > .claude/install_plugins.sh
+echo "$PLUGINS" | sed 's/^/claude plugin install /' >> .claude/install_plugins.sh
+```
+
+Update all installed plugins to latest:
+
+```bash
+jq -r '.plugins | keys[]' ~/.claude/plugins/installed_plugins.json \
+    | xargs -I{} claude plugin update {}
+```
+
+## Other Extensions (Claude Code)
+
+| Extension   | Description                                                                                                              |
+|-------------|--------------------------------------------------------------------------------------------------------------------------|
+| Subagents   | Spawn isolated child agents for focused subtasks (e.g. code review, exploration). Results report back to the main agent. |
+| Agent Teams | Multiple independent sessions coordinate via a shared task list. Experimental, disabled by default.                      |
+| Hooks       | Run shell commands automatically on events, e.g. auto-format after edits, block writes to protected files.               |
+| Commands    | Legacy predecessor of Skills.                                                                                            |
