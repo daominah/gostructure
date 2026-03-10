@@ -118,7 +118,7 @@ It handles git operations and creating pull requests with proper descriptions.
 
 **Claude Code** MCP servers can be added via
 [claude.ai/settings/connectors](https://claude.ai/settings/connectors)
-or by CLI `claude mcp add <name> -- <command> [args...]`
+or by CLI `claude mcp add`
 
 Added servers are stored in `~/.claude.json` (not meant for manual editing).
 
