@@ -1,6 +1,6 @@
 ---
 name: reviewing-agent-skill
-description: Suggest improvements to make a SKILL.md file follow authoring best practices. Use when reviewing or editing a SKILL.md file.
+description: Suggest improvements to make a SKILL.md file follow best practices. Use when reviewing, editing, or optimizing an agent skill.
 ---
 
 # Reviewing Agent Skills
@@ -9,9 +9,9 @@ description: Suggest improvements to make a SKILL.md file follow authoring best 
 
 Output the review with these sections in order:
 
-- **Verdict**: PASS or NEEDS_WORK.
+- **Verdict**: APPROVE or REQUEST_CHANGES.
 - **Summary**: Describe which criteria the skill does well on and overall quality assessment.
-- **Issues**: problems that should be fixed. Present only when verdict is NEEDS_WORK.
+- **Issues**: problems that should be fixed. Present only when verdict is REQUEST_CHANGES.
 - **Suggestions**: improvements that are not required but worth considering. Omit if empty.
 
 ## Review Checklist
@@ -29,14 +29,14 @@ The script checks:
 - SKILL.md body is under 500 lines.
 - No Windows-style backslash paths.
 
-### Metadata
+### Frontmatter
 
 - Description is written in **third person**
   ("Processes files..." not "I help you..." or "You can use this to...").
-- Description states both **what** the skill does and a **"Use when"** clause
-  (trigger scenarios, key terms the user might mention).
-- Description is specific enough for the agent to distinguish this skill
-  from other available skills.
+- Description states both **what** the skill does and a **"Use when"** clause.
+- Description is as concise as possible while including enough key terms
+  the user might mention to trigger reliably, and specific enough to
+  distinguish this skill from other available skills.
 - `disable-model-invocation: true` is present when the skill is work-in-progress
   or should not trigger automatically, e.g. "deploy-something".
 
@@ -66,12 +66,10 @@ The script checks:
 ### Content Quality
 
 - Terminology is consistent throughout (one term per concept, not mixing synonyms).
-- Examples are concrete and specific, not abstract descriptions.
+- Skills where output quality depends on seeing examples should include
+  multiple labeled Input/Output pairs, not abstract descriptions.
 - No time-sensitive information (e.g. "before August 2025, use the old API").
   Use an "old patterns" section with `<details>` if historical context is needed.
-- Skills where output quality depends on seeing examples should include
-  multiple labeled examples (Input/Output pairs),
-  not just mention that examples should be concrete.
 
 ### Scripts
 
@@ -84,5 +82,5 @@ The script checks:
 
 ### Re-validation
 
-If the verdict is NEEDS_WORK,
+If the verdict is REQUEST_CHANGES,
 re-run the review after the author addresses the issues to verify fixes.
