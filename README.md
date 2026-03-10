@@ -6,16 +6,7 @@ Business logic code is separated from infrastructure,
 making the system easier to test and change if needed.
 It also includes common boilerplate files you will likely need.
 
-Inspired by Clean Architecture and golang-standards/project-layout
-
-## How to start a new project
-
-1. Copy this directory, rename it to your new project name, then remove the `.git` folder.
-2. Update the module path in `go.mod` and all import statements across the codebase
-   (use Replace in All Files or a similar IDE feature).
-3. Rename `cmd/main` to something meaningful (e.g. `cmd/shop-assistant`)
-   and update the Dockerfile build path and any scripts that reference it.
-4. If you use Docker or config, update project-specific names (e.g. database name, container names).
+Inspired by Clean Architecture and golang-standards/project-layout.
 
 ## Code Structure
 
@@ -27,6 +18,17 @@ See [go-project-structure](.claude/skills/go-project-structure/SKILL.md).
 - [Agent workflow and basic concepts](doc/ai_usage_practices.md)
 - [Tool-specific settings: rules, skills, MCP](doc/ai_common_settings.md)
 
+## How to start a new project
+
+- Copy this directory, rename it to your new project name,
+  then remove the `.git` folder.
+- Update the module path in `go.mod` and all import statements
+  (use Replace in All Files or a similar IDE feature).
+- Rename `cmd/main` to something meaningful (e.g. `cmd/shop-assistant`)
+  and update the Dockerfile build path and any scripts that reference it.
+- If you use Docker or config,
+  update project-specific names (e.g. database name, container names).
+
 ## Deployment
 
 ### Local Development
@@ -34,7 +36,7 @@ See [go-project-structure](.claude/skills/go-project-structure/SKILL.md).
 Environment variables are loaded from `config/.env` or `config/.env.example`.
 See `config/.env.example` for configuration details.
 
-Run all services except the main app with docker compose,
+Run all services except the main application with docker compose,
 then run the application directly with Go (or debug mode in your IDE).
 
 ```bash
