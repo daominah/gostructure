@@ -146,15 +146,16 @@ such as new skills, MCP servers, and hooks.
 
 Some common plugins:
 
-| Plugin            | Type      | Usage                                                                              |
-|-------------------|-----------|------------------------------------------------------------------------------------|
-| claude-code-setup | Skill     | Answers questions about Claude Code features and recommends tools and automations. |
-| skill-creator     | Skill     | Helps create, modify, and evaluate skills.                                         |
-| gopls-lsp         | Passive   | Go language server for code intelligence. No need for user or Claude invocation.   |
-| superpowers       | Skill set | Skills for dev: brainstorm ideas, writing-plans, TDD, systematic-debugging, etc.   |
-| context7          | MCP       | Retrieves up-to-date documentation for libraries via MCP.                          |
-| pyright-lsp       | Passive   | Python language server for code intelligence.                                      |
-| typescript-lsp    | Passive   | JavaScript/TypeScript language server for code intelligence.                       |
+| Plugin                   | Type      | Usage                                                                               |
+|--------------------------|-----------|-------------------------------------------------------------------------------------|
+| claude-code-setup        | Skill     | Answers questions about Claude Code features and recommends tools and automations.  |
+| skill-creator            | Skill     | Helps create, modify, and evaluate skills.                                          |
+| gopls-lsp                | Passive   | Go language server for code intelligence. No need for user or Claude invocation.    |
+| superpowers              | Skill set | Skills for dev: brainstorm ideas, writing-plans, TDD, systematic-debugging, etc.    |
+| explanatory-output-style | Hook      | Injects a system prompt that adds educational insights about implementation choices |
+| context7                 | MCP       | Retrieves up-to-date documentation for libraries via MCP.                           |
+| pyright-lsp              | Passive   | Python language server for code intelligence.                                       |
+| typescript-lsp           | Passive   | JavaScript/TypeScript language server for code intelligence.                        |
 
 Export installed plugins as a reinstall script:
 
