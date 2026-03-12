@@ -153,6 +153,8 @@ Some common plugins:
 | gopls-lsp         | Passive   | Go language server for code intelligence. No need for user or Claude invocation.   |
 | superpowers       | Skill set | Skills for dev: brainstorm ideas, writing-plans, TDD, systematic-debugging, etc.   |
 | context7          | MCP       | Retrieves up-to-date documentation for libraries via MCP.                          |
+| pyright-lsp       | Passive   | Python language server for code intelligence.                                      |
+| typescript-lsp    | Passive   | JavaScript/TypeScript language server for code intelligence.                       |
 
 Export installed plugins as a reinstall script:
 
