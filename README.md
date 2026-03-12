@@ -16,7 +16,7 @@ See [go-project-structure](.claude/skills/go-project-structure/SKILL.md).
 
 - [Mindset and guidelines for using AI effectively](doc/ai_usage_mindset.md)
 - [Agent workflow and basic concepts](doc/ai_usage_practices.md)
-- [Tool-specific settings: rules, skills, MCP](doc/ai_common_settings.md)
+- [Tool-specific settings: rules, skills, MCP](doc/ai_common_settings.md/#skills)
 
 ## How to start a new project
 
