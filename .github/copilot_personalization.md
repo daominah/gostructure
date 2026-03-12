@@ -1,15 +1,3 @@
-# Always Confirm Before Implementing
-
-**CRITICAL**: Before making any code changes or implementations:
-
-1. **ALWAYS ask for confirmation** before changing code,
-   unless the user's prompt/question clearly indicates they want implementation
-2. When user asks "how to do ...", "what is...", "is it possible...":
-   provide information/explanation first, then ask if they want implementation
-3. User's prompt/question clearly indicates they want implementation usually has
-   some words like "implement", "fix", "add", "change", "do it", ...
-   but not limited to these words.
-
 # Commit Messages
 
 You MUST NOT include co-author, trailers, message footers, lines, etc.
@@ -41,19 +29,30 @@ if err != nil {
 This ensures error wrapping with context about which operation caused the error.
 Reading the log should be enough to know which line of code triggered the error.
 
+## Bool Naming
+
+Prefix bool variables and fields with `Is` or `is`.
+
+```
+var IsActive  bool  // Exported field or variable
+type Something struct {
+    isDeleted bool  // Unexported field or variable
+}
+```
+
 ## Enum-like Fields
 
-Define a named `string` type with constants for fields that hold a value
-from a fixed set.
+In Go, define a named `string` type with constants for
+fields that hold a value from a fixed set.
 
-Do not use a database enum type (adding a value requires a schema migration, etc.),
-store as `TEXT` instead. Enforce valid values in application code only.
+In the database, store these fields as `TEXT` rather than a database enum type
+(adding an enum value requires a schema migration, etc.).
+Enforce valid values in application code only.
 
 Constant names should not include the type prefix
 unless there are duplicate names in the same package.
 
-Prefer human-readable ALL_UPPERCASE string values instead of numeric
-codes.
+Prefer human-readable ALL_UPPERCASE string values instead of numeric codes.
 
 ```
 package model
@@ -112,7 +111,9 @@ for example `script_import_data.go`.
 - `interface.go`: Defines interfaces for infrastructure and external dependencies.
 - `interface_mock.go`: Mock implementations for tests or interfaces not yet implemented
   (use `MockSomething` naming for both stubs and mocks).
-- `app.go`: The `App` struct holds dependencies; its methods implement business logic.
+- `app.go`: The `App` struct holds all dependencies.
+  Business logic is implemented as methods on `App`,
+  or as methods on smaller structs that contain only the dependencies they need from `App`.
 - Must be testable without external setup.
 - Must not import any `driver` packages.
 - Depends on interfaces, not concrete implementations.
@@ -126,13 +127,17 @@ for example `script_import_data.go`.
 
 # Slack Messaging
 
-For any Slack send/reply/post request, **always create a draft first**.
-After drafting, share the direct Slack channel link, then ask the user
-whether they want the AI to send it or prefer to send it themselves in the Slack app.
+For any Slack send/reply/post request, **always create a draft first**
+(using the Slack draft message tool, so the user sees the draft in their Slack app).
+
+Apply skill `writing-style` to the message content.
+
+After drafting, share the direct Slack channel clickable link,
+then ask the user whether they want the AI to send it or will send it themselves.
 
 # SQL Formatting Rules
 
-- Use spaces around parentheses
+- Use a space before opening and after closing parentheses
 - Use consistent indentation (4 spaces)
 - If a clause is broken across lines, indent subordinate parts one additional level
 - Align columns and assignments within the same clause
@@ -163,30 +168,73 @@ ON CONFLICT (email)
     SET email = excluded.email;
 ```
 
-# Unit Test Comments
+# Test Comments
 
-Use the GIVEN/WHEN/THEN format for unit test comments:
+Use the GIVEN/WHEN/THEN comment format in tests.
+Comments describe business behavior, not implementation,
+so even non-technical stakeholders can understand them.
 
-- **GIVEN**: Setup/preconditions/base data
-- **WHEN**: Action/function being tested
-- **THEN**: Expected result/verification
+- **GIVEN** (optional): Setup or preconditions
+- **WHEN**: Action being tested
+- **THEN**: Expected result
 
-This format makes tests more readable and clearly structures the test flow.
+```
+// GIVEN the system has the hash of a user's plain password
+hash, err := HashPassword("s3cret")
+require.NoError(t, err)
+
+// WHEN the user logs in with the correct password
+ok := VerifyPassword(hash, "s3cret")
+
+// THEN the system confirms the password is correct
+require.True(t, ok)
+```
+
+# Writing Style
+
+## Avoid using dashes in the middle of sentences
+
+Avoid dashes such as `-` or `—` in the middle of sentences.
+Prefer rephrasing or using colons instead.
+
+Bad: "a feature - it does something" or "a feature — it does something"
+
+Good: "a feature: it does something" or "a feature that does something"
+
+Compound words are allowed: "real-time", "back-end"
+
+## Use standard straight quotes instead of curly quotes
+
+Using `'` (standard apostrophe) instead of `’` (curly apostrophe).
+
+Similarly, use `"` (standard double quote) instead of `“` or `”` (curly double quotes).
 
 # Markdown Writing Style
 
-## Lists: Prefer Bullet Points by Default
+Also apply all rules from the `writing-style` skill (if available).
 
-Prefer bullet points over numbered lists.
+## Lists: Use Bullet Points by Default
 
-Bullet points are easier to edit and reorder.
-Numbered lists are harder to modify because inserting items
-requires renumbering and indentation can become awkward.
+Prefer bullet points over numbered lists (easier to edit and reorder).
 
 Use numbered lists only when:
 
 - You must reference a specific step later.
 - Explicit numbering is required for clarity.
+
+## Diagrams: Use Mermaid by Default
+
+Always use Mermaid syntax for diagrams.
+
+Prefer sequence diagrams when they fit the purpose instead of other diagram types.
+
+Example:
+
+```mermaid
+sequenceDiagram
+    Client ->> Server: Request
+    Server -->> Client: Response
+```
 
 ## Breaking Lines at Semantic Boundaries
 
@@ -201,47 +249,40 @@ The target is the raw Markdown source, not rendered output in a browser or Markd
 
 Generally break lines in raw Markdown at around 80 characters.
 
-Prefer breaking lines at semantic boundaries; it is acceptable to exceed 80 characters slightly
-(as long as the length does not exceed 100 characters).
-This is more readable than strictly breaking by character count.
+Prefer breaking at semantic boundaries to strictly breaking by character count.
+Lines may exceed 80 characters but must not exceed 100.
 
-Tables are an exception and do not require manual line breaks.
+Do not split a short sentence or separate a parenthetical from its phrase
+just to stay under 80 characters. Keep the semantic unit on one line.
+
+Exceptions:
+
+- Markdown table.
+- Code block.
+- Agent Skill frontmatter.
 
 ### Example
 
 The following paragraph has **good** line breaks at semantic boundaries:
 
+```
 The VAPID key pair we generate proves that the push request comes from your server.
 Each push request is signed with the private key,
 the push service verifies the signature before delivering.
+```
 
 The next paragraph produces the same rendered output,
 but the line breaks strictly enforce the 80-character limit,
-which is less readable in raw Markdown:
+which is **less readable** in raw Markdown:
 
+```
 The VAPID key pair we generate proves that the push request comes from your
 server. Each push request is signed with the private key, the push service
 verifies the signature before delivering.
+```
 
-Avoid writing everything on one long line:
+**Avoid** writing everything on one long line:
 
+```
 The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key, the push service verifies the signature before delivering.
-
-# Writing Style
-
-Avoid dashes such as - or — in the middle of sentences.
-Prefer rephrasing or using colons instead.
-
-Using a hyphen to connect common compound words is allowed.
-
-Example:
-
-Bad: "This is a feature - it does something"
-
-Bad: "This is a feature — it does something"
-
-Good: "This is a feature: it does something"
-
-Good: "This is a feature that does something"
-
-Allowed: "The real-time processing logic runs on the back-end server."
+```
