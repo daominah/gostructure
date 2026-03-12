@@ -84,11 +84,10 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
 - Check retryable operations are idempotent and produce the same result if retried.
 - Improve the codebase where you touch it.
   Keep cleanup in separate commits from feature work for easier review and revert.
-- For Go code, run available analysis tools on the changed code:
+- For Go code only, run available analysis tools on the changed code:
   - `go vet`: detect suspicious or likely incorrect Go code.
   - `go fix`: automatically update code to modern Go APIs and patterns.
-  - `staticcheck`: advanced static analysis for bugs, performance issues,
-    and deprecated APIs.
+  - `staticcheck`: advanced static analysis for bugs, performance issues, and deprecated APIs.
 
 ### Process Feedback
 
