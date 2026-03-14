@@ -5,6 +5,7 @@
 .claude/settings.local.json
 # skills evaluation dir
 .claude/skills/*-workspace/
+.claude/skills/*/evals/
 
 
 # the following are inspired by https://github.com/github/gitignore/blob/main/Go.gitignore
