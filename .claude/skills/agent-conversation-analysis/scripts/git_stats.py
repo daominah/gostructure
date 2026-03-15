@@ -5,6 +5,11 @@ git_stats.py - Collect git statistics for project directories found in session d
 Runs git log commands to detect reverts/fixups, measure file churn, and
 cross-validate conversation-based scores.
 
+Handles three cases:
+- Project directory is a git repo: collects stats directly.
+- Project directory contains git sub-repos: collects stats per sub-repo.
+- Both (e.g. ~/workspace is a git repo with nested sub-repos).
+
 Usage:
     python git_stats.py --sessions SESSIONS.json [--out OUTPUT.json]
 
@@ -14,7 +19,7 @@ Usage:
 Output format:
     {
       "projects": {
-        "C:/path/to/project": {
+        "/path/to/project": {
           "commits_total": 42,
           "commits_recent": 10,
           "reverts_amends": 3,
@@ -24,7 +29,11 @@ Output format:
           ],
           "net_lines_added": 120,
           "net_lines_removed": 45,
-          "error": null  | "not a git repo" | "git not found"
+          "sub_repos": {              // present when sub-repos detected
+            "/path/to/sub": { ...same fields... }
+          },
+          "sub_repos_total_commits": N,
+          "error": null
         }
       }
     }
@@ -66,13 +75,35 @@ def find_git_root(path: str) -> str | None:
     return None
 
 
-def collect_git_stats(project_path: str, since: str) -> dict:
-    """Collect git statistics for a project directory."""
-    git_root = find_git_root(project_path)
-    if not git_root:
-        return {"error": "not a git repo"}
+def find_sub_repos(project_path: str, max_depth: int = 4) -> list[str]:
+    """Find git sub-repos inside project_path (not the project itself).
 
-    stats = {
+    Useful for meta-repos like ~/workspace that contain many sub-repos.
+    Returns a list of sub-repo root paths.
+    """
+    project = Path(project_path)
+    sub_repos = []
+    try:
+        result = subprocess.run(
+            ["find", str(project), "-maxdepth", str(max_depth),
+             "-name", ".git", "-type", "d"],
+            capture_output=True, text=True, timeout=10,
+        )
+        for line in result.stdout.strip().split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            repo_root = str(Path(line).parent)
+            # Skip the project itself
+            if repo_root != str(project):
+                sub_repos.append(repo_root)
+    except Exception:
+        pass
+    return sub_repos
+
+
+def _empty_stats(git_root: str = "") -> dict:
+    return {
         "git_root": git_root,
         "commits_total": 0,
         "commits_recent": 0,
@@ -84,6 +115,11 @@ def collect_git_stats(project_path: str, since: str) -> dict:
         "error": None,
     }
 
+
+def _collect_single_repo_stats(git_root: str, since: str) -> dict:
+    """Collect git stats from a single git repo root."""
+    stats = _empty_stats(git_root)
+
     # Total commits
     rc, out, err = run_git(["rev-list", "--count", "HEAD"], git_root)
     if rc == 0:
@@ -91,13 +127,13 @@ def collect_git_stats(project_path: str, since: str) -> dict:
     elif "git not found" in err:
         return {"error": "git not found"}
 
-    # Recent commits (since the analysis period)
+    # Recent commits
     rc, out, err = run_git(
         ["log", "--oneline", f"--since={since}", "--no-merges"],
         git_root,
     )
     if rc == 0:
-        lines = [l for l in out.strip().split("\n") if l]
+        lines = [line for line in out.strip().split("\n") if line]
         stats["commits_recent"] = len(lines)
 
     # Revert/amend/fixup commits
@@ -106,11 +142,11 @@ def collect_git_stats(project_path: str, since: str) -> dict:
         git_root,
     )
     if rc == 0:
-        examples = [l.strip() for l in out.strip().split("\n") if l.strip()]
+        examples = [line.strip() for line in out.strip().split("\n") if line.strip()]
         stats["reverts_amends"] = len(examples)
         stats["revert_examples"] = examples[:5]
 
-    # File churn: files modified multiple times
+    # File churn
     rc, out, err = run_git(
         ["log", "--diff-filter=M", "--name-only", "--format=", f"--since={since}"],
         git_root,
@@ -126,7 +162,7 @@ def collect_git_stats(project_path: str, since: str) -> dict:
             {"file": f, "modifications": c} for f, c in top_files
         ]
 
-    # Net lines changed (added/removed)
+    # Net lines changed
     rc, out, err = run_git(
         ["log", "--numstat", "--format=", f"--since={since}"],
         git_root,
@@ -144,6 +180,47 @@ def collect_git_stats(project_path: str, since: str) -> dict:
                     pass
         stats["net_lines_added"] = added
         stats["net_lines_removed"] = removed
+
+    return stats
+
+
+def collect_git_stats(project_path: str, since: str) -> dict:
+    """Collect git statistics for a project directory.
+
+    The project directory may be:
+    - A git repo itself (collect stats directly)
+    - A parent directory containing git sub-repos (collect per sub-repo)
+    - Both (a git repo with nested sub-repos, e.g. ~/workspace)
+    """
+    git_root = find_git_root(project_path)
+
+    if git_root:
+        stats = _collect_single_repo_stats(git_root, since)
+    else:
+        stats = _empty_stats()
+
+    # Check for sub-repos regardless of whether the parent is a git repo
+    sub_repos = find_sub_repos(project_path)
+    if sub_repos:
+        sub_stats = {}
+        for sub_path in sub_repos:
+            sub = _collect_single_repo_stats(sub_path, since)
+            if sub.get("commits_recent", 0) > 0:
+                sub_stats[sub_path] = sub
+        if sub_stats:
+            stats["sub_repos"] = sub_stats
+            stats["sub_repos_total_commits"] = sum(
+                s.get("commits_recent", 0) for s in sub_stats.values()
+            )
+            stats["sub_repos_total_added"] = sum(
+                s.get("net_lines_added", 0) for s in sub_stats.values()
+            )
+            stats["sub_repos_total_removed"] = sum(
+                s.get("net_lines_removed", 0) for s in sub_stats.values()
+            )
+
+    if not git_root and not sub_repos:
+        return {"error": "not a git repo and no sub-repos found"}
 
     return stats
 
