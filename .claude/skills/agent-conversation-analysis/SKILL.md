@@ -27,10 +27,10 @@ The skill directory path was shown when this skill loaded
 Run the data collection script:
 
 ```bash
-python <skill-dir>/scripts/analyze.py --project <project-slug> --days 30 --out /tmp/replay_data.json
+python <skill-dir>/scripts/analyze.py --days 30 --out /tmp/replay_data.json
 ```
 
-- `--project` accepts a partial match (e.g., `gostructure`). Omit to include all projects.
+- Default: all projects. Use `--project <slug>` to filter (partial match).
 - `--days` controls the analysis window. Use 7 for a quick look, 30 for a full review.
 
 Read the output file with the Read tool. The JSON structure is:
@@ -40,7 +40,17 @@ Read the output file with the Read tool. The JSON structure is:
   "projects": {
     "<project-path>": {
       "session_count": N,
-      "git": { commits_recent, amends_fixups, top_churned_files, net_lines_added/removed },
+      "git": {
+        "commits_recent": N,
+        "reverts_amends": N,
+        "top_churned_files": [{ "file": "...", "modifications": N }],
+        "net_lines_added": N,
+        "net_lines_removed": N,
+        "sub_repos": {                  // present if sub-repos detected inside project dir
+          "<sub-repo-path>": { ...same fields as git... }
+        },
+        "sub_repos_total_commits": N    // aggregate across sub-repos
+      },
       "manual_edits": {
         "ai_edited_files": [...],
         "committed_files": [...],
@@ -65,9 +75,9 @@ Read the output file with the Read tool. The JSON structure is:
           "stats": {
             "user_messages": N,
             "assistant_messages": N,
-            "corrections": N,           // phrases like "no", "try again", "that's wrong"
+            "corrections": N,           // user redirecting AI (system messages filtered out)
             "correction_examples": [...],
-            "setup_gaps": N,            // user pasting context Claude could have fetched
+            "setup_gaps": N,            // user pasting context (system messages filtered out)
             "setup_gap_examples": [...]
           },
           "messages": [{ "role", "content", "timestamp" }]
@@ -77,6 +87,27 @@ Read the output file with the Read tool. The JSON structure is:
   }
 }
 ```
+
+### Correction and setup gap filtering
+
+The script automatically excludes these from correction/setup gap counts:
+
+- Skill auto-load messages (`Base directory for this skill:`)
+- Task notifications from subagents (`<task-notification>`)
+- Command invocations and outputs (`<command-...>`, `<local-command-...>`)
+- Context continuation summaries
+- Grammar-check requests (`grammar?`, `smooth?`, `shorter?`)
+
+### Sub-repo detection
+
+A project directory may be a parent directory containing multiple git repos
+(e.g. a monorepo workspace with several service repos inside).
+The parent itself may or may not be a git repo.
+The script scans for `.git` directories inside the project path and collects
+git stats per sub-repo. The `sub_repos` field in the git data shows which
+sub-repos had recent commits. Use `sub_repos_total_commits` for the real
+commit count (the parent's `commits_recent` only covers the parent repo,
+if it is one, and misses all sub-repo work).
 
 ## Grouping Sessions into Tasks
 
@@ -92,7 +123,19 @@ python <skill-dir>/scripts/summarize.py --timeline /tmp/replay_data.json
   and first user message.
 
 Use this output to group sessions into tasks.
-Only go back to the full JSON for sessions that need deeper inspection.
+
+### Helper scripts
+
+Use these when you need to drill deeper into specific sessions:
+
+- `extract_task_details.py /tmp/replay_data.json`
+  Without `--session`: prints all sessions with correction flags.
+  With `--session <id-prefix>`: prints full message flow for one session.
+  Use to verify corrections and understand conversation context.
+
+- `scan_frustration.py /tmp/replay_data.json`
+  Scans for frustration keywords not yet in the detection list.
+  Use to discover new correction patterns to add to `collect_sessions.py`.
 
 Include all sessions where the user tried to get something done.
 Only exclude pure Q&A sessions (1-2 questions, no file changes).
@@ -122,11 +165,12 @@ Report uncertainty when data is insufficient.
   If not completed, visible progress toward completion.
 - **Manual corrections** (user redirecting AI): use `stats.corrections` from the JSON.
   Detected by keywords: "no", "try again", "revert", "wtf", "shit", "not work", etc.
-  Verify by sampling `correction_examples`: the script uses keyword matching
-  and may have false positives.
+  The script filters out system-injected messages and grammar-check requests,
+  but still verify by sampling `correction_examples` as keyword matching
+  can produce false positives.
 - **Setup gaps**: use `stats.setup_gaps`.
-  Includes user fetching data and pasting it back,
-  explaining where things are, repeating the same corrections across sessions.
+  Counts user messages that paste context Claude could have fetched itself.
+  System-injected content (skill auto-loads, task notifications) is filtered out.
   Root causes: missing CLAUDE.md entries, missing skills, missing MCP tools, or missing memory.
 
 ### Hard to measure (lower weight, flag uncertainty)
@@ -169,6 +213,8 @@ Do not trust conversation or git alone.
 - Smooth conversation + git amends/fixups = score should drop
 - Messy conversation + clean commits = score may rise
 - High `top_churned_files` relative to `net_lines_added` = thrashing
+- If the project is a parent directory with sub-repos, use `sub_repos` git data
+  to find the actual repo where work happened, not the parent directory itself
 
 ## Ask the User When Helpful
 

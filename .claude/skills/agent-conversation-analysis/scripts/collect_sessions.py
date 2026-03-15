@@ -56,6 +56,7 @@ Each session object:
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -84,7 +85,7 @@ SETUP_GAP_PATTERNS = [
 ]
 
 # Long user messages often indicate pastes (threshold in characters)
-PASTE_LENGTH_THRESHOLD = 500
+PASTE_LENGTH_THRESHOLD = 300
 
 
 def claude_home() -> Path:
@@ -149,8 +150,59 @@ def extract_text(content) -> str:
     return ""
 
 
+def _is_system_injected(text: str) -> bool:
+    """Return True if the message is system-injected content, not human input.
+
+    Catches: skill auto-loads, task-notifications, command outputs,
+    context summaries, and local-command messages.
+    """
+    stripped = text.strip()
+    # Skill auto-load messages
+    if stripped.startswith("Base directory for this skill:"):
+        return True
+    # Task notifications from subagents
+    if "<task-notification>" in stripped:
+        return True
+    # Command invocations and outputs (slash commands, local commands)
+    if stripped.startswith("<command-") or stripped.startswith("<local-command"):
+        return True
+    # Context continuation summaries
+    if stripped.startswith("This session is being continued from a previous"):
+        return True
+    # Tool loaded messages
+    if stripped == "Tool loaded.":
+        return True
+    return False
+
+
+def _is_grammar_check_request(text: str) -> bool:
+    """Return True if the user is asking for grammar help, not correcting AI.
+
+    Examples: "grammar?", "check grammar", "fix grammar", "smooth grammar".
+    """
+    lower = text.lower().strip()
+    # Short messages that are grammar-check requests
+    grammar_patterns = [
+        "grammar?", "grammar.", "grammar,",
+        "check grammar", "fix grammar", "correct grammar",
+        "smooth grammar", "rephrase grammar", "rephase grammar",
+        "smooth?", "smoother?", "shorter?", "sorter?",
+    ]
+    for pattern in grammar_patterns:
+        if pattern in lower:
+            return True
+    return False
+
+
 def is_correction(text: str) -> bool:
-    """Return True if the message looks like a user correction."""
+    """Return True if the message looks like a user correction.
+
+    Excludes system-injected messages and grammar-check requests.
+    """
+    if _is_system_injected(text):
+        return False
+    if _is_grammar_check_request(text):
+        return False
     lower = text.lower().strip()
     for phrase in CORRECTION_PHRASES:
         if phrase in lower:
@@ -158,14 +210,68 @@ def is_correction(text: str) -> bool:
     return False
 
 
+def _looks_like_pasted_data(text: str) -> bool:
+    """Return True if the text looks like pasted structured data.
+
+    Detects JSON, log output, test output, SQL results, structured tables,
+    and other data the user likely copied from a terminal, file, or UI.
+    """
+    lines = text.strip().split("\n")
+    stripped = text.strip()
+    indicators = 0
+
+    # JSON-like data: array or object at start, or "result [", "result {"
+    if stripped.startswith(("[", "{")):
+        indicators += 2
+    elif re.search(r'(?:result|output|response|data)\s*[\[{]', stripped[:200], re.IGNORECASE):
+        indicators += 2
+
+    # Repeated JSON keys pattern ("key": "value") appearing multiple times
+    json_key_count = len(re.findall(r'"[^"]+"\s*:', text))
+    if json_key_count >= 4:
+        indicators += 2
+
+    # Log output patterns (timestamps, level=, msg=)
+    log_lines = sum(1 for line in lines if "level=" in line or "msg=" in line)
+    if log_lines >= 2:
+        indicators += 2
+
+    # Test output (=== RUN, --- PASS, --- FAIL)
+    if any(line.strip().startswith(("=== RUN", "--- PASS", "--- FAIL")) for line in lines):
+        indicators += 2
+
+    # Repeated pipe-separated structure (table data)
+    pipe_lines = sum(1 for line in lines if line.count("|") >= 2)
+    if pipe_lines >= 3:
+        indicators += 1
+
+    # Code fences
+    if "```" in text:
+        indicators += 1
+
+    # Many indented lines (structured content, 3+ lines minimum)
+    if len(lines) >= 3:
+        indented = sum(1 for line in lines if line.startswith(("  ", "\t")))
+        if indented > len(lines) * 0.5:
+            indicators += 1
+
+    return indicators >= 2
+
+
 def is_setup_gap(text: str) -> bool:
-    """Return True if the message looks like the user pasting context."""
+    """Return True if the message looks like the user pasting context.
+
+    Excludes system-injected messages (skill content, task notifications).
+    Detects both keyword-based pastes and structural patterns in long messages.
+    """
+    if _is_system_injected(text):
+        return False
     lower = text.lower().strip()
     for pattern in SETUP_GAP_PATTERNS:
         if pattern in lower:
             return True
-    # Long message = likely a paste
-    if len(text) > PASTE_LENGTH_THRESHOLD and "```" in text:
+    # Long message with structural patterns = likely a paste
+    if len(text) > PASTE_LENGTH_THRESHOLD and _looks_like_pasted_data(text):
         return True
     return False
 
