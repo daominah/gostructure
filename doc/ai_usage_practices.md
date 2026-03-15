@@ -64,3 +64,7 @@ Correct the agent as soon as it goes off track. Do not wait for it to finish.
 - Undo and rewind are cheap. Use them freely.
 
 Reference: [Claude Code best practices](https://code.claude.com/docs/en/best-practices)
+
+### Improve Agent usage
+
+Try skill `/agent-conversation-analysis` in this repo.
