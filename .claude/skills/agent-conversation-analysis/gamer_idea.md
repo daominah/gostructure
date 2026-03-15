@@ -53,3 +53,9 @@ Markdown report containing:
 - Recurring patterns across 2+ tasks
 - Actionable fixes: exact CLAUDE.md lines to add,
   skills to create, workflow changes
+
+## Review note
+
+This file is not referenced from SKILL.md.
+However, it is the source-of-truth design rationale used to generate this skill,
+so it is intentionally kept.

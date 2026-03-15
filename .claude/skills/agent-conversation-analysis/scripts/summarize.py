@@ -11,6 +11,9 @@ Modes:
 import json
 import sys
 
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8")
+
 
 def summarize(data, timeline=False):
     for path, proj in data["projects"].items():
@@ -83,7 +86,11 @@ def _first_user_message(session, maxlen=120):
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     flags = [a for a in sys.argv[1:] if a.startswith("--")]
-    path = args[0] if args else "/tmp/replay_data.json"
+    if not args:
+        import tempfile, os
+        path = os.path.join(tempfile.gettempdir(), "replay_data.json")
+    else:
+        path = args[0]
     timeline = "--timeline" in flags
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)

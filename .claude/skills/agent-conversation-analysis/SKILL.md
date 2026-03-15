@@ -1,6 +1,6 @@
 ---
 name: agent-conversation-analysis
-description: Analyzes past Claude sessions to improve usage effectiveness and reduce human effort.
+description: Analyzes past Claude sessions to improve usage effectiveness and reduce human effort. Use when analyzing AI-assisted workflows for improvement.
 disable-model-invocation: true
 ---
 
@@ -24,11 +24,25 @@ Work through these steps in order. Check off each as you complete it.
 The skill directory path was shown when this skill loaded
 ("Base directory: ..."). Use that path as `<skill-dir>`.
 
+Detect the Python command and temp directory:
+
+```bash
+PYTHON=$(command -v python || command -v python3)
+TMP=$(cygpath -m /tmp 2>/dev/null || echo /tmp)
+echo "PYTHON=$PYTHON TMP=$TMP"
+```
+
+Note the printed values and use them directly (as literal paths)
+in all subsequent commands. Do not re-run the detection or use
+shell variables; substitute the actual values into each command.
+
 Run the data collection script:
 
 ```bash
-python <skill-dir>/scripts/analyze.py --days 30 --out /tmp/replay_data.json
+<python> <skill-dir>/scripts/analyze.py --days 30 --out <tmp>/replay_data.json
 ```
+
+Where `<python>` and `<tmp>` are the literal values from detection above.
 
 - Default: all projects. Use `--project <slug>` to filter (partial match).
 - `--days` controls the analysis window. Use 7 for a quick look, 30 for a full review.
@@ -115,7 +129,7 @@ Run the summarize script to get a compact overview
 (the full JSON is too large to read in context):
 
 ```bash
-python <skill-dir>/scripts/summarize.py --timeline /tmp/replay_data.json
+<python> <skill-dir>/scripts/summarize.py --timeline <tmp>/replay_data.json
 ```
 
 - Default mode shows only sessions with manual corrections or setup gaps.
@@ -128,12 +142,12 @@ Use this output to group sessions into tasks.
 
 Use these when you need to drill deeper into specific sessions:
 
-- `extract_task_details.py /tmp/replay_data.json`
+- `<python> <skill-dir>/scripts/extract_task_details.py <tmp>/replay_data.json`
   Without `--session`: prints all sessions with correction flags.
   With `--session <id-prefix>`: prints full message flow for one session.
   Use to verify corrections and understand conversation context.
 
-- `scan_frustration.py /tmp/replay_data.json`
+- `<python> <skill-dir>/scripts/scan_frustration.py <tmp>/replay_data.json`
   Scans for frustration keywords not yet in the detection list.
   Use to discover new correction patterns to add to `collect_sessions.py`.
 
@@ -170,7 +184,7 @@ Report uncertainty when data is insufficient.
   can produce false positives.
 - **Setup gaps**: use `stats.setup_gaps`.
   Counts user messages that paste context Claude could have fetched itself.
-  System-injected content (skill auto-loads, task notifications) is filtered out.
+  System-injected content (skill autoloads, task notifications) is filtered out.
   Root causes: missing CLAUDE.md entries, missing skills, missing MCP tools, or missing memory.
 
 ### Hard to measure (lower weight, flag uncertainty)
