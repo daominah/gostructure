@@ -40,19 +40,9 @@ This repo includes configurations that can be applied to either tool.
 Rules are persistent context that the agent always includes in every session.
 Use them for security boundaries, personal preferences, project conventions, etc.
 
-- **Cursor**: place `.mdc` files in `.cursor/rules/`
-- **Claude Code**: `.claude/CLAUDE.md` or `CLAUDE.md`
-
-Place rules in project root or user home directory.
-
-```bash
-# this will overwrite existing user home CLAUDE.md,
-# run this command from the root of this repo
-mkdir -p ~/.claude
-cp ".claude/CLAUDE.md" ~/.claude/CLAUDE.md
-```
-
-Cursor user rules need to be copied manually to the IDE settings.
+- **Claude Code**: `.claude/CLAUDE.md` or `CLAUDE.md` in user home or project dir.
+- **Cursor**: `.mdc` files in `.cursor/rules/` in project dir.
+  User rules need to be copied manually to the IDE settings.
 
 ## Skills
 
@@ -77,16 +67,8 @@ that the agent uses when the skill is active.
 - **Cursor**: can also load skills from `.claude/skills/`,
   so skills in this repo work in both tools.
 
-Copy this repo's skills to your home directory (so they apply to all projects):
-
-```bash
-# make sure target directory exists
-mkdir -p ~/.claude/skills
-# overwrites existing skills with the same name, run from this repo's root
-cp -r .claude/skills/* ~/.claude/skills/
-# sql-schema-placeholder is just a skill template that needs user-specific content
-rm -rf ~/.claude/skills/sql-schema-placeholder
-```
+Copy this repo's skills to your home directory (so they apply to all projects)
+by running [copy_skills_to_home.sh](../.claude/copy_skills_to_home.sh).
 
 References:
 

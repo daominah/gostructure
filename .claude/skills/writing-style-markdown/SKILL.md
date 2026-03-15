@@ -1,11 +1,9 @@
 ---
 name: writing-style-markdown
-description: Markdown writing style conventions. Use when writing or editing Markdown files or variants (e.g. .mdc).
+description: Markdown writing style conventions. Use when writing or editing Markdown files or variants (e.g. *.md, *.mdc).
 ---
 
 # Markdown Writing Style
-
-Also apply all rules from the `writing-style` skill (if available).
 
 ## Lists: Use Bullet Points by Default
 
