@@ -138,6 +138,7 @@ Some common plugins:
 | context7                 | MCP       | Retrieves up-to-date documentation for libraries via MCP.                           |
 | pyright-lsp              | Passive   | Python language server for code intelligence.                                       |
 | typescript-lsp           | Passive   | JavaScript/TypeScript language server for code intelligence.                        |
+| frontend-design          | Skill     | Creates distinctive, production-grade frontend interfaces with high design quality. |
 
 Export installed plugins as a reinstall script:
 
