@@ -15,7 +15,7 @@ go to `Settings` > `Tools` > `GitHub Copilot` > `Customizations` > `Global`
 and paste the content there (or paste directly to file
 `$HOME/AppData/Local/github-copilot/intellij/global-copilot-instructions.md`).
 
-**Limit:** ~8000 characters before content may be truncated.
+**Limit:** ~4000 characters before content may be truncated.
 
 ## ChatGPT
 

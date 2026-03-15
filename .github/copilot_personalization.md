@@ -68,106 +68,6 @@ const (
 )
 ```
 
-# Go Project Structure
-
-Follow this layout when adding or organizing code for Go services and applications.
-
-## Directory Layout
-
-| Directory     | Purpose                                                                                  |
-|---------------|------------------------------------------------------------------------------------------|
-| `cmd/{app}/`  | Loads config from env, wires dependencies, starts the app                                |
-| `pkg/model/`  | Domain data structures and related errors (for cross-package error matching).            |
-| `pkg/logic/`  | Business logic, interfaces. Testable without external dependencies.                      |
-| `pkg/driver/` | Implements interfaces for external interactions (HTTP, database, third-party APIs, etc.) |
-| `pkg/base/`   | Shared pure utilities with no business logic (logger, uuid, ...)                         |
-| `config/`     | Configuration files. `.env.example` lists env vars to configure.                         |
-| `web/`        | Optional simple UI if needed. Served with the API. JS calls API by relative paths.       |
-| `doc/`        | Design docs, user guides, tech specs, algorithms, API specs                              |
-
-## Conventions
-
-### `cmd/`
-
-Contains the main service executable and any optional one-off scripts,
-one subdirectory each.
-
-The subdirectory name determines the default binary name from `go build`,
-so use a meaningful name rather than something generic like `main`.
-
-Multi-word executable names use hyphens, following common CLI conventions,
-for example `script-import-data`.
-
-Source file names use `snake_case`, following Go conventions,
-for example `script_import_data.go`.
-
-### `pkg/model/`
-
-- Keep everything in a single `model.go` file, or split into one file per entity if it grows
-  too large (e.g. `product.go` containing the `Product` struct and its related errors).
-
-### `pkg/logic/`
-
-- `interface.go`: Defines interfaces for infrastructure and external dependencies.
-- `interface_mock.go`: Mock implementations for tests or interfaces not yet implemented
-  (use `MockSomething` naming for both stubs and mocks).
-- `app.go`: The `App` struct holds all dependencies.
-  Business logic is implemented as methods on `App`,
-  or as methods on smaller structs that contain only the dependencies they need from `App`.
-- Must be testable without external setup.
-- Must not import any `driver` packages.
-- Depends on interfaces, not concrete implementations.
-
-### `pkg/driver/`
-
-- Implements the interfaces defined in `pkg/logic/interface.go`.
-- One subpackage per external concern:
-  `database/`, `httpsvr/`, `external_provider/`, etc.
-- `database/` also contains SQL migrations.
-
-# Slack Messaging
-
-For any Slack send/reply/post request, **always create a draft first**
-(using the Slack draft message tool, so the user sees the draft in their Slack app).
-
-Apply skill `writing-style` to the message content.
-
-After drafting, share the direct Slack channel clickable link,
-then ask the user whether they want the AI to send it or will send it themselves.
-
-# SQL Formatting Rules
-
-- Use a space before opening and after closing parentheses
-- Use consistent indentation (4 spaces)
-- If a clause is broken across lines, indent subordinate parts one additional level
-- Align columns and assignments within the same clause
-- Avoid vague or abbreviated column names.
-- If a column name may be unclear, clarify its meaning with a comment
-  (based on the definition in documentation or related code).
-
-## Example
-
-```
-CREATE TABLE users
-(
-    id    INTEGER PRIMARY KEY,
-    email TEXT    NOT NULL,
-    ts    INTEGER NOT NULL -- created timestamp
-);
-
-UPDATE users
-SET email = 'alice@example.com',
-    name  = 'Alice'
-WHERE id = 1
-    AND active = TRUE;
-
-INSERT INTO users (email)
-VALUES ('alice@example.com')
-ON CONFLICT (email)
-    DO UPDATE
-    SET email = excluded.email;
-```
-
 # Test Comments
 
 Use the GIVEN/WHEN/THEN comment format in tests.
@@ -190,28 +90,7 @@ ok := VerifyPassword(hash, "s3cret")
 require.True(t, ok)
 ```
 
-# Writing Style
-
-## Avoid using dashes in the middle of sentences
-
-Avoid dashes such as `-` or `—` in the middle of sentences.
-Prefer rephrasing or using colons instead.
-
-Bad: "a feature - it does something" or "a feature — it does something"
-
-Good: "a feature: it does something" or "a feature that does something"
-
-Compound words are allowed: "real-time", "back-end"
-
-## Use standard straight quotes instead of curly quotes
-
-Using `'` (standard apostrophe) instead of `’` (curly apostrophe).
-
-Similarly, use `"` (standard double quote) instead of `“` or `”` (curly double quotes).
-
 # Markdown Writing Style
-
-Also apply all rules from the `writing-style` skill (if available).
 
 ## Lists: Use Bullet Points by Default
 
@@ -261,28 +140,9 @@ Exceptions:
 - Code block.
 - Agent Skill frontmatter.
 
-### Example
+# Writing Style
 
-The following paragraph has **good** line breaks at semantic boundaries:
-
-```
-The VAPID key pair we generate proves that the push request comes from your server.
-Each push request is signed with the private key,
-the push service verifies the signature before delivering.
-```
-
-The next paragraph produces the same rendered output,
-but the line breaks strictly enforce the 80-character limit,
-which is **less readable** in raw Markdown:
-
-```
-The VAPID key pair we generate proves that the push request comes from your
-server. Each push request is signed with the private key, the push service
-verifies the signature before delivering.
-```
-
-**Avoid** writing everything on one long line:
-
-```
-The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key, the push service verifies the signature before delivering.
-```
+- Avoid dashes (`-` or `—`) in the middle of sentences;
+  rephrase or use colons instead.
+  Compound words are allowed: "real-time", "back-end".
+- Use standard straight quotes (`'` and `"`) instead of curly quotes.
