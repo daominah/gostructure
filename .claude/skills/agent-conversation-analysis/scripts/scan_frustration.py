@@ -12,6 +12,9 @@ import re
 import sys
 from collections import Counter
 
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8")
+
 
 # Known frustration/profanity patterns to search for
 CANDIDATE_PATTERNS = [
@@ -21,7 +24,7 @@ CANDIDATE_PATTERNS = [
     r"\bnot that\b", r"\bnot this\b", r"\bnot what\b",
     r"\brevert\b", r"\bundo\b", r"\brollback\b",
     r"\btry again\b", r"\bfix this\b", r"\bfix it\b",
-    r"\bi said\b", r"\bi meant\b", r"\bi mean\b",
+    r"\bi said\b", r"\bi meant\b", r"\bi mean\b", r"\bmy meaning\b",
     r"\bdon'?t\b", r"\bdidn'?t\b", r"\bshouldn'?t\b",
     r"\bstill\b", r"\bagain\b", r"\balready\b",
     r"\bnot work\b", r"\bdoesn'?t work\b", r"\bnot right\b",
@@ -57,7 +60,11 @@ def scan(data):
 
 
 def main():
-    path = sys.argv[1] if len(sys.argv) > 1 else "/tmp/replay_data.json"
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+    else:
+        import tempfile, os
+        path = os.path.join(tempfile.gettempdir(), "replay_data.json")
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     scan(data)

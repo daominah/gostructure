@@ -22,6 +22,7 @@ for skill_dir in "$SCRIPT_DIR"/skills/*/; do
     # Skills to exclude from copying
     excluded=(
         "*-workspace"
+        "agent-conversation-analysis"
         "sql-schema-placeholder"
     )
     skip=false

@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Extract detailed task-level information for scoring.
 
 Usage:
-    python3 extract_task_details.py <json_path> [--session <prefix>]
+    python extract_task_details.py <json_path> [--session <prefix>]
 
 Without --session: prints a compact summary of all sessions with user messages.
 With --session: prints full user messages for that specific session.
@@ -11,9 +11,14 @@ With --session: prints full user messages for that specific session.
 import json
 import sys
 
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8")
+if sys.stderr.encoding and sys.stderr.encoding.lower() != "utf-8":
+    sys.stderr.reconfigure(encoding="utf-8")
+
 
 def load_data(path):
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 

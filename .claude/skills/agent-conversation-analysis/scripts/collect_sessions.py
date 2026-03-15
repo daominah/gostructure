@@ -67,7 +67,7 @@ CORRECTION_PHRASES = [
     "no,", "no.", "nope", "wrong", "that's wrong", "thats wrong",
     "not what i asked", "not what i wanted", "try again",
     "revert", "undo", "that's not", "thats not",
-    "i meant", "i mean ", "actually,", "wait,",
+    "i meant", "i mean", "my meaning", "actually,", "wait,",
     "you misunderstood", "not correct", "incorrect",
     "please fix", "fix this", "this is wrong",
     "not work", "doesn't work", "doesnt work",

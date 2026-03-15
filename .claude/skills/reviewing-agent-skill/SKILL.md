@@ -80,6 +80,14 @@ The script checks:
 - Prefer bundling pre-made scripts over asking the agent to generate code:
   scripts are more reliable, save tokens, and ensure consistency.
 
+#### Python scripts work cross-platform (Windows/macOS/Linux)
+
+- Python command should be `python` on Windows, `python3` on Linux/macOS.
+  The skill should detect the correct command at runtime.
+- Paths avoid hardcoded `/tmp`, will not work on Python Windows.
+- File I/O uses explicit `encoding="utf-8"`.
+  Windows defaults to `cp1252`, which breaks on non-ASCII content.
+
 ### Re-validation
 
 If the verdict is REQUEST_CHANGES,

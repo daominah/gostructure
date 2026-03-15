@@ -1,6 +1,6 @@
 # Agent Conversation Analysis
 
-**Generated**: {date} | **Projects**: {count} | **Tasks**: {count} | **Sessions**: {count}
+**Generated**: {date}, **Projects**: {count}, **Tasks**: {count}, **Sessions**: {count}
 
 ## Summary
 

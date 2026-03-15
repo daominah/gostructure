@@ -84,6 +84,8 @@ def find_sub_repos(project_path: str, max_depth: int = 4) -> list[str]:
     project = Path(project_path)
     sub_repos = []
     try:
+        # This uses the Unix `find` command, which works in Git Bash
+        # (not in Windows cmd, but that is OK).
         result = subprocess.run(
             ["find", str(project), "-maxdepth", str(max_depth),
              "-name", ".git", "-type", "d"],

@@ -14,7 +14,7 @@ Usage:
                     in the current directory)
 
 Typical Claude invocation (from SKILL.md):
-    python .claude/skills/replay-conversation-analysis/scripts/analyze.py \
+    python .claude/skills/agent-conversation-analysis/scripts/analyze.py \
         --project gostructure --days 14 --out /tmp/replay_data.json
 
 Output is a merged JSON:
@@ -133,7 +133,7 @@ def main():
             "setup_usage": usage_stats,
         }
 
-    # Step 4: print summary to stderr for quick sanity check
+    # Step 6: print summary to stderr for quick sanity check
     total_sessions = sum(p["session_count"] for p in merged["projects"].values())
     total_corrections = sum(
         sum(s["stats"]["corrections"] for s in p["sessions"])
@@ -149,7 +149,7 @@ def main():
         rv = pdata.get("git", {}).get("reverts_amends", "?")
         print(f"  {path}: {sc} sessions, {gc} commits, {rv} reverts", file=sys.stderr)
 
-    # Step 5: write output
+    # Step 7: write output
     duration_seconds = round(time.monotonic() - t0, 1)
     merged["duration_seconds"] = duration_seconds
 

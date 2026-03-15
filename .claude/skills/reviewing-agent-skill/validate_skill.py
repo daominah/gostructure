@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
 """Validate a SKILL.md file against mechanical checklist rules.
 
-Usage: python3 validate_skill.py path/to/SKILL.md
+Usage: python validate_skill.py path/to/SKILL.md
+       (replace python with python3 on Linux/macOS)
 """
 
 import re
@@ -31,7 +31,7 @@ def validate(path: str) -> list[str]:
     errors: list[str] = []
 
     try:
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             lines = f.readlines()
     except FileNotFoundError:
         return [f"File not found: {path}"]
