@@ -6,8 +6,10 @@
 # skills evaluation dir
 .claude/skills/*-workspace/
 .claude/skills/*/evals/
-__pycache__/
 agent-conversation-analysis-result*.md
+
+
+__pycache__/
 
 
 # the following are inspired by https://github.com/github/gitignore/blob/main/Go.gitignore

@@ -1,0 +1,14 @@
+{
+	"permissions": {
+		"deny": [
+			"Read(//**/.docker*)",
+			"Read(//**/.netrc*)",
+			"Read(//**/.ssh/**)",
+			"Read(~/.config/**)",
+			"Read(~/.gnupg/**)",
+			"Read(~/.gsutil/**)",
+			"Read(~/.kube/**)",
+			"Read(config/.env)"
+		]
+	}
+}
