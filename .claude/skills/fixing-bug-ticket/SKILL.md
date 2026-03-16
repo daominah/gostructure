@@ -16,7 +16,7 @@ Replace with the user's available tools.
 ## Workflow checklist
 
 At the start, create a checklist file in the current working directory
-named `<ticket>-checklist.md` (e.g. `MMP-123-checklist.md`).
+named `<ticket>-<short-description>-checklist.md`.
 List all steps below and mark each as it completes.
 
 ## Step 1: Understand the report
@@ -52,76 +52,90 @@ List all steps below and mark each as it completes.
 
 ## Step 4: Create branch and write a failing test (red)
 
-- Create a feature branch named `<ticket>-<short-description>`,
+> **Common mistake**: Do NOT touch any file other than the test file.
+> Do NOT modify the function under test or write any fix in this step.
+> The goal is a red test only. Any fix belongs in Step 6.
+
+- Create a new branch named `<ticket>-<short-description>`,
   including the ticket number for traceability.
 - Write a test that calls the existing code and asserts the correct behavior.
-  Do NOT modify the function under test. Only add the test.
 - Run the test and confirm it fails, proving the bug exists.
-- Present the failing output to the user for review.
-  If the user agrees the test captures the bug, commit the failing test.
-  Do not proceed to step 5 until the user explicitly says to continue.
-- If a unit test is not practical, document the manual verification steps
-  for the user to try. Wait for the user before continuing.
+- Ensure the test fails because of the bug, not because of wrong environment setup:
+  - Run existing related tests to confirm they still pass.
+  - No unexpected error in test output.
+- Present the failing output to the **user for review**.
 
-## Step 5: Apply the fix (green)
+## Step 5: Commit and push the failing test
+
+### STOP: wait for user before continuing
+
+- Commit with message "add red test for <ticket>-<short-description>".
+- Push the branch to the remote. Verify the CI test fails with the same error as local.
+  If results differ, go back to Step 4: likely a local environment issue.
+
+## Step 6: Apply the fix (green)
+
+> Only begin this step after the failing test is committed and pushed in Step 5.
 
 - Make the minimal code change that fixes the root cause.
 - Run the failing test again and confirm it passes.
 - Run related tests to check for regressions.
 
-## Step 6: Document (if non-trivial)
-
-Skip this step for small, self-explanatory fixes.
+## Step 7: Document and reflect
 
 - If the repo has a shared context directory (found in step 2)
   and the fix touches complex logic, add or update a doc there.
 - When the code deviates from the common approach,
   add a comment explaining why (often a business rule or edge case).
+- Consider why this bug happened and what would prevent similar ones.
+  If the answer points to something beyond this fix
+  (e.g. untestable code structure, bad UI/UX, misleading docs, ineffective alerting),
+  create a follow-up ticket.
 
-## Step 7: Commit the fix and open PR
+## Step 8: Commit the fix and open PR
 
 - Follow the `commit-messages` skill: concise message focused on business logic,
   no AI attribution.
 - Push and open a PR with a summary and a test plan checklist.
 
-## Step 8: Self-review the PR
+## Step 9: Self-review the PR
 
 - Use the `reviewing-code-and-pr` skill to review the fix
 - Fix any blockers or suggestions before requesting external review.
 
-## Step 9: Update Linear and Slack
+## Step 10: Update Linear and Slack
 
 - Linear: add a comment with the PR link summarizing the fix,
   then move the issue to "In Review".
 - Slack: call the message draft tool to create a reply in the bug thread
   with the PR link. Ask if the user wants you to send it.
 
-## Step 10: Address review feedback
+## Step 11: Address review feedback
 
 - Read reviewer comments and decide on each item with the user:
   whether to fix, defer, or explain why it is not actionable.
 - Apply fixes, commit, push, and reply to the PR comment addressing each point.
 - Ask the user if they want to request re-review on Slack.
 
-**Steps 11-13 are user-driven. The agent guides but does not act directly.**
+**Steps 12-14 are user-driven. The agent guides but does not act directly.**
 
-## Step 11: Merge and create release tag
+## Step 12: Merge and create release tag
 
 - Merge the PR after approval.
 - Create a release tag on the merged commit.
 
-## Step 12: Deploy to development environment and verify the fix
+## Step 13: Deploy to development environment and verify the fix
 
 - Deploy using ArgoCD: Update affected services to the new release tag.
 - Manually verify the bug is fixed in the development environment.
 
-## Step 13: Deploy to production
+## Step 14: Deploy to production
 
 - Follow the project's production deployment process.
 - Run smoke tests or sanity checks if available.
 - Verify the bug is fixed in production.
 
-## Step 14: Announce the fix
+## Step 15: Announce the fix
 
 - Slack: draft a reply in the bug thread with the release version
   and request the reporter to check if the fix works as expected.
