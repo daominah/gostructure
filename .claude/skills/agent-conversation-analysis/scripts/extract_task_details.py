@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Extract detailed task-level information for scoring.
 
 Usage:
-    python extract_task_details.py <json_path> [--session <prefix>]
+    python3 extract_task_details.py <json_path> [--session <prefix>]
 
 Without --session: prints a compact summary of all sessions with user messages.
 With --session: prints full user messages for that specific session.

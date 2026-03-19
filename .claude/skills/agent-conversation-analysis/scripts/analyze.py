@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 analyze.py - Run full data collection pipeline and produce a JSON report.
 
@@ -6,7 +6,7 @@ This is the main entry point. It runs collect_sessions.py and git_stats.py,
 then merges the output into a single structured report for Claude to reason about.
 
 Usage:
-    python analyze.py [--project SLUG] [--days N] [--out OUTPUT.json]
+    python3 analyze.py [--project SLUG] [--days N] [--out OUTPUT.json]
 
     --project SLUG  Filter to a specific project slug (partial match ok)
     --days N        Include sessions from the last N days (default: 30)
@@ -14,7 +14,7 @@ Usage:
                     in the current directory)
 
 Typical Claude invocation (from SKILL.md):
-    python .claude/skills/agent-conversation-analysis/scripts/analyze.py \
+    python3 .claude/skills/agent-conversation-analysis/scripts/analyze.py \
         --project gostructure --days 14 --out /tmp/replay_data.json
 
 Output is a merged JSON:

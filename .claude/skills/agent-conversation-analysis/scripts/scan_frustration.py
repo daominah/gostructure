@@ -4,7 +4,7 @@ Prints unique words/phrases from short user messages (likely corrections)
 that aren't already in CORRECTION_PHRASES, to help discover new keywords.
 
 Usage:
-    python scan_frustration.py /tmp/replay_data.json
+    python3 scan_frustration.py /tmp/replay_data.json
 """
 
 import json

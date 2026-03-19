@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 detect_setup_usage.py - Detect which skills, MCP tools,
 and setup features were actually used during sessions.
@@ -9,7 +9,7 @@ Scans session JSONL files for:
 - Built-in tool usage (Write, Edit, Read, Bash, Grep, Glob, etc.)
 
 Usage:
-    python detect_setup_usage.py --sessions SESSIONS.json [--out OUTPUT.json]
+    python3 detect_setup_usage.py --sessions SESSIONS.json [--out OUTPUT.json]
 
 Output format:
     {

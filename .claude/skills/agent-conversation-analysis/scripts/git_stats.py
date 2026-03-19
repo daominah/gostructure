@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 git_stats.py - Collect git statistics for project directories found in session data.
 
@@ -11,7 +11,7 @@ Handles three cases:
 - Both (e.g. ~/workspace is a git repo with nested sub-repos).
 
 Usage:
-    python git_stats.py --sessions SESSIONS.json [--out OUTPUT.json]
+    python3 git_stats.py --sessions SESSIONS.json [--out OUTPUT.json]
 
     --sessions FILE  Path to output from collect_sessions.py
     --out FILE       Write JSON output to FILE (default: stdout)

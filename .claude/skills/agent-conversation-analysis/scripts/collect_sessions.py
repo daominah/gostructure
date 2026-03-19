@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 collect_sessions.py - Collect and parse Claude session data from ~/.claude
 
@@ -7,7 +7,7 @@ session data ready for scoring. Also cross-references ~/.claude/history.jsonl
 for session metadata.
 
 Usage:
-    python collect_sessions.py [--project SLUG] [--days N] [--out OUTPUT.json]
+    python3 collect_sessions.py [--project SLUG] [--days N] [--out OUTPUT.json]
 
     --project SLUG  Filter to a specific project slug (partial match ok).
                     Example: "gostructure" or "daominah"

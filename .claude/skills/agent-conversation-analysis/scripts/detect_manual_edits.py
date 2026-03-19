@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 detect_manual_edits.py - Detect manual edits by comparing
 git commit diffs against Claude's Write/Edit tool outputs.
@@ -11,7 +11,7 @@ Two detection methods:
    wasn't found (someone edited the file between Read and Edit).
 
 Usage:
-    python detect_manual_edits.py --sessions SESSIONS.json [--out OUTPUT.json]
+    python3 detect_manual_edits.py --sessions SESSIONS.json [--out OUTPUT.json]
 
 Output format:
     {

@@ -1,7 +1,6 @@
 """Validate a SKILL.md file against mechanical checklist rules.
 
-Usage: python validate_skill.py path/to/SKILL.md
-       (replace python with python3 on Linux/macOS)
+Usage: python3 validate_skill.py path/to/SKILL.md
 """
 
 import re
