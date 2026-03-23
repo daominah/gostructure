@@ -10,7 +10,9 @@
 Do not weaken or remove test assertions when the error looks like an environment issue;
 ask the user to fix the environment setup instead.
 
-# Skills
+# Git Commit
 
-- `commit-messages`: ALWAYS invoke this skill before ANY git commit,
-  including short requests like "commit", "git commit", "commit push", "git commit push", etc.
+- Before committing, check the staged changes for secrets (API keys, tokens, passwords, etc.)
+  and warn the user if any are found.
+- ALWAYS invoke skill `commit-messages` before ANY git commit,
+  including short user requests: "commit", "git commit", "commit push", "git commit push", etc.

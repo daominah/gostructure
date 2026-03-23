@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Copy CLAUDE.md
 if diff -q "$SCRIPT_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md" > /dev/null 2>&1; then
-    echo "Up to date: CLAUDE.md"
+    echo "unchanged CLAUDE.md (already identical)"
 else
     cp "$SCRIPT_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
     echo "Overwrote CLAUDE.md"
@@ -38,7 +38,7 @@ for skill_dir in "$SCRIPT_DIR"/skills/*/; do
     target="$HOME/.claude/skills/$skill_name"
     if [[ -d "$target" ]]; then
         if diff -rq "$skill_dir" "$target" > /dev/null 2>&1; then
-            echo "Up to date: $skill_name"
+            echo "unchanged $skill_name (already identical)"
             continue
         fi
         action="Overwrote"
