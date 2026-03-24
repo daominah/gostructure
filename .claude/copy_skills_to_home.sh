@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
 # This script copies skills and CLAUDE.md from this project's .claude/ to ~/.claude/,

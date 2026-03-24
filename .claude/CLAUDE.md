@@ -16,3 +16,7 @@ ask the user to fix the environment setup instead.
   and warn the user if any are found.
 - ALWAYS invoke skill `commit-messages` before ANY git commit,
   including short user requests: "commit", "git commit", "commit push", "git commit push", etc.
+
+# Bash
+
+- Use `#!/bin/bash` as the shebang line, not `#!/usr/bin/env bash`.
