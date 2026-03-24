@@ -60,3 +60,20 @@ const (
 	Purchase MessageIntent = "PURCHASE"
 )
 ```
+
+## JSON Struct Tags
+
+The default Go field name (PascalCase) is fine.
+Only add json camelCase tags for external API contracts.
+
+```
+// Internal: no json tag needed
+type Config struct {
+    IsEnabled bool
+}
+
+// External API: json tags required
+type APIResponse struct {
+    IsEnabled bool `json:"isEnabled"`
+}
+```
