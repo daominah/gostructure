@@ -74,6 +74,8 @@ CORRECTION_PHRASES = [
     "i said",
     # Frustration signals
     "wtf", "wth", "the fuck", "the hell", "shit",
+    # Mismatch signals
+    "hmm",
 ]
 
 # Patterns that indicate the user is pasting context Claude could have fetched

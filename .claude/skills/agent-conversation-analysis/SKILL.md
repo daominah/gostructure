@@ -177,7 +177,8 @@ Report uncertainty when data is insufficient.
 - **Outcome**: task completion.
   If not completed, visible progress toward completion.
 - **Manual corrections** (user redirecting AI): use `stats.corrections` from the JSON.
-  Detected by keywords: "no", "try again", "revert", "wtf", "shit", "not work", etc.
+  Detected by keywords: "no", "try again", "revert", "wtf", "shit", "not work", "hmm", etc.
+  Note: "hmm" specifically signals a mismatch between what the user expected and what Claude produced.
   The script filters out system-injected messages and grammar-check requests,
   but still verify by sampling `correction_examples` as keyword matching
   can produce false positives.
