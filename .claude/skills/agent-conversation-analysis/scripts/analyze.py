@@ -7,15 +7,16 @@ then merges the output into a single structured report for Claude to reason abou
 
 Usage:
     python3 analyze.py [--project SLUG] [--days N] [--out OUTPUT.json]
+                       [--claude-dirs DIR [DIR ...]]
 
-    --project SLUG  Filter to a specific project slug (partial match ok)
-    --days N        Include sessions from the last N days (default: 30)
-    --out FILE      Write JSON output to FILE (default: sessions_report.json
-                    in the current directory)
+    --project SLUG      Filter to a specific project slug (partial match ok)
+    --days N            Sessions from last N days (default: 0 = all time)
+    --out FILE          Write JSON output to FILE (default: sessions_report.json)
+    --claude-dirs DIRS  One or more .claude directories (default: ~/.claude)
 
 Typical Claude invocation (from SKILL.md):
     python3 .claude/skills/agent-conversation-analysis/scripts/analyze.py \
-        --project gostructure --days 14 --out /tmp/replay_data.json
+        --project gostructure --out /tmp/replay_data.json
 
 Output is a merged JSON:
     {
@@ -54,8 +55,10 @@ def run_script(script: Path, extra_args: list) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--project", default="", help="Filter projects by partial slug match")
-    parser.add_argument("--days", type=int, default=30, help="Sessions from last N days (default: 30)")
+    parser.add_argument("--days", type=int, default=0, help="Sessions from last N days (default: 0 = all time)")
     parser.add_argument("--out", default="sessions_report.json", help="Output file (default: sessions_report.json)")
+    parser.add_argument("--claude-dirs", nargs="+", default=None,
+                        help="One or more .claude directories to scan (default: ~/.claude)")
     args = parser.parse_args()
 
     import time
@@ -63,10 +66,16 @@ def main():
 
     print(f"Collecting sessions (last {args.days} days)...", file=sys.stderr)
 
+    # Build shared --claude-dirs args for sub-scripts
+    claude_dirs_args = []
+    if args.claude_dirs:
+        claude_dirs_args = ["--claude-dirs"] + args.claude_dirs
+
     # Step 1: collect sessions
     collect_args = ["--days", str(args.days)]
     if args.project:
         collect_args += ["--project", args.project]
+    collect_args += claude_dirs_args
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as tmp:
         sessions_file = tmp.name
@@ -98,7 +107,7 @@ def main():
 
     subprocess.run(
         [sys.executable, str(SCRIPT_DIR / "detect_manual_edits.py"),
-         "--sessions", sessions_file, "--out", manual_file],
+         "--sessions", sessions_file, "--out", manual_file] + claude_dirs_args,
         check=True,
     )
     manual_data = json.loads(Path(manual_file).read_text(encoding="utf-8"))
@@ -110,7 +119,7 @@ def main():
 
     subprocess.run(
         [sys.executable, str(SCRIPT_DIR / "detect_setup_usage.py"),
-         "--sessions", sessions_file, "--out", usage_file],
+         "--sessions", sessions_file, "--out", usage_file] + claude_dirs_args,
         check=True,
     )
     usage_data = json.loads(Path(usage_file).read_text(encoding="utf-8"))

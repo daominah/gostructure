@@ -6,13 +6,20 @@ Reads JSONL session files from ~/.claude/projects/ and outputs structured
 session data ready for scoring. Also cross-references ~/.claude/history.jsonl
 for session metadata.
 
+Supports multiple .claude directories so you can include session data copied
+from other machines. Repo paths from other machines will not exist locally,
+so git-dependent steps will gracefully skip those projects.
+
 Usage:
     python3 collect_sessions.py [--project SLUG] [--days N] [--out OUTPUT.json]
+                                [--claude-dirs DIR [DIR ...]]
 
-    --project SLUG  Filter to a specific project slug (partial match ok).
-                    Example: "gostructure" or "daominah"
-    --days N        Only include sessions from the last N days (default: 30)
-    --out FILE      Write JSON output to FILE (default: stdout)
+    --project SLUG      Filter to a specific project slug (partial match ok).
+                        Example: "gostructure" or "daominah"
+    --days N            Sessions from last N days (default: 0 = all time)
+    --out FILE          Write JSON output to FILE (default: stdout)
+    --claude-dirs DIRS  One or more .claude directories to scan
+                        (default: ~/.claude)
 
 Output format:
     {
@@ -55,25 +62,48 @@ Each session object:
 
 import argparse
 import json
-import os
 import re
 import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 
-# Phrases that indicate the user is correcting or frustrated with Claude
+# Regex patterns for correction detection (case-insensitive, applied to full message).
+# Start-anchored patterns reduce false positives from mid-sentence matches.
+# Updated 2026-03-31 based on analysis of 2873 real user messages with agent context.
+CORRECTION_REGEXES = [
+    re.compile(p, re.I) for p in [
+        # Direct disagreement
+        r"^no[,.\s!]",
+        r"^nah",
+        r"^wrong",
+        r"^actually[,.\s]",
+        r"^wait[\s,!]",
+        r"^i mean[,\s]",
+        r"^not (really|quite|happy|smooth)",
+        r"^you (edit|review|delete|did).*wrong",
+        r"^screw it",
+        # Frustration
+        r"^(wtf|wth|what the (hell|fuck))",
+        r"^(shit|fuck|holy ?shit)",
+        r"^(aggg|huh)[,.\s]",
+        r"^why (the hell|the fuck|did you skip|are you)",
+        r"remember my.*(writ|style|rule)",
+    ]
+]
+
+# Plain substring phrases (case-insensitive `in` check).
+# These work well without regex because they are multi-word
+# and unlikely to appear in non-correction contexts.
 CORRECTION_PHRASES = [
-    "no,", "no.", "nope", "wrong", "that's wrong", "thats wrong",
-    "not what i asked", "not what i wanted", "try again",
-    "revert", "undo", "that's not", "thats not",
-    "i meant", "i mean", "my meaning", "actually,", "wait,",
+    "nope", "that's wrong", "thats wrong",
+    "not what i asked", "not what i wanted",
+    "that's not", "thats not",
+    "i meant", "my meaning",
     "you misunderstood", "not correct", "incorrect",
     "please fix", "fix this", "this is wrong",
     "not work", "doesn't work", "doesnt work",
-    "i said",
-    # Frustration signals
-    "wtf", "wth", "the fuck", "the hell", "shit",
+    "i said", "undo", "revert",
     # Mismatch signals
     "hmm",
 ]
@@ -86,12 +116,17 @@ SETUP_GAP_PATTERNS = [
     "for context,", "for reference,", "fyi,",
 ]
 
-# Long user messages often indicate pastes (threshold in characters)
-PASTE_LENGTH_THRESHOLD = 300
+# Minimum message length (chars) for structural paste detection.
+# Messages shorter than this are only checked against SETUP_GAP_PATTERNS keywords.
+# Messages at or above this AND matching _looks_like_pasted_data() count as setup gaps.
+# Based on message length distribution: p75=88, p90=138, p95=178, p99=414.
+# 128 catches most pasted data (JSON, logs, SQL results) while relying on
+# _looks_like_pasted_data() to filter out normal long questions.
+PASTE_LENGTH_THRESHOLD = 128
 
 
-def claude_home() -> Path:
-    return Path.home() / ".claude"
+def default_claude_dirs() -> list[Path]:
+    return [Path.home() / ".claude"]
 
 
 def slugify_path(path: str) -> str:
@@ -100,31 +135,38 @@ def slugify_path(path: str) -> str:
     return path.replace("\\", "-").replace("/", "-").replace(":", "-").lstrip("-")
 
 
-def load_history(since: datetime) -> dict:
-    """Load history.jsonl and return {sessionId: {project, timestamp}} for sessions since `since`."""
-    history_file = claude_home() / "history.jsonl"
+def load_history(since: datetime, claude_dirs: list[Path] = None) -> dict:
+    """Load history.jsonl from all claude dirs.
+
+    Returns {sessionId: {project, timestamp}} for sessions since `since`.
+    """
+    if claude_dirs is None:
+        claude_dirs = default_claude_dirs()
     result = {}
-    if not history_file.exists():
-        return result
-    with open(history_file, encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                obj = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            ts_ms = obj.get("timestamp", 0)
-            ts = datetime.fromtimestamp(ts_ms / 1000, tz=timezone.utc)
-            if ts < since:
-                continue
-            sid = obj.get("sessionId")
-            if sid and sid not in result:
-                result[sid] = {
-                    "project": obj.get("project", ""),
-                    "timestamp": ts.isoformat(),
-                }
+    for claude_dir in claude_dirs:
+        history_file = claude_dir / "history.jsonl"
+        if not history_file.exists():
+            continue
+        with open(history_file, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    obj = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                ts_ms = obj.get("timestamp", 0)
+                ts = datetime.fromtimestamp(ts_ms / 1000, tz=timezone.utc)
+                if ts < since:
+                    continue
+                sid = obj.get("sessionId")
+                if sid and sid not in result:
+                    result[sid] = {
+                        "project": obj.get("project", ""),
+                        "timestamp": ts.isoformat(),
+                        "source_dir": str(claude_dir),
+                    }
     return result
 
 
@@ -200,12 +242,17 @@ def is_correction(text: str) -> bool:
     """Return True if the message looks like a user correction.
 
     Excludes system-injected messages and grammar-check requests.
+    Checks regex patterns first (start-anchored, lower FP),
+    then falls back to plain substring phrases.
     """
     if _is_system_injected(text):
         return False
     if _is_grammar_check_request(text):
         return False
     lower = text.lower().strip()
+    for rx in CORRECTION_REGEXES:
+        if rx.search(lower):
+            return True
     for phrase in CORRECTION_PHRASES:
         if phrase in lower:
             return True
@@ -301,9 +348,9 @@ def parse_session_file(jsonl_path: Path) -> list:
             # These are user-role but not actual human input.
             if role == "user" and isinstance(raw_content, list):
                 if all(
-                    isinstance(b, dict) and b.get("type") in ("tool_result", "tool_use")
-                    for b in raw_content
-                    if isinstance(b, dict)
+                        isinstance(b, dict) and b.get("type") in ("tool_result", "tool_use")
+                        for b in raw_content
+                        if isinstance(b, dict)
                 ):
                     continue
 
@@ -345,63 +392,81 @@ def compute_stats(messages: list) -> dict:
     }
 
 
-def collect_project(project_slug: str, since: datetime, history_sessions: set) -> dict:
-    """Collect all sessions for a given project slug."""
-    project_dir = claude_home() / "projects" / project_slug
-    if not project_dir.exists():
+def collect_project(project_slug: str, since: datetime, history_sessions: set,
+                    claude_dirs: list[Path] = None) -> dict:
+    """Collect all sessions for a given project slug.
+
+    Searches for the project slug across all provided claude_dirs.
+    """
+    if claude_dirs is None:
+        claude_dirs = default_claude_dirs()
+
+    # Find all project dirs matching this slug across all claude homes
+    project_dirs = []
+    for cd in claude_dirs:
+        candidate = cd / "projects" / project_slug
+        if candidate.exists():
+            project_dirs.append(candidate)
+
+    if not project_dirs:
         return {}
 
     sessions = []
-    for jsonl_file in sorted(project_dir.glob("*.jsonl")):
-        session_id = jsonl_file.stem
-        # Check modification time as quick filter
-        mtime = datetime.fromtimestamp(jsonl_file.stat().st_mtime, tz=timezone.utc)
-        if mtime < since:
-            continue
+    seen_session_ids = set()
+    for project_dir in project_dirs:
+        for jsonl_file in sorted(project_dir.glob("*.jsonl")):
+            session_id = jsonl_file.stem
+            if session_id in seen_session_ids:
+                continue
+            seen_session_ids.add(session_id)
+            # Check modification time as quick filter
+            mtime = datetime.fromtimestamp(jsonl_file.stat().st_mtime, tz=timezone.utc)
+            if mtime < since:
+                continue
 
-        messages = parse_session_file(jsonl_file)
-        if not messages:
-            continue
+            messages = parse_session_file(jsonl_file)
+            if not messages:
+                continue
 
-        # Timestamps
-        timestamps = [m["timestamp"] for m in messages if m["timestamp"]]
-        started_at = min(timestamps) if timestamps else ""
-        ended_at = max(timestamps) if timestamps else ""
+            # Timestamps
+            timestamps = [m["timestamp"] for m in messages if m["timestamp"]]
+            started_at = min(timestamps) if timestamps else ""
+            ended_at = max(timestamps) if timestamps else ""
 
-        # Duration
-        duration_minutes = None
-        if started_at and ended_at:
-            try:
-                def parse_ts(ts):
-                    # handle both ISO and ms-epoch formats
-                    if isinstance(ts, (int, float)):
-                        return datetime.fromtimestamp(ts / 1000, tz=timezone.utc)
-                    return datetime.fromisoformat(ts.replace("Z", "+00:00"))
-                t0 = parse_ts(started_at)
-                t1 = parse_ts(ended_at)
-                duration_minutes = round((t1 - t0).total_seconds() / 60, 1)
-            except Exception:
-                pass
+            # Duration
+            duration_minutes = None
+            if started_at and ended_at:
+                try:
+                    def parse_ts(ts):
+                        if isinstance(ts, (int, float)):
+                            return datetime.fromtimestamp(ts / 1000, tz=timezone.utc)
+                        return datetime.fromisoformat(ts.replace("Z", "+00:00"))
 
-        # CWD and branch from first message that has them
-        cwd = next((m["cwd"] for m in messages if m.get("cwd")), "")
-        git_branch = next((m["git_branch"] for m in messages if m.get("git_branch")), "")
+                    t0 = parse_ts(started_at)
+                    t1 = parse_ts(ended_at)
+                    duration_minutes = round((t1 - t0).total_seconds() / 60, 1)
+                except Exception:
+                    pass
 
-        stats = compute_stats(messages)
+            # CWD and branch from first message that has them
+            cwd = next((m["cwd"] for m in messages if m.get("cwd")), "")
+            git_branch = next((m["git_branch"] for m in messages if m.get("git_branch")), "")
 
-        sessions.append({
-            "session_id": session_id,
-            "cwd": cwd,
-            "git_branch": git_branch,
-            "started_at": started_at,
-            "ended_at": ended_at,
-            "duration_minutes": duration_minutes,
-            "stats": stats,
-            "messages": [
-                {"role": m["role"], "content": m["content"], "timestamp": m["timestamp"]}
-                for m in messages
-            ],
-        })
+            stats = compute_stats(messages)
+
+            sessions.append({
+                "session_id": session_id,
+                "cwd": cwd,
+                "git_branch": git_branch,
+                "started_at": started_at,
+                "ended_at": ended_at,
+                "duration_minutes": duration_minutes,
+                "stats": stats,
+                "messages": [
+                    {"role": m["role"], "content": m["content"], "timestamp": m["timestamp"]}
+                    for m in messages
+                ],
+            })
 
     sessions.sort(key=lambda s: s["started_at"], reverse=True)
 
@@ -419,38 +484,63 @@ def collect_project(project_slug: str, since: datetime, history_sessions: set) -
     }
 
 
+def parse_claude_dirs(raw: list[str] | None) -> list[Path]:
+    """Parse --claude-dirs argument into a list of Path objects."""
+    if not raw:
+        return default_claude_dirs()
+    return [Path(d).expanduser() for d in raw]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--project", default="", help="Filter projects by partial slug match")
-    parser.add_argument("--days", type=int, default=30, help="Include sessions from the last N days (default: 30)")
+    parser.add_argument("--days", type=int, default=0,
+                        help="Include sessions from the last N days (default: 0 = all time)")
     parser.add_argument("--out", default="-", help="Output file path (default: stdout)")
+    parser.add_argument("--claude-dirs", nargs="+", default=None,
+                        help="One or more .claude directories to scan (default: ~/.claude)")
     args = parser.parse_args()
 
-    since = datetime.now(tz=timezone.utc) - timedelta(days=args.days)
+    claude_dirs = parse_claude_dirs(args.claude_dirs)
+
+    if args.days > 0:
+        since = datetime.now(tz=timezone.utc) - timedelta(days=args.days)
+    else:
+        since = datetime(2020, 1, 1, tzinfo=timezone.utc)
 
     # Load history for session cross-reference
-    history = load_history(since)
+    history = load_history(since, claude_dirs)
     history_session_ids = set(history.keys())
 
-    # Find matching project directories
-    projects_dir = claude_home() / "projects"
-    if not projects_dir.exists():
-        print("ERROR: ~/.claude/projects/ not found", file=sys.stderr)
+    # Find matching project directories across all claude dirs
+    project_slugs = set()
+    found_any = False
+    for cd in claude_dirs:
+        projects_dir = cd / "projects"
+        if not projects_dir.exists():
+            print(f"WARN: {projects_dir} not found, skipping", file=sys.stderr)
+            continue
+        found_any = True
+        for d in projects_dir.iterdir():
+            if d.is_dir() and (not args.project or args.project.lower() in d.name.lower()):
+                project_slugs.add(d.name)
+
+    if not found_any:
+        print("ERROR: no .claude/projects/ found in any provided directory", file=sys.stderr)
         sys.exit(1)
 
-    project_slugs = [
-        d.name for d in projects_dir.iterdir()
-        if d.is_dir() and (not args.project or args.project.lower() in d.name.lower())
-    ]
+    print(f"Scanning {len(claude_dirs)} .claude dir(s), "
+          f"{len(project_slugs)} project slug(s) found", file=sys.stderr)
 
     output = {
         "generated_at": datetime.now(tz=timezone.utc).isoformat(),
         "since": since.isoformat(),
+        "claude_dirs": [str(cd) for cd in claude_dirs],
         "projects": {},
     }
 
     for slug in sorted(project_slugs):
-        data = collect_project(slug, since, history_session_ids)
+        data = collect_project(slug, since, history_session_ids, claude_dirs)
         if data and data.get("session_count", 0) > 0:
             output["projects"][data["path"]] = data
 

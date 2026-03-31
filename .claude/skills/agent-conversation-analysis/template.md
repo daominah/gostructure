@@ -15,12 +15,14 @@
 
 ### Tasks Overview
 
-| Project   | Task           | Score          | Manual corrections | Setup gaps |
-|-----------|----------------|----------------|--------------------|------------|
-| {project} | {task summary} | {progress bar} | {n}                | {n}        |
+| Project   | Task           | Score          | Manual corrections | Setup gaps | Time range     |
+|-----------|----------------|----------------|--------------------|------------|----------------|
+| {project} | [{task summary}](#task-{slug}) | {progress bar} | {n}                | {n}        | {first} → {last} |
 
 (one row per task, newest first, no duplicates, score as: ★★★★★ ★★★★☆ ★★★☆☆ ★★☆☆☆ ★☆☆☆☆)
 For struggled tasks (scored 1-2), prefix ⚠️ to the task name in the same row.
+Task name is a markdown link to the corresponding `#### Task:` heading
+using the auto-generated anchor (e.g. `[MMP-142 bug fix](#task-mmp-142-bug-fix)`).
 
 ## Scoring Methodology
 
@@ -77,7 +79,7 @@ Adjusted for task complexity.
 
 - **Score**: {1-5}, {label}
   (uncertainty: {low/medium/high} for hard-to-measure criteria)
-- **Sessions**: {count}, {date range}
+- **Sessions**: {count}, {first message time} → {last message time}
 - **Outcome**: {completed/partial/abandoned}
 - **Manual corrections** (user redirecting AI): {count}
 - **Setup gaps**: {count of manual context injections}

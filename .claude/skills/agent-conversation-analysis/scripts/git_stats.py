@@ -252,7 +252,9 @@ def main():
                 break
 
         if not resolved:
-            output["projects"][project_path] = {"error": f"directory not found: {project_path}"}
+            output["projects"][project_path] = {
+                "error": f"directory not found (may be from another machine): {project_path}",
+            }
             continue
 
         output["projects"][project_path] = collect_git_stats(resolved, since)

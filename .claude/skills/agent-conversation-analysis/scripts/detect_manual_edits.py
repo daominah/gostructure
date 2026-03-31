@@ -12,6 +12,7 @@ Two detection methods:
 
 Usage:
     python3 detect_manual_edits.py --sessions SESSIONS.json [--out OUTPUT.json]
+                                   [--claude-dirs DIR [DIR ...]]
 
 Output format:
     {
@@ -40,7 +41,22 @@ import sys
 from pathlib import Path
 
 
-def extract_ai_outputs(sessions_data: dict) -> dict:
+def _resolve_claude_dirs(args_claude_dirs) -> list[Path]:
+    if args_claude_dirs:
+        return [Path(d).expanduser() for d in args_claude_dirs]
+    return [Path.home() / ".claude"]
+
+
+def _find_jsonl(slug: str, session_id: str, claude_dirs: list[Path]) -> Path | None:
+    """Find a session JSONL file across multiple .claude directories."""
+    for cd in claude_dirs:
+        candidate = cd / "projects" / slug / f"{session_id}.jsonl"
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def extract_ai_outputs(sessions_data: dict, claude_dirs: list[Path]) -> dict:
     """Extract Claude's Write/Edit outputs from session JSONL files.
 
     Returns {project_path: {
@@ -48,19 +64,17 @@ def extract_ai_outputs(sessions_data: dict) -> dict:
         "stale_reads": [error messages],
     }}.
     """
-    claude_home = Path.home() / ".claude"
     result = {}
 
     for project_path, project_info in sessions_data.get("projects", {}).items():
         ai_files = {}   # filepath -> set of lines AI wrote
         stale_reads = []
         slug = project_info.get("slug", "")
-        project_dir = claude_home / "projects" / slug
 
         for session in project_info.get("sessions", []):
             sid = session.get("session_id", "")
-            jsonl_path = project_dir / f"{sid}.jsonl"
-            if not jsonl_path.exists():
+            jsonl_path = _find_jsonl(slug, sid, claude_dirs)
+            if not jsonl_path:
                 continue
 
             with open(jsonl_path, encoding="utf-8", errors="replace") as f:
@@ -204,14 +218,20 @@ def main():
         "--out", default="-",
         help="Output file path (default: stdout)",
     )
+    parser.add_argument(
+        "--claude-dirs", nargs="+", default=None,
+        help="One or more .claude directories to scan (default: ~/.claude)",
+    )
     args = parser.parse_args()
+
+    claude_dirs = _resolve_claude_dirs(args.claude_dirs)
 
     sessions_data = json.loads(
         Path(args.sessions).read_text(encoding="utf-8")
     )
     since = sessions_data.get("since", "1970-01-01T00:00:00+00:00")
 
-    ai_data = extract_ai_outputs(sessions_data)
+    ai_data = extract_ai_outputs(sessions_data, claude_dirs)
 
     output = {"projects": {}}
 

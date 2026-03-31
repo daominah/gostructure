@@ -54,6 +54,65 @@ Markdown report containing:
 - Actionable fixes: exact CLAUDE.md lines to add,
   skills to create, workflow changes
 
+## Tuning Correction Detection
+
+The `CORRECTION_PHRASES` list in `collect_sessions.py` decides what counts
+as a user correction. To update it with data (not guesses), follow this flow:
+
+### Step 1: Dump user messages
+
+```bash
+python3 scripts/dev_dump_user_messages.py [--claude-dirs ~/.claude ~/other/.claude]
+```
+
+Outputs `tmp_dump_user_messages_<timestamp>.md` with all user messages
+grouped by first word, frequency, and length.
+Each message includes the preceding agent's context:
+tools used, first meaningful line, and last meaningful line.
+This context is critical for judging whether a message is a real correction.
+Also includes Section 0: bash aliases (false positives to ignore).
+Truncated at 256 chars per message.
+
+### Step 2: LLM suggests regex patterns
+
+Feed the full dump to an LLM.
+If the dump exceeds 1MB, filter to specific first-word groups
+or use `--claude-dirs` with fewer directories to reduce size.
+Ask it to suggest regex patterns that detect user corrections,
+using agent context to verify each match is a real correction.
+
+The LLM outputs `tmp_likely_correction_phrases_<timestamp>.md` with:
+- Regex patterns (Python `re` syntax, case-insensitive)
+- 2-3 example matches with agent context
+- Estimated false positive rate
+- Two explicit choices per pattern: `[ ] ACCEPT` and `[ ] REJECT`
+  (so unchecked items are clearly missed, not skipped)
+
+### Step 3: Human reviews suggestions
+
+Open the suggestion file. For each pattern, check one of ACCEPT or REJECT.
+Edit patterns if needed (e.g. adjust regex, change anchoring).
+
+### Step 4: Update collect_sessions.py
+
+Apply accepted patterns:
+- Regex patterns go in `CORRECTION_REGEXES` (compiled with `re.I`)
+- Plain substring phrases stay in `CORRECTION_PHRASES`
+- `is_correction()` checks regexes first, then falls back to substrings
+
+Run the test suite to verify:
+- Old false positives are now excluded
+- New patterns catch expected messages
+- Existing true positives still match
+
+### Notes
+
+- Run step 1 with `--claude-dirs` to include session data copied from other machines.
+- `tmp_*` files are gitignored and timestamped for comparison.
+- The dump script auto-detects bash aliases to flag false positives.
+- Start-anchored regexes (`^pattern`) have lower false positive rates
+  than substring checks because mid-sentence matches are usually not corrections.
+
 ## Review note
 
 This file is not referenced from SKILL.md.

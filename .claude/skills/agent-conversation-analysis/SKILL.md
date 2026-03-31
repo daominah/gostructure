@@ -146,10 +146,6 @@ Use these when you need to drill deeper into specific sessions:
   With `--session <id-prefix>`: prints full message flow for one session.
   Use to verify corrections and understand conversation context.
 
-- `python3 <skill-dir>/scripts/scan_frustration.py <tmp>/replay_data.json`
-  Scans for frustration keywords not yet in the detection list.
-  Use to discover new correction patterns to add to `collect_sessions.py`.
-
 Include all sessions where the user tried to get something done.
 Only exclude pure Q&A sessions (1-2 questions, no file changes).
 
@@ -244,11 +240,14 @@ Only ask when it changes a score or a recommendation. Use judgment.
 
 ## Output Format
 
-Write the report to `agent-conversation-analysis-result.md` in the current working directory.
+Write the report to `.claude/tmp_agent_conversation_analysis_result_<yyyymmdd_hhmm>.md`
+relative to the current working directory, using the current timestamp.
 Do not print the report inline; tell the user to open the file.
 
 Read `<skill-dir>/template.md` for the report structure.
 Follow the template exactly, filling in placeholders with real data.
+Display all timestamps in Asia/Ho_Chi_Minh timezone (UTC+7),
+formatted as `2006-01-02T15:04+07`.
 
 ## Rules
 
