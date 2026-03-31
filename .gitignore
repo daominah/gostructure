@@ -3,14 +3,6 @@
 .vscode
 .DS_Store
 .claude/settings.local.json
-# skills evaluation dir
-.claude/skills/*-workspace/
-.claude/skills/*/evals/
-agent-conversation-analysis-result*.md
-
-
-__pycache__/
-
 
 # the following are inspired by https://github.com/github/gitignore/blob/main/Go.gitignore
 

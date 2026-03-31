@@ -1,0 +1,13 @@
+# skill evaluation and workspace dirs
+skills/*-workspace/
+skills/*/evals/
+
+# Python
+__pycache__/
+
+# agent-conversation-analysis dev tool outputs
+skills/agent-conversation-analysis/tmp_*.md
+skills/agent-conversation-analysis/tmp_*.json
+
+# agent conversation analysis results (temporary)
+tmp_agent_conversation_analysis_result_*.md

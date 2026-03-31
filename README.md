@@ -14,6 +14,9 @@ See [go-project-structure](.claude/skills/go-project-structure/SKILL.md).
 
 ## Working with AI Agents
 
+The `.claude/` directory in this repo is the author's centralized agent setup
+(rules, skills, session analysis).
+
 - [Mindset and guidelines for using AI effectively](doc/ai_usage_mindset.md)
 - [Agent workflow and basic concepts](doc/ai_usage_practices.md)
 - [Tool-specific settings: rules, skills, MCP](doc/ai_common_settings.md/#skills)
@@ -22,6 +25,9 @@ See [go-project-structure](.claude/skills/go-project-structure/SKILL.md).
 
 - Copy this directory, rename it to your new project name,
   then remove the `.git` folder.
+- In `.claude/`, keep only `CLAUDE.md` (project rules) and
+  `settings.json` (deny reading secrets). Remove everything else
+  (skills, scripts, and shell helpers are for the author's personal workflow).
 - Update the module path in `go.mod` and all import statements
   (use Replace in All Files or a similar IDE feature).
 - Rename `cmd/main` to something meaningful (e.g. `cmd/shop-assistant`)
