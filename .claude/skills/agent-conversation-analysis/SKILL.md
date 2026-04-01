@@ -150,11 +150,17 @@ Include all sessions where the user tried to get something done.
 Only exclude pure Q&A sessions (1-2 questions, no file changes).
 
 A task might span multiple sessions.
-Group sessions that share the same goal by looking at:
+Group sessions that share the same goal, strongest signals first:
 
-- Similar `cwd` and `git_branch` across sessions
-- Overlapping or adjacent time windows
-- Related content in opening user messages
+- **Same goal/scope** (strongest): same ticket number, same skill being edited,
+  or sessions working toward the same outcome (e.g. consecutive sessions
+  touching the same files). If sessions target different tickets,
+  different skills, or different repos, they are separate tasks.
+- **Same git branch** (strong, when not master/main)
+- **Adjacent time**: sessions close in time likely belong to the same goal
+- **Related opening messages**
+- **Same cwd** (weakest, tie-breaker only: a parent dir
+  can host many sessions spanning unrelated tasks)
 
 Two kinds of tasks:
 
@@ -206,15 +212,18 @@ Report uncertainty when data is insufficient.
 
 ### Scoring Heuristics
 
-- 0 manual corrections + clean commits + task completed: 5
-- 1 manual correction or minor clarifications + good outcome: 4
-- 2-3 manual corrections or high file churn but solid final result: 3
-- 4+ manual corrections or significant rework: 2
-- Abandoned, restarted, user manually fixed, heavy rework: 1
+Use corrections per session as the primary signal
+(a task spanning 5 long sessions tolerates more total corrections
+than a single short session):
 
-Always adjust for task complexity:
-a multi-file refactor scoring 3 is fine;
-a typo fix scoring 3 means something went wrong.
+- under 0.6 corrections per session average: 5
+- 0.6 to under 2.1 corrections per session average: 4
+- 2.1 to under 4.1 corrections per session average: 3
+- 4.1+ corrections per session average: 2
+- Abandoned, restarted, user manually fixed: 1
+
+Adjust for session size: a 200-message session with 3 corrections
+is smoother than a 10-message session with 3 corrections.
 
 ### Cross-Validation
 

@@ -54,11 +54,17 @@ Markdown report containing:
 - Actionable fixes: exact CLAUDE.md lines to add,
   skills to create, workflow changes
 
+## Skill reviewer note
+
+This file is not referenced from SKILL.md.
+However, it is the source-of-truth design rationale used to generate this skill,
+so it is intentionally kept.
+
 ## Tuning Correction Detection
 
 The `CORRECTION_PHRASES` list in `collect_sessions.py` decides what counts
 as a user correction. To update it with data (not guesses), follow this flow:
-``
+
 ### Step 1: Dump user messages
 
 ```bash
@@ -82,6 +88,7 @@ Ask it to suggest regex patterns that detect user corrections,
 using agent context to verify each match is a real correction.
 
 The LLM outputs `tmp_likely_correction_phrases_<timestamp>.md` with:
+
 - Regex patterns (Python `re` syntax, case-insensitive)
 - 2-3 example matches with agent context
 - Estimated false positive rate
@@ -96,11 +103,13 @@ Edit patterns if needed (e.g. adjust regex, change anchoring).
 ### Step 4: Update collect_sessions.py
 
 Apply accepted patterns:
+
 - Regex patterns go in `CORRECTION_REGEXES` (compiled with `re.I`)
 - Plain substring phrases stay in `CORRECTION_PHRASES`
 - `is_correction()` checks regexes first, then falls back to substrings
 
 Run the test suite to verify:
+
 - Old false positives are now excluded
 - New patterns catch expected messages
 - Existing true positives still match
@@ -120,8 +129,11 @@ Report a usage summary table for all Claude Code extensions
 so the user can see which provide value and which are dead weight.
 Passive plugins and hooks are not yet trackable from session data.
 
-## Review note
+## Reducing Report Variance Across Runs
 
-This file is not referenced from SKILL.md.
-However, it is the source-of-truth design rationale used to generate this skill,
-so it is intentionally kept.
+Running the skill on different machines (or even re-running on the same machine)
+produces reports that differ in task grouping, scores, and surfaced patterns.
+
+SKILL.md addresses this with weighted grouping signals
+and corrections-per-session scoring thresholds.
+Comparing reports from different runs helps find findings each missed.
