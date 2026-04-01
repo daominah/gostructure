@@ -38,13 +38,13 @@ shell variables; substitute the actual value into each command.
 Run the data collection script:
 
 ```bash
-python3 <skill-dir>/scripts/analyze.py --days 30 --out <tmp>/replay_data.json
+python3 <skill-dir>/scripts/analyze.py --out <tmp>/replay_data.json
 ```
 
 Where `<tmp>` is the literal value from detection above.
 
-- Default: all projects. Use `--project <slug>` to filter (partial match).
-- `--days` controls the analysis window. Use 7 for a quick look, 30 for a full review.
+- Default: all projects, all time. Use `--project <slug>` to filter (partial match).
+- `--days N` limits the analysis window (e.g. 7 for a quick look). Omit for all time.
 
 Read the output file with the Read tool. The JSON structure is:
 
@@ -73,7 +73,7 @@ Read the output file with the Read tool. The JSON structure is:
         "stale_read_examples": [...]
       },
       "setup_usage": {
-        "skills_triggered": { "name": { count, sessions } },
+        "skills_triggered": { "name": { count, sessions, type } },  // type: "Custom skill" or "Plugin skill"
         "mcp_tools_called": { "mcp__server__tool": { count, sessions } },
         "builtin_tools": { "Write": N, "Edit": N, ... },
         "total_skills_triggered": N,
@@ -209,7 +209,7 @@ Report uncertainty when data is insufficient.
 - 0 manual corrections + clean commits + task completed: 5
 - 1 manual correction or minor clarifications + good outcome: 4
 - 2-3 manual corrections or high file churn but solid final result: 3
-- 4+ manual corrections, amends/fixups in git, or significant rework: 2
+- 4+ manual corrections or significant rework: 2
 - Abandoned, restarted, user manually fixed, heavy rework: 1
 
 Always adjust for task complexity:
@@ -220,7 +220,6 @@ a typo fix scoring 3 means something went wrong.
 
 Do not trust conversation or git alone.
 
-- Smooth conversation + git amends/fixups = score should drop
 - Messy conversation + clean commits = score may rise
 - High `top_churned_files` relative to `net_lines_added` = thrashing
 - If the project is a parent directory with sub-repos, use `sub_repos` git data
@@ -241,13 +240,14 @@ Only ask when it changes a score or a recommendation. Use judgment.
 ## Output Format
 
 Write the report to `.claude/tmp_agent_conversation_analysis_result_<yyyymmdd_hhmm>.md`
-relative to the current working directory, using the current timestamp.
+relative to the current working directory.
+Check the actual current time right before writing the file to name it.
 Do not print the report inline; tell the user to open the file.
 
 Read `<skill-dir>/template.md` for the report structure.
 Follow the template exactly, filling in placeholders with real data.
 Display all timestamps in Asia/Ho_Chi_Minh timezone (UTC+7),
-formatted as `2006-01-02T15:04+07`.
+formatted as `2006-01-02 15:04`.
 
 ## Rules
 
@@ -257,7 +257,8 @@ formatted as `2006-01-02T15:04+07`.
 - Cross-validate conversation with git. Don't trust either alone.
 - Mark tasks "Unscored" if too short or ambiguous to evaluate.
 - In Patterns & Recommendations, only surface patterns from 2+ tasks.
-- When suggesting CLAUDE.md additions, write the actual line to add.
+- When suggesting CLAUDE.md additions, read the existing CLAUDE.md first
+  and only suggest rules not already covered. Write the actual line to add.
 - When suggesting skills, explain what repeated pattern it would eliminate.
 - Report uncertainty on hard-to-measure criteria explicitly.
 - The overall score averages across all tasks.

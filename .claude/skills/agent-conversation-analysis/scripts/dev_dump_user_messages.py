@@ -1,7 +1,4 @@
-#!/bin/bash
-"""true" # polyglot trick
-exec python3 "$0" "$@"
-"""
+#!/usr/bin/env python3
 """DEV TOOL: Dump all user messages for manual review.
 
 This script is NOT part of the analysis pipeline. It is a development helper
@@ -381,10 +378,13 @@ def main():
             escaped = text.replace("|", "\\|")
             out.write(f"| {count} | `{escaped}` |\n")
 
-    size_kib = output_path.stat().st_size / 1024
-    print(f"\nWritten to {output_path} ({size_kib:.0f} KiB)", file=sys.stderr)
-    if size_kib > 1024:
-        print("WARNING: dump exceeds 1 MiB. Consider filtering with --claude-dirs "
+    size_bytes = output_path.stat().st_size
+    size_kib = size_bytes / 1024
+    est_tokens = size_bytes // 4  # rough estimate: ~4 bytes per token
+    print(f"\nWritten to {output_path} ({size_kib:.0f} KiB, ~{est_tokens:,} tokens)",
+          file=sys.stderr)
+    if size_kib > 2048:
+        print("WARNING: dump exceeds 2 MiB. Consider filtering with --claude-dirs "
               "or fewer sessions to fit in LLM context.", file=sys.stderr)
 
 

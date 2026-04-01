@@ -70,7 +70,7 @@ from pathlib import Path
 
 # Regex patterns for correction detection (case-insensitive, applied to full message).
 # Start-anchored patterns reduce false positives from mid-sentence matches.
-# Updated 2026-03-31 based on analysis of 2873 real user messages with agent context.
+# Updated 2026-04-01 based on analysis of 5440 real user messages (Mac + Windows).
 CORRECTION_REGEXES = [
     re.compile(p, re.I) for p in [
         # Direct disagreement
@@ -79,8 +79,10 @@ CORRECTION_REGEXES = [
         r"^wrong",
         r"^actually[,.\s]",
         r"^wait[\s,!]",
+        r"^stop[\s,.!]",
+        r"^revert",
         r"^i mean[,\s]",
-        r"^not (really|quite|happy|smooth)",
+        r"^not (really|quite|happy|smooth|work)",
         r"^you (edit|review|delete|did).*wrong",
         r"^screw it",
         # Frustration

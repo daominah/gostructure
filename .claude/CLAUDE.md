@@ -6,6 +6,15 @@
 - Use standard straight quotes (`'` and `"`) instead of curly quotes.
 - When the user asks to correct grammar (e.g. "grammar?", "smooth?"),
   apply only the minimal change without rephrasing the rest of the sentence.
+- Use bold only to insist on a specific approach over a common alternative                                                            
+  or to warn about pitfalls the reader might skip past.
+
+# Naming
+
+When naming variables, sections, or concepts:
+prefer short, code-style terms over verbose descriptions,
+but use full words instead of abbreviations.
+Ask for confirmation before choosing names if the context is ambiguous.
 
 # Testing
 

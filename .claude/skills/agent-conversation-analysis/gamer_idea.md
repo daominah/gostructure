@@ -58,7 +58,7 @@ Markdown report containing:
 
 The `CORRECTION_PHRASES` list in `collect_sessions.py` decides what counts
 as a user correction. To update it with data (not guesses), follow this flow:
-
+``
 ### Step 1: Dump user messages
 
 ```bash
@@ -76,7 +76,7 @@ Truncated at 256 chars per message.
 ### Step 2: LLM suggests regex patterns
 
 Feed the full dump to an LLM.
-If the dump exceeds 1MB, filter to specific first-word groups
+If the dump exceeds 2MB, filter to specific first-word groups
 or use `--claude-dirs` with fewer directories to reduce size.
 Ask it to suggest regex patterns that detect user corrections,
 using agent context to verify each match is a real correction.
@@ -112,6 +112,13 @@ Run the test suite to verify:
 - The dump script auto-detects bash aliases to flag false positives.
 - Start-anchored regexes (`^pattern`) have lower false positive rates
   than substring checks because mid-sentence matches are usually not corrections.
+
+## Measuring Extension Usage
+
+Report a usage summary table for all Claude Code extensions
+(custom skills, plugin skills, MCP servers, passive plugins, hooks)
+so the user can see which provide value and which are dead weight.
+Passive plugins and hooks are not yet trackable from session data.
 
 ## Review note
 

@@ -39,7 +39,28 @@ import sys
 from pathlib import Path
 
 
-COMMAND_NAME_RE = re.compile(r"<command-name>/?([\w-]+)</command-name>")
+COMMAND_NAME_RE = re.compile(r"<command-name>/?([\w:.-]+)</command-name>")
+
+# Built-in slash commands (not skills or plugins)
+BUILTIN_COMMANDS = {
+    "exit", "model", "compact", "context", "help", "clear", "login",
+    "logout", "resume", "statusline", "mcp", "plugin", "fast", "effort",
+    "bug", "cost", "doctor", "init", "memory", "permissions", "review",
+    "terminal-setup", "vim",
+}
+
+
+def _collect_plugin_skill_names(claude_dirs: list[Path]) -> set[str]:
+    """Scan plugin cache dirs to find all plugin skill names."""
+    names = set()
+    for cd in claude_dirs:
+        cache = cd / "plugins" / "cache"
+        if not cache.exists():
+            continue
+        for skill_md in cache.rglob("skills/*/SKILL.md"):
+            # .../skills/<skill-name>/SKILL.md
+            names.add(skill_md.parent.name)
+    return names
 
 
 def _resolve_claude_dirs(args_claude_dirs) -> list[Path]:
@@ -59,10 +80,11 @@ def _find_jsonl(slug: str, session_id: str, claude_dirs: list[Path]) -> Path | N
 
 def scan_sessions(sessions_data: dict, claude_dirs: list[Path]) -> dict:
     """Scan session JSONL files for setup usage."""
+    plugin_skills = _collect_plugin_skill_names(claude_dirs)
     result = {}
 
     for project_path, project_info in sessions_data.get("projects", {}).items():
-        skills = {}       # skill_name -> {count, sessions set}
+        skills = {}       # skill_name -> {count, sessions set, type}
         mcp_tools = {}    # tool_name -> {count, sessions set}
         builtin_tools = {}  # tool_name -> count
         slug = project_info.get("slug", "")
@@ -92,10 +114,19 @@ def scan_sessions(sessions_data: dict, claude_dirs: list[Path]) -> dict:
                         text = _content_to_text(content)
                         for match in COMMAND_NAME_RE.finditer(text):
                             skill_name = match.group(1)
+                            # Extract the leaf name for classification
+                            # e.g. "superpowers:brainstorming" -> "brainstorming"
+                            leaf = skill_name.split(":")[-1] if ":" in skill_name else skill_name
+                            if leaf in BUILTIN_COMMANDS:
+                                continue
                             if skill_name not in skills:
+                                is_plugin = (leaf in plugin_skills
+                                             or ":" in skill_name)
+                                stype = "Plugin skill" if is_plugin else "Custom skill"
                                 skills[skill_name] = {
                                     "count": 0,
                                     "sessions": set(),
+                                    "type": stype,
                                 }
                             skills[skill_name]["count"] += 1
                             skills[skill_name]["sessions"].add(sid)
@@ -155,7 +186,7 @@ def scan_sessions(sessions_data: dict, claude_dirs: list[Path]) -> dict:
             skills.items(), key=lambda x: x[1]["count"], reverse=True
         )[:5]:
             print(
-                f"  skill: {name} ({info['count']}x "
+                f"  skill: {name} [{info['type']}] ({info['count']}x "
                 f"in {len(info['sessions'])} sessions)",
                 file=sys.stderr,
             )

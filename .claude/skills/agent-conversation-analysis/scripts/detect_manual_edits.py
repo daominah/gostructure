@@ -158,7 +158,7 @@ def get_committed_diffs(project_path: str, since: str) -> dict:
 
     Returns {filepath: {"added_lines": set, "total_added": int}}.
     """
-    p = Path(project_path.replace("/", "\\"))
+    p = Path(project_path)
     git_root = None
     while p != p.parent:
         if (p / ".git").exists():

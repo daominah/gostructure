@@ -1,8 +1,10 @@
 # Agent Conversation Analysis
 
-**Generated**: {date}, **Projects**: {count}, **Tasks**: {count}, **Sessions**: {count}
+**Generated**: {date} (all timestamps are UTC+7)
 
 ## Summary
+
+**Projects**: {count}, **Tasks**: {count}, **Sessions**: {count}.
 
 | Metric                       | Value                              |
 |------------------------------|------------------------------------|
@@ -12,17 +14,6 @@
 | Most common friction pattern | {pattern}                          |
 | Top improvement opportunity  | {suggestion}                       |
 | Setup coverage               | {assessment of CLAUDE.md + skills} |
-
-### Tasks Overview
-
-| Project   | Task           | Score          | Manual corrections | Setup gaps | Time range     |
-|-----------|----------------|----------------|--------------------|------------|----------------|
-| {project} | [{task summary}](#task-{slug}) | {progress bar} | {n}                | {n}        | {first} → {last} |
-
-(one row per task, newest first, no duplicates, score as: ★★★★★ ★★★★☆ ★★★☆☆ ★★☆☆☆ ★☆☆☆☆)
-For struggled tasks (scored 1-2), prefix ⚠️ to the task name in the same row.
-Task name is a markdown link to the corresponding `#### Task:` heading
-using the auto-generated anchor (e.g. `[MMP-142 bug fix](#task-mmp-142-bug-fix)`).
 
 ## Scoring Methodology
 
@@ -66,14 +57,37 @@ Adjusted for task complexity.
 
 - {observations about setup, workflow, habits}
 
+### Extension usage
+
+| Extension | Type                                               | Sessions | Times used | Projects       |
+|-----------|----------------------------------------------------|----------|------------|----------------|
+| {name}    | {CustomSkill / PluginSkill / MCP / Passive / Hook} | {n}      | {n}        | {project list} |
+
+(populate from `setup_usage` in the JSON: `skills_triggered` and `mcp_tools_called`.
+Classify type by source: user `.claude/skills/` = CustomSkill,
+plugin cache = PluginSkill, MCP tool = MCP.
+Passive plugins and hooks are not yet tracked, note this gap.
+Sort by sessions descending. Omit built-in commands like exit, model, compact, context.)
+
+### Tasks Overview
+
+| Project   | Task                           | Score          | Manual corrections | Setup gaps | First message    | Last message    | Duration      |
+|-----------|--------------------------------|----------------|--------------------|------------|------------------|-----------------|---------------|
+| {project} | [{task summary}](#task-{slug}) | {progress bar} | {n}                | {n}        | {first msg time} | {last msg time} | {e.g. 6h, 3d} |
+
+(one row per task, newest first, no duplicates, score as: ★★★★★ ★★★★☆ ★★★☆☆ ★★☆☆☆ ★☆☆☆☆)
+For struggled tasks (scored 1-2), prefix ⚠️ to the task name in the same row.
+Task name is a markdown link to the corresponding `#### Task:` heading
+using the auto-generated anchor (e.g. `[MMP-142 bug fix](#task-mmp-142-bug-fix)`).
+
 ## Task Details
 
 (all per-project task breakdowns go here, at the end of the report)
 
 ### Project: {name}
 
-**Setup used**: {n} skills triggered, {n} MCP tools called
-**Git summary**: {commits} commits, {amends} amends/fixups
+**Setup used**: {n} skills triggered, {n} MCP tools called.
+**Git summary**: {commits} commits.
 
 #### Task: {summary}
 
