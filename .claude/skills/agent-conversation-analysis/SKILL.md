@@ -24,24 +24,11 @@ Work through these steps in order. Check off each as you complete it.
 The skill directory path was shown when this skill loaded
 ("Base directory: ..."). Use that path as `<skill-dir>`.
 
-Detect the temp directory:
-
-```bash
-TMP=$(cygpath -m /tmp 2>/dev/null || echo /tmp)
-echo "TMP=$TMP"
-```
-
-Note the printed value and use it directly (as a literal path)
-in all subsequent commands. Do not re-run the detection or use
-shell variables; substitute the actual value into each command.
-
 Run the data collection script:
 
 ```bash
-python3 <skill-dir>/scripts/analyze.py --out <tmp>/replay_data.json
+python3 <skill-dir>/scripts/analyze.py --out <skill-dir>/tmp_replay_data.json
 ```
-
-Where `<tmp>` is the literal value from detection above.
 
 - Default: all projects, all time. Use `--project <slug>` to filter (partial match).
 - `--days N` limits the analysis window (e.g. 7 for a quick look). Omit for all time.
@@ -130,7 +117,7 @@ Run the summarize script to get a compact overview
 (the full JSON is too large to read in context):
 
 ```bash
-python3 <skill-dir>/scripts/summarize.py --timeline <tmp>/replay_data.json
+python3 <skill-dir>/scripts/summarize.py --timeline <skill-dir>/tmp_replay_data.json
 ```
 
 - Default mode shows only sessions with manual corrections or setup gaps.
@@ -143,7 +130,7 @@ Use this output to group sessions into tasks.
 
 Use these when you need to drill deeper into specific sessions:
 
-- `python3 <skill-dir>/scripts/extract_task_details.py <tmp>/replay_data.json`
+- `python3 <skill-dir>/scripts/extract_task_details.py <skill-dir>/tmp_replay_data.json`
   Without `--session`: prints all sessions with correction flags.
   With `--session <id-prefix>`: prints full message flow for one session.
   Use to verify corrections and understand conversation context.

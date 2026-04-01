@@ -1,7 +1,7 @@
 """Summarize replay_data.json for quick overview and task grouping.
 
 Usage:
-    python3 summarize.py [--timeline] /tmp/replay_data.json
+    python3 summarize.py [--timeline] <skill-dir>/tmp_replay_data.json
 
 Modes:
     default:    project stats + sessions with corrections/gaps

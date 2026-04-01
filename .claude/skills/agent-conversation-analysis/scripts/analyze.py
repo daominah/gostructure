@@ -16,7 +16,7 @@ Usage:
 
 Typical Claude invocation (from SKILL.md):
     python3 .claude/skills/agent-conversation-analysis/scripts/analyze.py \
-        --project gostructure --out /tmp/replay_data.json
+        --project gostructure --out <skill-dir>/tmp_replay_data.json
 
 Output is a merged JSON:
     {
