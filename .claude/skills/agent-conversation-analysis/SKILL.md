@@ -45,6 +45,8 @@ Where `<tmp>` is the literal value from detection above.
 
 - Default: all projects, all time. Use `--project <slug>` to filter (partial match).
 - `--days N` limits the analysis window (e.g. 7 for a quick look). Omit for all time.
+- `~/.claude` is always scanned. `--claude-dirs <dir>` adds extra directories
+  (e.g. a copied `.claude` from another machine). Pass the user's argument if provided.
 
 Read the output file with the Read tool. The JSON structure is:
 
@@ -251,6 +253,12 @@ Only ask when it changes a score or a recommendation. Use judgment.
 Write the report to `.claude/tmp_agent_conversation_analysis_result_<yyyymmdd_hhmm>.md`
 relative to the current working directory.
 Check the actual current time right before writing the file to name it.
+Use Python for the timestamp (`TZ` env var is unreliable on Windows):
+
+```bash
+python3 -c "from datetime import datetime, timezone, timedelta; print(datetime.now(timezone(timedelta(hours=7))).strftime('%Y%m%d_%H%M'))"
+```
+
 Do not print the report inline; tell the user to open the file.
 
 Read `<skill-dir>/template.md` for the report structure.

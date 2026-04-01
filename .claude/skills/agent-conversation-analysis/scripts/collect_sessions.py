@@ -487,10 +487,17 @@ def collect_project(project_slug: str, since: datetime, history_sessions: set,
 
 
 def parse_claude_dirs(raw: list[str] | None) -> list[Path]:
-    """Parse --claude-dirs argument into a list of Path objects."""
-    if not raw:
-        return default_claude_dirs()
-    return [Path(d).expanduser() for d in raw]
+    """Parse --claude-dirs argument into a list of Path objects.
+
+    Always includes ~/.claude. The --claude-dirs flag adds extra directories.
+    """
+    dirs = default_claude_dirs()
+    if raw:
+        for d in raw:
+            p = Path(d).expanduser()
+            if p not in dirs:
+                dirs.append(p)
+    return dirs
 
 
 def main():
@@ -500,7 +507,7 @@ def main():
                         help="Include sessions from the last N days (default: 0 = all time)")
     parser.add_argument("--out", default="-", help="Output file path (default: stdout)")
     parser.add_argument("--claude-dirs", nargs="+", default=None,
-                        help="One or more .claude directories to scan (default: ~/.claude)")
+                        help="Additional .claude directories to scan (~/.claude is always included)")
     args = parser.parse_args()
 
     claude_dirs = parse_claude_dirs(args.claude_dirs)

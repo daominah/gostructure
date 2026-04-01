@@ -248,15 +248,17 @@ def main():
     )
     parser.add_argument(
         "--claude-dirs", nargs="+", default=None,
-        help="One or more .claude directories to scan (default: ~/.claude)",
+        help="Additional .claude directories to scan (~/.claude is always included)",
     )
     args = parser.parse_args()
 
     output_path = Path(args.out) if args.out else _default_output()
+    claude_dirs = [Path.home() / ".claude"]
     if args.claude_dirs:
-        claude_dirs = [Path(d).expanduser() for d in args.claude_dirs]
-    else:
-        claude_dirs = [Path.home() / ".claude"]
+        for d in args.claude_dirs:
+            p = Path(d).expanduser()
+            if p not in claude_dirs:
+                claude_dirs.append(p)
 
     all_messages, total_user_messages = scan_all_sessions(claude_dirs)
     aliases = collect_bash_aliases()

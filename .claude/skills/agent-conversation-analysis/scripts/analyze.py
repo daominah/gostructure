@@ -12,7 +12,7 @@ Usage:
     --project SLUG      Filter to a specific project slug (partial match ok)
     --days N            Sessions from last N days (default: 0 = all time)
     --out FILE          Write JSON output to FILE (default: sessions_report.json)
-    --claude-dirs DIRS  One or more .claude directories (default: ~/.claude)
+    --claude-dirs DIRS  Additional .claude directories (~/.claude is always included)
 
 Typical Claude invocation (from SKILL.md):
     python3 .claude/skills/agent-conversation-analysis/scripts/analyze.py \
@@ -58,7 +58,7 @@ def main():
     parser.add_argument("--days", type=int, default=0, help="Sessions from last N days (default: 0 = all time)")
     parser.add_argument("--out", default="sessions_report.json", help="Output file (default: sessions_report.json)")
     parser.add_argument("--claude-dirs", nargs="+", default=None,
-                        help="One or more .claude directories to scan (default: ~/.claude)")
+                        help="Additional .claude directories (~/.claude is always included)")
     args = parser.parse_args()
 
     import time

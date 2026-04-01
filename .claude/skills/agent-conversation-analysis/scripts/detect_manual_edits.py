@@ -42,9 +42,14 @@ from pathlib import Path
 
 
 def _resolve_claude_dirs(args_claude_dirs) -> list[Path]:
+    """Always includes ~/.claude. Extra dirs are additive."""
+    dirs = [Path.home() / ".claude"]
     if args_claude_dirs:
-        return [Path(d).expanduser() for d in args_claude_dirs]
-    return [Path.home() / ".claude"]
+        for d in args_claude_dirs:
+            p = Path(d).expanduser()
+            if p not in dirs:
+                dirs.append(p)
+    return dirs
 
 
 def _find_jsonl(slug: str, session_id: str, claude_dirs: list[Path]) -> Path | None:
