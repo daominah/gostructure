@@ -28,6 +28,11 @@ ask the user to fix the environment setup instead.
 - ALWAYS invoke skill `commit-messages` before ANY git commit,
   including short user requests: "commit", "git commit", "commit push", "git commit push", etc.
 
+# Go
+
+**Always load** skills `go-personal-convention` and `go-project-structure`
+before doing anything related to Go code.
+
 # Bash
 
 - Use `#!/bin/bash` as the shebang line, not `#!/usr/bin/env bash`.
