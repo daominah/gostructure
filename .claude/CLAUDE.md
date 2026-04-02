@@ -16,11 +16,6 @@ prefer short, code-style terms over verbose descriptions,
 but use full words instead of abbreviations.
 Ask for confirmation before choosing names if the context is ambiguous.
 
-# Testing
-
-Do not weaken or remove test assertions when the error looks like an environment issue;
-ask the user to fix the environment setup instead.
-
 # Git Commit
 
 - Before committing, check the staged changes for secrets (API keys, tokens, passwords, etc.)
@@ -32,6 +27,16 @@ ask the user to fix the environment setup instead.
 
 **Always load** skills `go-personal-convention` and `go-project-structure`
 before doing anything related to Go code.
+
+# Testing
+
+Do not weaken or remove test assertions when the error looks like an environment issue;
+ask the user to fix the environment setup instead.
+
+# Checkpoints
+
+When a skill instruction says STOP or "wait for confirmation",
+do not proceed to the next step until the user explicitly approves.
 
 # Bash
 

@@ -265,4 +265,5 @@ formatted as `2006-01-02 15:04`.
   and only suggest rules not already covered. Write the actual line to add.
 - When suggesting skills, explain what repeated pattern it would eliminate.
 - Report uncertainty on hard-to-measure criteria explicitly.
-- The overall score averages across all tasks.
+- The overall score is a weighted average across all scored tasks.
+  Weight each task by `sqrt(session_count)`. Exclude Unscored tasks.
