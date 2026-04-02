@@ -38,6 +38,12 @@ ask the user to fix the environment setup instead.
 When a skill instruction says STOP or "wait for confirmation",
 do not proceed to the next step until the user explicitly approves.
 
+# Session Hygiene
+
+When a task appears complete (commit done, PR created, investigation answered),
+or when the user asks a question that seems unrelated to the current topic,
+suggest starting a new session for the next topic.
+
 # Bash
 
 - Use `#!/bin/bash` as the shebang line, not `#!/usr/bin/env bash`.
