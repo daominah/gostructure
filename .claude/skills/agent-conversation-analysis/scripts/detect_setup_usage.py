@@ -120,7 +120,7 @@ def scan_sessions(sessions_data: dict, claude_dirs: list[Path]) -> dict:
                         for match in COMMAND_NAME_RE.finditer(text):
                             skill_name = match.group(1)
                             # Extract the leaf name for classification
-                            # e.g. "superpowers:brainstorming" -> "brainstorming"
+                            # e.g. "skill-creator:skill-creator" -> "skill-creator"
                             leaf = skill_name.split(":")[-1] if ":" in skill_name else skill_name
                             if leaf in BUILTIN_COMMANDS:
                                 continue

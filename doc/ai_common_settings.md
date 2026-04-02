@@ -133,7 +133,6 @@ Some common plugins:
 | claude-code-setup        | Skill     | Answers questions about Claude Code features and recommends tools and automations.  |
 | skill-creator            | Skill     | Helps create, modify, and evaluate skills.                                          |
 | gopls-lsp                | Passive   | Go language server for code intelligence. No need for user or Claude invocation.    |
-| superpowers              | Skill set | Skills for dev: brainstorm ideas, writing-plans, TDD, systematic-debugging, etc.    |
 | explanatory-output-style | Hook      | Injects a system prompt that adds educational insights about implementation choices |
 | context7                 | MCP       | Retrieves up-to-date documentation for libraries via MCP.                           |
 | pyright-lsp              | Passive   | Python language server for code intelligence.                                       |
