@@ -6,15 +6,8 @@
 - Use standard straight quotes (`'` and `"`) instead of curly quotes.
 - When the user asks to correct grammar (e.g. "grammar?", "smooth?"),
   apply only the minimal change without rephrasing the rest of the sentence.
-- Use bold only to insist on a specific approach over a common alternative                                                            
+- Use bold only to insist on a specific approach over a common alternative
   or to warn about pitfalls the reader might skip past.
-
-# Naming
-
-When naming variables, sections, or concepts:
-prefer short, code-style terms over verbose descriptions,
-but use full words instead of abbreviations.
-Ask for confirmation before choosing names if the context is ambiguous.
 
 # Git Commit
 
@@ -28,6 +21,19 @@ Ask for confirmation before choosing names if the context is ambiguous.
 **Always load** skills `go-personal-convention` and `go-project-structure`
 before doing anything related to Go code.
 
+# Naming
+
+When naming variables, sections, or concepts:
+prefer short, code-style terms over verbose descriptions,
+but use full words instead of abbreviations.
+Ask for confirmation before choosing names if the context is ambiguous.
+
+# Session Hygiene
+
+When a task appears complete (commit done, PR created, investigation answered),
+or when the user asks a question that seems unrelated to the current topic,
+suggest starting a new session for the next topic.
+
 # Testing
 
 Do not weaken or remove test assertions when the error looks like an environment issue;
@@ -38,11 +44,11 @@ ask the user to fix the environment setup instead.
 When a skill instruction says STOP or "wait for confirmation",
 do not proceed to the next step until the user explicitly approves.
 
-# Session Hygiene
+# Multi-part Response
 
-When a task appears complete (commit done, PR created, investigation answered),
-or when the user asks a question that seems unrelated to the current topic,
-suggest starting a new session for the next topic.
+When presenting multiple issues, questions, or options for review,
+list them all first as a summary, then go through each one individually.
+Wait for the user's response before moving to the next.
 
 # Bash
 
