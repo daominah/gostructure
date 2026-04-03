@@ -50,6 +50,13 @@ When presenting multiple issues, questions, or options for review,
 list them all first as a summary, then go through each one individually.
 Wait for the user's response before moving to the next.
 
+# Code Comments
+
+Code comments should explain intent and non-obvious behavior.
+Avoid generating comments that just restate the function or variable name.
+
+For test comments, load skill `test-comments`.
+
 # Bash
 
 - Use `#!/bin/bash` as the shebang line, not `#!/usr/bin/env bash`.

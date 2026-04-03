@@ -12,7 +12,7 @@ if diff -q "$SCRIPT_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md" > /dev/null 2>&1; t
     echo "unchanged CLAUDE.md (already identical)"
 else
     cp "$SCRIPT_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-    echo "Overwrote CLAUDE.md"
+    echo "OVERWROTE CLAUDE.md"
 fi
 
 # Copy each skill directory
@@ -41,9 +41,9 @@ for skill_dir in "$SCRIPT_DIR"/skills/*/; do
             echo "unchanged $skill_name (already identical)"
             continue
         fi
-        action="Overwrote"
+        action="OVERWROTE"
     else
-        action="Created"
+        action="CREATED"
     fi
     mkdir -p "$target"
     cp -r "$skill_dir"* "$target/"
