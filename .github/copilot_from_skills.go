@@ -18,6 +18,8 @@ func main() {
 
 	// excludedSkills lists skill directory names to skip when generating the output.
 	var excludedSkills = map[string]bool{
+		"adding-feature-ticket": true, // full flow with tools for local agent
+		"fixing-bug-ticket":     true, // full flow with tools for local agent
 		"go-project-structure":  true, // Copilot usually only focuses on one file
 		"reviewing-code-and-pr": true, // long, not really helpful on remote AI
 		"slack-messaging":       true, // Copilot cannot send Slack anyway
@@ -106,7 +108,7 @@ func main() {
 		}
 	}
 
-	output := strings.Join(parts, "\n\n")
+	output := strings.Join(parts, "\n\n") + "\n"
 	if err := os.WriteFile(outputPath, []byte(output), 0644); err != nil {
 		log.Fatalf("error os.WriteFile %s: %v", outputPath, err)
 	}

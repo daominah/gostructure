@@ -68,6 +68,23 @@ const (
 )
 ```
 
+## JSON Struct Tags
+
+The default Go field name (PascalCase) is fine.
+Only add json camelCase tags for external API contracts.
+
+```
+// Internal: no json tag needed
+type Config struct {
+    IsEnabled bool
+}
+
+// External API: json tags required
+type APIResponse struct {
+    IsEnabled bool `json:"isEnabled"`
+}
+```
+
 # Test Comments
 
 Use the GIVEN/WHEN/THEN comment format in tests.
@@ -146,3 +163,7 @@ Exceptions:
   rephrase or use colons instead.
   Compound words are allowed: "real-time", "back-end".
 - Use standard straight quotes (`'` and `"`) instead of curly quotes.
+- When the user asks to correct grammar (e.g. "grammar?", "smooth?"),
+  apply only the minimal change without rephrasing the rest of the sentence.
+- Use bold only to insist on a specific approach over a common alternative
+  or to warn about pitfalls the reader might skip past.
