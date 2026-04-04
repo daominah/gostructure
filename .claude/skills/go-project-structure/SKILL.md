@@ -9,16 +9,16 @@ Follow this layout when adding or organizing code for Go services and applicatio
 
 ## Directory Layout
 
-| Directory     | Purpose                                                                                  |
-|---------------|------------------------------------------------------------------------------------------|
-| `cmd/{app}/`  | Loads config from env, wires dependencies, starts the app                                |
-| `pkg/model/`  | Domain data structures and related errors (for cross-package error matching).            |
-| `pkg/logic/`  | Business logic, interfaces. Testable without external dependencies.                      |
-| `pkg/driver/` | Implements interfaces for external interactions (HTTP, database, third-party APIs, etc.) |
-| `pkg/base/`   | Shared pure utilities with no business logic (logger, uuid, ...)                         |
-| `config/`     | Configuration files. `.env.example` lists env vars to configure.                         |
-| `web/`        | Optional simple UI if needed. Served with the API. JS calls API by relative paths.       |
-| `doc/`        | Design docs, user guides, tech specs, algorithms, API specs                              |
+| Directory     | Purpose                                                                                           |
+|---------------|---------------------------------------------------------------------------------------------------|
+| `cmd/{app}/`  | Loads config from env, wires dependencies, starts the app                                         |
+| `pkg/model/`  | Domain data structures and related errors (for cross-package error matching).                     |
+| `pkg/logic/`  | Business logic, interfaces. Testable without external dependencies.                               |
+| `pkg/driver/` | Implements interfaces for external interactions (HTTP, database, third-party APIs, etc.)          |
+| `pkg/base/`   | Shared pure utilities with no business logic (logger, uuid, ...). Can be imported by any package. |
+| `config/`     | Configuration files. `.env.example` lists env vars to configure.                                  |
+| `web/`        | Optional simple UI if needed. Served with the API. JS calls API by relative paths.                |
+| `doc/`        | Design docs, user guides, tech specs, algorithms, API specs                                       |
 
 ## Conventions
 
