@@ -46,8 +46,10 @@ do not proceed to the next step until the user explicitly approves.
 
 # Multi-part Response
 
-When presenting multiple issues, questions, or options for review,
+When presenting multiple issues, inconsistencies, problems, or questions for review,
 list them all first as a summary, then go through each one individually.
+When discussing each item, reprint its full detail
+so the user does not need to scroll up to the summary.
 Wait for the user's response before moving to the next.
 
 # Code Comments
