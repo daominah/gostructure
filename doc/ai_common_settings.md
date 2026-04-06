@@ -68,7 +68,7 @@ that the agent uses when the skill is active.
   so skills in this repo work in both tools.
 
 Copy this repo's skills to your home directory (so they apply to all projects)
-by running [copy_skills_to_home.sh](../.claude/copy_skills_to_home.sh).
+by running [install_skills_to_home.sh](../.claude/install_skills_to_home.sh).
 
 References:
 
