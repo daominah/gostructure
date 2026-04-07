@@ -21,6 +21,11 @@
 **Always load** skills `go-personal-convention` and `go-project-structure`
 before doing anything related to Go code.
 
+# Frontend
+
+**Always load** skill `frontend-code-style`
+before doing anything related to HTML, JavaScript, or CSS.
+
 # Naming
 
 When naming variables, sections, or concepts:
