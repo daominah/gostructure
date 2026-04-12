@@ -46,7 +46,8 @@ for skill_dir in "$SCRIPT_DIR"/skills/*/; do
         action="CREATED"
     fi
     mkdir -p "$target"
-    cp -r "$skill_dir"* "$target/"
+    # Trailing /. copies contents including dotfiles; bare /* glob skips them.
+    cp -r "$skill_dir." "$target/"
     echo "$action skill: $skill_name"
 done
 
