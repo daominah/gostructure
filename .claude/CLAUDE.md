@@ -21,6 +21,10 @@
 **Always load** skills `go-personal-convention` and `go-project-structure`
 before doing anything related to Go code.
 
+# Python
+
+Place all imports at the top of the file.
+
 # Frontend
 
 **Always load** skill `frontend-code-style`
