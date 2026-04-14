@@ -40,8 +40,8 @@ This repo includes configurations that can be applied to either tool.
 Rules are persistent context that the agent always includes in every session.
 Use them for security boundaries, personal preferences, project conventions, etc.
 
-- **Claude Code**: `.claude/CLAUDE.md` or `CLAUDE.md` in user home or project dir.
-- **Cursor**: `.mdc` files in `.cursor/rules/` in project dir.
+- Claude Code: `.claude/CLAUDE.md` or `CLAUDE.md` in user home or project dir.
+- Cursor: `.mdc` files in `.cursor/rules/` in project dir.
   User rules need to be copied manually to the IDE settings.
 
 ## Skills
@@ -61,10 +61,10 @@ with a name, description, and prompt body.
 The directory can also include scripts, templates, and reference files
 that the agent uses when the skill is active.
 
-- **Claude Code**: place skill directories under `.claude/skills/`.
+- Claude Code: place skill directories under `.claude/skills/`.
   Let the agent load it automatically when relevant (based on the description)
   or invoke with `/skill-name` in the chat.
-- **Cursor**: can also load skills from `.claude/skills/`,
+- Cursor: can also load skills from `.claude/skills/`,
   so skills in this repo work in both tools.
 
 Copy this repo's skills to your home directory (so they apply to all projects)
@@ -93,12 +93,12 @@ Some common MCP endpoints:
 GitHub's integration works by default via the `gh` CLI, no MCP needed.
 It handles git operations and creating pull requests with proper descriptions.
 
-**Cursor** stores MCP server lists in `mcp.json`:
+Cursor stores MCP server lists in `mcp.json`:
 
 - Project scope: `.cursor/mcp.json`
 - User scope: `~/.cursor/mcp.json`
 
-**Claude Code** MCP servers can be added via
+Claude Code MCP servers can be added via
 [claude.ai/settings/connectors](https://claude.ai/settings/connectors)
 or by CLI `claude mcp add`
 

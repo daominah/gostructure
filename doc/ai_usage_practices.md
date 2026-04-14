@@ -13,24 +13,24 @@ Understanding them is essential for productive use.
 The context window holds everything the agent sees in a session:
 your messages, files it reads, command outputs, and its own responses.
 It has a fixed size and performance degrades as it fills up.
+Even with a large context window (e.g. Opus at 1M tokens), quality may noticeably drop
+around 200k+ tokens used; starting a fresh session is often better than pushing further.
 
 Manage it actively:
 
 - Start a new session or clear context (`/clear`) between unrelated tasks.
-- Avoid letting the agent read too many files in one session.
-  Delegate research to subagents when possible.
 - If the agent starts "forgetting" instructions or making odd mistakes,
-  the context is likely too full. Clear and restart with a better prompt.
+  the context is likely too full. A `/compact` may help.
 
 ### Explore, Plan, Then Code
 
 Jumping straight to coding often solves the wrong problem.
 The recommended flow:
 
-- **Explore**: let the agent read relevant code and understand the current state.
-- **Plan**: ask for an implementation plan. Review it before any code is written.
-- **Implement**: execute the plan, with tests to verify.
-- **Commit**: commit with a descriptive message.
+- Explore: let the agent read relevant code and understand the current state.
+- Plan: ask for an implementation plan. Review it before any code is written.
+- Implement: execute the plan, with tests to verify.
+- Commit: commit with a descriptive message.
 
 Skip planning for small, obvious changes (typo fix, rename, add a log line).
 Use it when the scope is unclear, multiple files are involved,
@@ -65,6 +65,6 @@ Correct the agent as soon as it goes off track. Do not wait for it to finish.
 
 Reference: [Claude Code best practices](https://code.claude.com/docs/en/best-practices)
 
-### Improve Agent usage
+### Improve Agent Usage
 
 Try skill `/agent-conversation-analysis` in this repo.
