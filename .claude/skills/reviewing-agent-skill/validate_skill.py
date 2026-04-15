@@ -1,29 +1,78 @@
 """Validate a SKILL.md file against mechanical checklist rules.
 
 Usage: python3 validate_skill.py path/to/SKILL.md
+
+Dependencies (optional): PyYAML (pip install pyyaml) for strict YAML validation.
+Falls back to heuristic checks when PyYAML is not installed.
 """
 
 import re
 import sys
 
+try:
+    import yaml
 
-def extract_frontmatter(lines: list[str]) -> tuple[dict[str, str], int]:
-    """Return (frontmatter key-values, body start line index)."""
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
+
+
+def _is_yaml_quoted(value: str) -> bool:
+    """Check if a YAML value is wrapped in quotes (single or double).
+
+    Does not handle YAML escaped quotes (e.g. 'it''s a value')
+    or multi-line folded values. Sufficient for single-line descriptions.
+    """
+    stripped = value.strip()
+    if len(stripped) < 2:
+        return False
+    return (
+        (stripped[0] == "'" and stripped[-1] == "'")
+        or (stripped[0] == '"' and stripped[-1] == '"')
+    )
+
+
+def extract_frontmatter(lines: list[str]) -> tuple[dict[str, str], list[str], int]:
+    """Return (frontmatter key-values, yaml_errors, body start line index)."""
     if not lines or lines[0].strip() != "---":
-        return {}, 0
+        return {}, [], 0
     end = None
     for i, line in enumerate(lines[1:], start=1):
         if line.strip() == "---":
             end = i
             break
     if end is None:
-        return {}, 0
+        return {}, [], 0
+
+    fm_text = "\n".join(lines[1:end])
+    yaml_errors: list[str] = []
+
+    # Try strict YAML parsing first
+    if HAS_YAML:
+        try:
+            parsed = yaml.safe_load(fm_text)
+            if isinstance(parsed, dict):
+                fm = {k: str(v) for k, v in parsed.items() if v is not None}
+                return fm, [], end + 1
+        except yaml.YAMLError as exc:
+            yaml_errors.append(f"YAML parse error in frontmatter: {exc}")
+
+    # Fallback: naive regex extraction + heuristic checks
     fm: dict[str, str] = {}
     for line in lines[1:end]:
         m = re.match(r"^(\w[\w-]*):\s*(.*)", line)
         if m:
-            fm[m.group(1)] = m.group(2)
-    return fm, end + 1
+            key, value = m.group(1), m.group(2)
+            fm[key] = value
+            # Only run heuristic when strict parsing did not already report an error
+            if not yaml_errors and not _is_yaml_quoted(value) and re.search(r":\s", value):
+                yaml_errors.append(
+                    f"'{key}' value contains ': ' (colon-space) without quoting. "
+                    f"YAML parsers will misinterpret this as a nested mapping. "
+                    f"Wrap the value in single quotes."
+                )
+
+    return fm, yaml_errors, end + 1
 
 
 def validate(path: str) -> list[str]:
@@ -35,8 +84,9 @@ def validate(path: str) -> list[str]:
     except FileNotFoundError:
         return [f"File not found: {path}"]
 
-    raw_lines = [l.rstrip("\n") for l in lines]
-    fm, body_start = extract_frontmatter(raw_lines)
+    raw_lines = [line.rstrip("\n") for line in lines]
+    fm, yaml_errors, body_start = extract_frontmatter(raw_lines)
+    errors.extend(yaml_errors)
 
     if not fm:
         errors.append("Missing YAML frontmatter (expected --- delimiters)")
@@ -72,6 +122,16 @@ def validate(path: str) -> list[str]:
             errors.append(
                 "description uses multi-line YAML syntax (>- or |), "
                 "should be a single line"
+            )
+        # Overlapping trigger clauses
+        desc_lower = desc.lower()
+        has_use_when = "use when" in desc_lower
+        has_trigger_on = bool(re.search(r"\btrigger\s*(on|when|if)\b", desc_lower))
+        if has_use_when and has_trigger_on:
+            errors.append(
+                "description has overlapping trigger clauses "
+                "('Use when' and 'Trigger on'). "
+                "Merge the useful keywords into a single 'Use when' clause."
             )
 
     # -- body line count --

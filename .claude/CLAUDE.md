@@ -37,6 +37,10 @@ prefer short, code-style terms over verbose descriptions,
 but use full words instead of abbreviations.
 Ask for confirmation before choosing names if the context is ambiguous.
 
+This applies to conversation too: never introduce abbreviations
+for project names, company names, or concepts unless the user
+used that abbreviation first. Use the full name for easier understanding.
+
 # Session Hygiene
 
 When a task appears complete (commit done, PR created, investigation answered),

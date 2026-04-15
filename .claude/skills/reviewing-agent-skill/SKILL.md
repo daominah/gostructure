@@ -25,7 +25,8 @@ The script checks:
   no reserved words ("anthropic", "claude").
 - `description` field: non-empty, max 1024 characters, **single line**
   (multi-line YAML values like `>-` or indented continuations are valid syntax,
-  but can cause missed triggers).
+  but can cause missed triggers), valid YAML (no unquoted colon-space sequences),
+  no redundant trigger clauses (e.g. both "Use when" and "Trigger on").
 - SKILL.md body is under 500 lines.
 - No Windows-style backslash paths.
 
@@ -34,6 +35,13 @@ The script checks:
 - Description is written in **third person**
   ("Processes files..." not "I help you..." or "You can use this to...").
 - Description states both **what** the skill does and a **"Use when"** clause.
+- Description has **one trigger clause, not two**.
+  A single "Use when" clause is sufficient.
+  Flag descriptions that have overlapping trigger phrases
+  (e.g. a "Use when" clause plus a separate "Trigger on:" keyword list)
+  because the overlap makes the description harder to read
+  and the extra colons often break YAML parsing.
+  Merge the useful keywords into the "Use when" clause instead.
 - Description is as concise as possible while including enough key terms
   the user might mention to trigger reliably, and specific enough to
   distinguish this skill from other available skills.
