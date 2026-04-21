@@ -72,6 +72,11 @@ Avoid generating comments that just restate the function or variable name.
 
 For test comments, load skill `test-comments`.
 
+# Answering Questions About Code
+
+When answering any "where is X" / "how does Y work" / "which file handles Z" question,
+cite concrete paths as `file_path:line_number` alongside the explanation.
+
 # Bash
 
 - Use `#!/bin/bash` as the shebang line, not `#!/usr/bin/env bash`.
