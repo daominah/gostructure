@@ -128,16 +128,17 @@ such as new skills, MCP servers, and hooks.
 
 Some common plugins:
 
-| Plugin                   | Type      | Usage                                                                               |
-|--------------------------|-----------|-------------------------------------------------------------------------------------|
-| claude-code-setup        | Skill     | Answers questions about Claude Code features and recommends tools and automations.  |
-| skill-creator            | Skill     | Helps create, modify, and evaluate skills.                                          |
-| gopls-lsp                | Passive   | Go language server for code intelligence. No need for user or Claude invocation.    |
-| explanatory-output-style | Hook      | Injects a system prompt that adds educational insights about implementation choices |
-| context7                 | MCP       | Retrieves up-to-date documentation for libraries via MCP.                           |
-| pyright-lsp              | Passive   | Python language server for code intelligence.                                       |
-| typescript-lsp           | Passive   | JavaScript/TypeScript language server for code intelligence.                        |
-| frontend-design          | Skill     | Creates distinctive, production-grade frontend interfaces with high design quality. |
+| Plugin                   | Type    | Usage                                                                               |
+|--------------------------|---------|-------------------------------------------------------------------------------------|
+| claude-code-setup        | Skill   | Answers questions about Claude Code features and recommends tools and automations.  |
+| claude-md-management     | Skill   | Audits and improves CLAUDE.md files; appends learnings from a session.              |
+| skill-creator            | Skill   | Helps create, modify, and evaluate skills.                                          |
+| gopls-lsp                | Passive | Go language server for code intelligence. No need for user or Claude invocation.    |
+| explanatory-output-style | Hook    | Injects a system prompt that adds educational insights about implementation choices |
+| context7                 | MCP     | Retrieves up-to-date documentation for libraries via MCP.                           |
+| pyright-lsp              | Passive | Python language server for code intelligence.                                       |
+| typescript-lsp           | Passive | JavaScript/TypeScript language server for code intelligence.                        |
+| frontend-design          | Skill   | Creates distinctive, production-grade frontend interfaces with high design quality. |
 
 Export installed plugins as a reinstall script:
 
@@ -154,6 +155,18 @@ Update all installed plugins to latest:
 jq -r '.plugins | keys[]' ~/.claude/plugins/installed_plugins.json \
     | xargs -I{} claude plugin update {}
 ```
+
+## Analyzing Your Usage (Claude Code)
+
+Analyze past sessions to find friction patterns and setup gaps worth fixing.
+
+- `/insights` (built-in): narrative HTML report, 30-day window, single machine.
+  Polished and quick to skim, but suggestions tend to be generic.
+- `/agent-conversation-analysis` (custom skill in this repo):
+  per-task star scoring with correction counts and setup gaps.
+  Cross-references commits against Claude's edits to estimate
+  how much code was written manually, and merges sessions across machines,
+  so the suggestions stay closer to your actual workflow.
 
 ## Other Extensions (Claude Code)
 
