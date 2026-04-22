@@ -156,6 +156,28 @@ jq -r '.plugins | keys[]' ~/.claude/plugins/installed_plugins.json \
     | xargs -I{} claude plugin update {}
 ```
 
+## Hooks (Claude Code)
+
+Hooks are shell commands the CLI runs automatically on events
+(session start, tool use, stop, and others). They make an action deterministic,
+so the agent does not have to remember a CLAUDE.md rule.
+
+Typical use case: always load short essential knowledge about the project or company
+when a new Claude session starts, so the agent never misses it.
+
+To ask the agent to set one up, the only inputs it needs are:
+
+- **Trigger directories**: where the session must start for the hook to fire.
+- **Target context**: which files or directories to inject into the session context.
+
+Verify hooks work by the `SessionStart:startup` log on session start.
+
+### Cost
+
+Always-on context is not free. It eats a percent of the context window.
+Be careful with trigger directories.
+Prompt caching absorbs most of the repeated cost.
+
 ## Analyzing Your Usage (Claude Code)
 
 Analyze past sessions to find friction patterns and setup gaps worth fixing.
