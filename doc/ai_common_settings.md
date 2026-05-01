@@ -109,13 +109,24 @@ For project-shared servers, edit `.mcp.json` at the project root.
 ## Status Line (Claude Code)
 
 Claude Code can display a status line at the bottom of the terminal.
-Request it to display your preferred information. Example:
+The setup in this repo uses [.claude/statusline-command.sh](../.claude/statusline-command.sh),
+which renders `Opus 4.7, 240k/1000k ctx, repo-name[branch]`.
 
-```
-/statusline use this format `Model: Opus 4.6, Context: 24% used 48k/200k tokens`
+To install on a new machine,
+copy the script to `~/.claude/statusline-command.sh`
+and add to `~/.claude/settings.json`:
+
+```json
+{
+	"statusLine": {
+		"type": "command",
+		"command": "bash ~/.claude/statusline-command.sh"
+	}
+}
 ```
 
-The default statusline script uses `jq`. On Windows, install it via:
+The script uses `jq` to parse the JSON input from Claude Code,
+so on Windows install it via:
 
 ```bash
 winget install jqlang.jq  # jq is automatically added to PATH after install
