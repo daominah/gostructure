@@ -10,6 +10,14 @@ model=$(echo "$input" | jq -r '.model.display_name // .model.id // "unknown"')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // empty')
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
+# Resolve relative cwd (Claude Code on Windows sends ".") to absolute path
+if [ -n "$cwd" ] && [[ "$cwd" != /* ]] && [[ "$cwd" != [A-Za-z]:* ]]; then
+  cwd=$(cd "$cwd" 2>/dev/null && pwd) || cwd=""
+fi
+# Convert Windows path (C:\...) to Unix path (/c/...) so bash tools work correctly
+if command -v cygpath >/dev/null 2>&1 && [[ "$cwd" == [A-Za-z]:* ]]; then
+  cwd=$(cygpath -u "$cwd" 2>/dev/null) || true
+fi
 
 if [ -n "$used_pct" ] && [ -n "$ctx_size" ]; then
   size_k=$(( ctx_size / 1000 ))
@@ -56,14 +64,25 @@ walk_up_for_markers() {
 # Fallback to cwd's basename.
 right=""
 if [ -n "$cwd" ]; then
-  recent=$(
-    find "$cwd" -maxdepth 6 \
-      \( -name .git -o -name node_modules -o -name .venv -o -name __pycache__ \
-         -o -name vendor -o -name dist -o -name build -o -name target -o -name .next \) -prune \
-      -o -type f -print0 2>/dev/null \
-    | xargs -0 stat -f '%m %N' 2>/dev/null \
-    | sort -rn | head -1 | cut -d' ' -f2-
-  )
+  # GNU find (Linux/Git Bash) supports -printf; BSD find (macOS) does not
+  if find /dev/null -printf '' 2>/dev/null; then
+    recent=$(
+      find "$cwd" -maxdepth 6 \
+        \( -name .git -o -name node_modules -o -name .venv -o -name __pycache__ \
+           -o -name vendor -o -name dist -o -name build -o -name target -o -name .next \) -prune \
+        -o -type f -printf '%T@ %p\n' 2>/dev/null \
+      | sort -rn | head -1 | cut -d' ' -f2-
+    )
+  else
+    recent=$(
+      find "$cwd" -maxdepth 6 \
+        \( -name .git -o -name node_modules -o -name .venv -o -name __pycache__ \
+           -o -name vendor -o -name dist -o -name build -o -name target -o -name .next \) -prune \
+        -o -type f -print0 2>/dev/null \
+      | xargs -0 stat -f '%m %N' 2>/dev/null \
+      | sort -rn | head -1 | cut -d' ' -f2-
+    )
+  fi
   start_dir="$cwd"
   if [ -n "$recent" ]; then
     start_dir=$(dirname "$recent")
