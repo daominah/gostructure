@@ -77,3 +77,35 @@ type APIResponse struct {
     IsEnabled bool `json:"isEnabled"`
 }
 ```
+
+## File Structure for Executables
+
+In a one-off Go script (`package main`),
+place adjustable config at the top so a reader can find and tweak it immediately,
+then `func main()` so the business flow is visible just below,
+and move internal state to the bottom where it doesn't push the interesting parts down.
+
+Suggested top-to-bottom order:
+
+1. Package and imports.
+2. The script's config. Use a `const (...)` block, plus a `var (...)` block
+   next to it for values Go can't declare as `const` (maps, slices, structs).
+   Examples: API keys, target IDs, URLs, limits, sizes, feature flags,
+   small lookup maps you might edit before a run.
+   Open the block with a one-line header comment, e.g.
+   "// Inputs (edit for each run):" or
+   "// Adjustable knobs for X (edit before running):".
+   Add an inline or preceding comment for any value whose meaning is non-obvious.
+   Prefer `const`/`var` over the `flag` package: it's convenient to
+   edit and re-run.
+3. `func main()`: the business flow.
+4. Helpers used by `main` in call order (pipeline funcs, setup/teardown).
+5. Debug and profiling globals (e.g. `flag.String("cpuprofile", ...)`).
+   Each global gets a doc comment explaining what it is and why.
+6. Internal data globals: lookup tables, caches,
+   and the helpers that mutate them.
+   Each global gets a doc comment explaining what it is and why.
+7. Type declarations (structs, named types).
+
+Note: long-running services don't fit this layout. They load config from
+environment variables instead of a `const` block.
