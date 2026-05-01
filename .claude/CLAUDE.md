@@ -15,6 +15,9 @@
   and warn the user if any are found.
 - ALWAYS invoke skill `commit-messages` before ANY git commit,
   including short user requests: "commit", "git commit", "commit push", "git commit push", etc.
+- Run "git commit" or "git push" only when the user explicitly asks,
+  **never on your own initiative**.
+  Acceptable triggers: a direct ask, or a skill step that calls for a commit.
 
 # Markdown
 
