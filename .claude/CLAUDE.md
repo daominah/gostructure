@@ -16,6 +16,14 @@
 - ALWAYS invoke skill `commit-messages` before ANY git commit,
   including short user requests: "commit", "git commit", "commit push", "git commit push", etc.
 
+# Markdown
+
+**Always load** skill `writing-style-markdown` before writing or editing any `.md` file,
+including README, CLAUDE.md, SKILL.md, ticket and feature design docs,
+plans, checklists, review reports, findings, and spec docs.
+This applies even when the file is referenced implicitly without a `.md` extension,
+and when the user asks for a diagram (defaults to Mermaid embedded in a markdown file).
+
 # Go
 
 **Always load** skills `go-personal-convention` and `go-project-structure`
