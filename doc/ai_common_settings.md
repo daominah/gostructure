@@ -67,8 +67,11 @@ that the agent uses when the skill is active.
 - Cursor: can also load skills from `.claude/skills/`,
   so skills in this repo work in both tools.
 
-Copy this repo's skills to your home directory (so they apply to all projects)
-by running [install_skills_to_home.sh](../.claude/install_skills_to_home.sh).
+Copy this repo's `.claude/` config to your home directory
+(skills, status line script, hooks, plus selected keys from
+`home_settings.json` merged into `~/.claude/settings.json`)
+by running [install_dotclaude_to_home.sh](../.claude/install_dotclaude_to_home.sh).
+The script is one-way (repo to home), idempotent, and safe to re-run after each edit.
 
 References:
 
@@ -112,19 +115,6 @@ Claude Code can display a status line at the bottom of the terminal.
 The setup in this repo uses [.claude/statusline-command.sh](../.claude/statusline-command.sh),
 which renders `Opus 4.7, 240k/1000k ctx, repo-name[branch]`.
 
-To install on a new machine,
-copy the script to `~/.claude/statusline-command.sh`
-and add to `~/.claude/settings.json`:
-
-```json
-{
-	"statusLine": {
-		"type": "command",
-		"command": "bash ~/.claude/statusline-command.sh"
-	}
-}
-```
-
 The script uses `jq` to parse the JSON input from Claude Code,
 so on Windows install it via:
 
@@ -139,17 +129,16 @@ such as new skills, MCP servers, and hooks.
 
 Some common plugins:
 
-| Plugin                   | Type    | Usage                                                                               |
-|--------------------------|---------|-------------------------------------------------------------------------------------|
-| claude-code-setup        | Skill   | Answers questions about Claude Code features and recommends tools and automations.  |
-| claude-md-management     | Skill   | Audits and improves CLAUDE.md files; appends learnings from a session.              |
-| skill-creator            | Skill   | Helps create, modify, and evaluate skills.                                          |
-| gopls-lsp                | Passive | Go language server for code intelligence. No need for user or Claude invocation.    |
-| explanatory-output-style | Hook    | Injects a system prompt that adds educational insights about implementation choices |
-| context7                 | MCP     | Retrieves up-to-date documentation for libraries via MCP.                           |
-| pyright-lsp              | Passive | Python language server for code intelligence.                                       |
-| typescript-lsp           | Passive | JavaScript/TypeScript language server for code intelligence.                        |
-| frontend-design          | Skill   | Creates distinctive, production-grade frontend interfaces with high design quality. |
+| Plugin               | Type    | Usage                                                                               |
+|----------------------|---------|-------------------------------------------------------------------------------------|
+| claude-code-setup    | Skill   | Answers questions about Claude Code features and recommends tools and automations.  |
+| claude-md-management | Skill   | Audits and improves CLAUDE.md files; appends learnings from a session.              |
+| skill-creator        | Skill   | Helps create, modify, and evaluate skills.                                          |
+| gopls-lsp            | Passive | Go language server for code intelligence. No need for user or Claude invocation.    |
+| context7             | MCP     | Retrieves up-to-date documentation for libraries via MCP.                           |
+| pyright-lsp          | Passive | Python language server for code intelligence.                                       |
+| typescript-lsp       | Passive | JavaScript/TypeScript language server for code intelligence.                        |
+| frontend-design      | Skill   | Creates distinctive, production-grade frontend interfaces with high design quality. |
 
 Export installed plugins as a reinstall script:
 
@@ -182,6 +171,10 @@ To ask the agent to set one up, the only inputs it needs are:
 - **Target context**: which files or directories to inject into the session context.
 
 Verify hooks work by the `SessionStart:startup` log on session start.
+
+See [.claude/hooks/load-project-context.sh](../.claude/hooks/load-project-context.sh)
+as an example: a SessionStart hook that loads project-specific Markdown docs
+into the session context when the cwd is inside `~/workspace`.
 
 ### Cost
 
