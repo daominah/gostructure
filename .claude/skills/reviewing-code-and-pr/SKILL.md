@@ -39,6 +39,19 @@ Omit Blockers, Suggestions, and Nitpicks if they have no items.
   Edge cases are optional but encouraged.
 - Test comments use GIVEN (precondition) / WHEN (action) / THEN (result)
   to describe business behavior, readable by non-technical stakeholders.
+- Verify docs, comments, and code stay consistent.
+  Compare the code to every description of its behavior:
+  PR description, linked ticket, README, design docs,
+  package and exported doc comments, and inline comments in or near the changed files.
+  These descriptions are alternative specs: when they disagree with the code,
+  the next reader trusts the wrong source or wastes time deciding which to believe.
+  A mismatch is a signal: decide which side is correct before classifying.
+- Severity for mismatches: wrong code is a Blocker.
+  For stale descriptions (code is correct), classify by audience reach:
+  misinformation in user-facing artifacts harms more readers.
+  Public API docs, README, and exported doc comments are Blockers;
+  internal artifacts (design docs, unexported doc comments) are Suggestions;
+  stale phrasing in inline comments is a Nitpick.
 
 ### Do Not Break Existing Behavior
 
