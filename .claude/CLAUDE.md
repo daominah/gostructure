@@ -36,6 +36,10 @@ before doing anything related to Go code.
 
 Place all imports at the top of the file.
 
+# Bash
+
+- Use `#!/bin/bash` as the shebang line, not `#!/usr/bin/env bash`.
+
 # Frontend
 
 **Always load** skill `frontend-code-style`
@@ -52,16 +56,34 @@ This applies to conversation too: never introduce abbreviations
 for project names, company names, or concepts unless the user
 used that abbreviation first. Use the full name for easier understanding.
 
-# Session Hygiene
+# Code Comments
 
-When a task appears complete (commit done, PR created, investigation answered),
-or when the user asks a question that seems unrelated to the current topic,
-suggest starting a new session for the next topic.
+Code comments should explain intent and non-obvious behavior.
+Avoid generating comments that just restate the function or variable name.
+
+For test comments, load skill `test-comments`.
 
 # Testing
 
 Do not weaken or remove test assertions when the error looks like an environment issue;
 ask the user to fix the environment setup instead.
+
+# Answering Questions About Code
+
+When answering any "where is X" / "how does Y work" / "which file handles Z" question,
+cite concrete paths as `file_path:line_number` alongside the explanation.
+
+# Slack
+
+**Always load** skill `slack-messaging` for anything that involves
+reading from or writing to Slack, including implicit reads
+(e.g. "what am I working on since last week", etc.)
+
+# Session Hygiene
+
+When a task appears complete (commit done, PR created, investigation answered),
+or when the user asks a question that seems unrelated to the current topic,
+suggest starting a new session for the next topic.
 
 # Checkpoints
 
@@ -75,19 +97,3 @@ list them all first as a summary, then go through each one individually.
 When discussing each item (including when asking whether to proceed to it)
 reprint its full detail so the user does not need to scroll up to the summary.
 Wait for the user's response before moving to the next.
-
-# Code Comments
-
-Code comments should explain intent and non-obvious behavior.
-Avoid generating comments that just restate the function or variable name.
-
-For test comments, load skill `test-comments`.
-
-# Answering Questions About Code
-
-When answering any "where is X" / "how does Y work" / "which file handles Z" question,
-cite concrete paths as `file_path:line_number` alongside the explanation.
-
-# Bash
-
-- Use `#!/bin/bash` as the shebang line, not `#!/usr/bin/env bash`.
