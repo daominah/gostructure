@@ -26,7 +26,16 @@ then ask the user whether they want the AI to send it or will send it themselves
 For any "what am I working on", "who is waiting on me", "any update from X",
 "scan my Slack", "catch me up", or similar Slack-data question,
 scan **each signal below in parallel** as its own search query.
-The exact filter syntax is for the agent to construct:
+The exact filter syntax is for the agent to construct.
+
+Time range: infer from the query type.
+
+- Recency scan ("catch me up", "what am I working on", "scan my Slack"):
+  default to the last 7 days.
+- Specific lookup ("any update from X", "that thread about Y",
+  "what did I promise to Z"): no time filter; let Slack rank by relevance.
+
+Signals to scan:
 
 - Messages the user sent.
   Establishes what the user has been doing and what promises or follow-ups are open.
@@ -73,3 +82,13 @@ even when the first batch looks comprehensive.
 
 For deep-dive into a single thread, switch from search to the thread-read tool,
 which returns the full thread content with a much higher per-call limit.
+
+### Output format
+
+After gathering all signals, present findings grouped by urgency:
+
+- **Open asks**: someone is waiting on the user (direct question, unacknowledged request).
+- **Follow-ups**: user has an open promise or unresolved thread to revisit.
+- **FYI**: low-priority pings, reactions, passive mentions with no action needed.
+
+Omit empty groups. Within each group, list items newest-first.
