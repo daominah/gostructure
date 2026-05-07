@@ -182,6 +182,49 @@ Always-on context is not free. It eats a percent of the context window.
 Be careful with trigger directories.
 Prompt caching absorbs most of the repeated cost.
 
+## Routines (claude.ai)
+
+Routines are remote agents that run on a cron schedule in Anthropic's cloud.
+
+Runs share the same 5-hour and weekly limits as your interactive Claude Code sessions,
+so small recurring prompts cost less than calling the Anthropic API directly,
+where every token is metered.
+
+Create one from any signed-in Claude Code session by running `/schedule`.
+Manage them at [claude.ai/code/routines](https://claude.ai/code/routines).
+
+Each run starts in a fresh sandbox with no access to your local context,
+so to customize behavior (rules, skills, hooks, settings),
+commit them at the standard paths inside the source repo
+(`CLAUDE.md`, `.claude/skills/`, `.claude/hooks/`, `.claude/settings.json`);
+the sandbox clones the repo and picks them up automatically.
+
+### Example: Three daily time checks
+
+The following sets up a workaround, so I can reduce waiting time
+between Claude's 5-hour limit windows:
+
+```
+/schedule create 3 routines:
+"Daily morning ping" at 05:30 Asia/Saigon (22:30 UTC) → cron `30 22 * * *`,
+"Daily midday ping" at 10:30 Asia/Saigon (03:30 UTC) → cron `30 3 * * *`,
+"Daily afternoon ping" at 15:30 Asia/Saigon (08:30 UTC) → cron `30 8 * * *`.
+All 3 use:
+cheapest Haiku model,
+repo github.com/daominah/gostructure,
+prompt: What time is it?
+Output ONLY the timestamp in this exact format: 2006-01-02 15:04:05 GMT+7
+No preamble, no explanation, no extra text.
+Use the Bash tool to check, do not answer from memory.
+```
+
+Notes:
+
+- A source repo is required even when the prompt does not need it.
+  Prefer a public repo to skip GitHub auth setup;
+  private repos need the Claude GitHub integration authorized.
+- Why the prompt is so strict: Haiku is dumb, needs specific instructions.
+
 ## Analyzing Your Usage (Claude Code)
 
 Analyze past sessions to find friction patterns and setup gaps worth fixing.
