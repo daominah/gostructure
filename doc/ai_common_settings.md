@@ -206,9 +206,9 @@ between Claude's 5-hour limit windows:
 
 ```
 /schedule create 3 routines:
-"Daily morning ping" at 05:30 Asia/Saigon (22:30 UTC) → cron `30 22 * * *`,
-"Daily midday ping" at 10:30 Asia/Saigon (03:30 UTC) → cron `30 3 * * *`,
-"Daily afternoon ping" at 15:30 Asia/Saigon (08:30 UTC) → cron `30 8 * * *`.
+"Daily morning ping" at 05:50 Asia/Saigon
+"Daily midday ping" at 10:50 Asia/Saigon
+"Daily afternoon ping" at 15:50 Asia/Saigon
 All 3 use:
 cheapest Haiku model,
 repo github.com/daominah/gostructure,
