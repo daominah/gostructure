@@ -29,6 +29,7 @@ func main() {
 	// stripSections maps skill names to section headers to remove from their content.
 	var stripSections = map[string][]string{
 		"writing-style-markdown": {"### Example"},
+		"go-personal-convention": {"## File Structure for Executables"},
 	}
 
 	// claudeMD sections to extract by header (included before skills).
@@ -139,12 +140,16 @@ func extractSection(content, header string) string {
 			break
 		}
 	}
-	// Find the next header of equal or higher level
+	// Find the next header of equal or higher level (hashes followed by a space)
 	lines := strings.Split(rest, "\n")
 	var end int
 	found := false
 	for i, line := range lines {
-		if strings.HasPrefix(line, strings.Repeat("#", level)+" ") || line == strings.Repeat("#", level) {
+		if !strings.HasPrefix(line, "#") {
+			continue
+		}
+		hashCount := len(line) - len(strings.TrimLeft(line, "#"))
+		if hashCount > 0 && hashCount <= level && len(line) > hashCount && line[hashCount] == ' ' {
 			end = i
 			found = true
 			break
