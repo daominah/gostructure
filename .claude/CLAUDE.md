@@ -61,6 +61,10 @@ used that abbreviation first. Use the full name for easier understanding.
 Code comments should explain intent and non-obvious behavior.
 Avoid generating comments that just restate the function or variable name.
 
+Break comment lines at semantic boundaries,
+following skill `writing-style-markdown` section
+"Breaking Lines at Semantic Boundaries" (apply the same rule to comment text instead of markdown).
+
 For test comments, load skill `test-comments`.
 
 # Testing
