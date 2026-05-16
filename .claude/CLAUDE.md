@@ -8,6 +8,9 @@
   apply only the minimal change without rephrasing the rest of the sentence.
 - Use bold only to insist on a specific approach over a common alternative
   or to warn about pitfalls the reader might skip past.
+- Never introduce abbreviations (unless the user used that abbreviation first)
+  on any writing surface (including docs, commits, PRs, conversations, etc.).
+  Full words help the reader skip the mental step of mapping them to actual terms.
 
 # Git Commit
 
@@ -18,6 +21,20 @@
 - Run "git commit" or "git push" only when the user explicitly asks,
   **never on your own initiative**.
   Acceptable triggers: a direct ask, or a skill step that calls for a commit.
+- Before any git push, check that the git user email matches the repo:
+  work email for company repos, personal email for personal repos.
+  If wrong, ask the user to fix the git config.
+
+# Pull Request
+
+Keep PR description at the concept level, not implementation walkthroughs:
+
+- Behavior changes, public surfaces for non-engineers.
+- High-level code structure (new package, new function, refactor)
+  for engineers and future-self.
+
+For large or complex PRs (cross-repo, customer-critical, etc.),
+load skill `pr-description` for the full structure template.
 
 # Markdown
 
@@ -51,10 +68,6 @@ When naming variables, sections, or concepts:
 prefer short, code-style terms over verbose descriptions,
 but use full words instead of abbreviations.
 Ask for confirmation before choosing names if the context is ambiguous.
-
-This applies to conversation too: never introduce abbreviations
-for project names, company names, or concepts unless the user
-used that abbreviation first. Use the full name for easier understanding.
 
 # Code Comments
 
@@ -94,10 +107,15 @@ suggest starting a new session for the next topic.
 When a skill instruction says STOP or "wait for confirmation",
 do not proceed to the next step until the user explicitly approves.
 
-# Multi-part Response
+# Walkthrough Items
 
 When presenting multiple issues, inconsistencies, problems, or questions for review,
-list them all first as a summary, then go through each one individually.
+list them all first as a summary, then walk through each one by one.
+
 When discussing each item (including when asking whether to proceed to it)
 reprint its full detail so the user does not need to scroll up to the summary.
 Wait for the user's response before moving to the next.
+
+After resolving an item, advance to the next item by default.
+If the user opens a related issue instead of answering or approving,
+treat it as a detour: pause the walk and wait for an explicit cue to resume.
