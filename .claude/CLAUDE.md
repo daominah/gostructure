@@ -85,7 +85,7 @@ For test comments, load skill `test-comments`.
 Do not weaken or remove test assertions when the error looks like an environment issue;
 ask the user to fix the environment setup instead.
 
-# Answering Questions About Code
+# Code Citations
 
 When answering any "where is X" / "how does Y work" / "which file handles Z" question,
 cite concrete paths as `file_path:line_number` alongside the explanation.
@@ -95,6 +95,7 @@ cite concrete paths as `file_path:line_number` alongside the explanation.
 **Always load** skill `slack-messaging` for anything that involves
 reading from or writing to Slack, including implicit reads
 (e.g. "what am I working on since last week", etc.)
+and any bare Slack URL pasted without further instruction.
 
 # Session Hygiene
 

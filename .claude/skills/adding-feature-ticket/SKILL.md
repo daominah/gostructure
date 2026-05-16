@@ -113,7 +113,22 @@ This is the key artifact the user reviews carefully.
 - Persist the design in the working doc.
 - Get user approval before moving to the detailed plan.
 
-## Step 5: Detailed implementation plan
+## Step 5: Create branch and open draft PR with working doc
+
+The PR is the container all subsequent commits land into.
+Opening it now (before any code) lets teammates review the design and
+gives the user a single URL to track from any machine.
+
+- Create a new branch named `<ticket>-<short-description>`,
+  including the ticket number for traceability.
+- Commit the working doc (Steps 1-4 content) as the first commit.
+- Push the branch.
+- Open a **draft PR** with the high-level design from Step 4 in the description
+  (and the working doc linked or quoted) plus a test plan checklist.
+- Linear: add a comment with the draft PR link.
+- Slack: share the draft PR link in the feature thread.
+
+## Step 6: Detailed implementation plan
 
 The user may skim or edit this, but not as carefully as the high-level design.
 
@@ -125,15 +140,14 @@ The user may skim or edit this, but not as carefully as the high-level design.
 - Append the plan to the end of the working doc with a note:
   "This section has not been reviewed with the same rigor as the high-level design.
   Verify details before relying on them."
+- Commit and push the updated working doc so the draft PR reflects the plan.
 
-## Step 6: Create branch and write tests first (red)
+## Step 7: Write tests first (red)
 
 > **Common mistake**: Do NOT write implementation logic in this step.
 > Only create the minimal stub (function signature with a no-op body)
-> needed for the test to compile. The real implementation belongs in Step 8.
+> needed for the test to compile. The real implementation belongs in Step 9.
 
-- Create a new branch named `<ticket>-<short-description>`,
-  including the ticket number for traceability.
 - Prefer a new, dedicated test function,
   unless the change is small enough to fit naturally in an existing test.
 - Since the feature doesn't exist yet, the function/endpoint may not exist either.
@@ -150,22 +164,17 @@ The user may skim or edit this, but not as carefully as the high-level design.
 
 ### STOP: wait for user before continuing
 
-## Step 7: Commit, push, and open draft PR
+## Step 8: Commit and push red tests
 
 - Commit with message "add red tests for <ticket>-<short-description>".
 - Push the branch to the remote. Verify the CI test fails with the same
-  error as local. If results differ, go back to Step 6.
-- Open a **draft PR** with the high-level design from Step 4 in the description
-  and a test plan checklist. This gives teammates early visibility
-  so they can comment, suggest, or help.
-- Linear: add a comment with the draft PR link.
-- Slack: share the draft PR link in the feature thread.
+  error as local. If results differ, go back to Step 7.
 
-## Step 8: Implement the feature (green)
+## Step 9: Implement the feature (green)
 
-> Only begin this step after the failing tests are committed and pushed in Step 7.
+> Only begin this step after the failing tests are committed and pushed in Step 8.
 
-- Implement the feature following the plan from Step 5.
+- Implement the feature following the plan from Step 6.
 - Run the failing tests again and confirm they pass.
 - Run related tests to check for regressions.
 - Verify the implementation matches risk mitigations decided in Step 4
@@ -175,7 +184,7 @@ The user may skim or edit this, but not as carefully as the high-level design.
 - If the implementation reveals design gaps, update the plan
   and get user approval before continuing.
 
-## Step 9: Document
+## Step 10: Document
 
 - If the repo has a shared context directory (found in Step 2)
   and the feature adds complex logic, add or update a doc there.
@@ -187,36 +196,37 @@ The user may skim or edit this, but not as carefully as the high-level design.
   (e.g. missing API fields, untestable code, misleading docs).
   If the answer points to something beyond this feature, create a follow-up ticket.
 
-## Step 10: Commit the implementation and mark PR ready for review
+## Step 11: Commit the implementation and mark PR ready for review
 
 - Commit with a concise message focused on business logic.
 - Push and mark the draft PR as ready for review.
+- Update the PR description with the final summary and test plan checklist.
 
-## Step 11: Self-review the PR
+## Step 12: Self-review the PR
 
 - Self-review the PR diff for correctness, regressions, and code quality.
 - Fix any blockers or suggestions before requesting external review.
 
-## Step 12: Request review
+## Step 13: Request review
 
 - Slack: call the message draft tool to create a reply in the feature thread
   noting the PR is ready for review. Ask if the user wants you to send it.
 
-## Step 13: Address review feedback
+## Step 14: Address review feedback
 
 - Read reviewer comments and decide on each item with the user:
   whether to fix, defer, or explain why it is not actionable.
 - Apply fixes, commit, push, and reply to the PR comment addressing each point.
 - Ask the user if they want to request re-review on Slack.
 
-> **Steps 14-18 are user-driven. The agent guides but does not act directly.**
+> **Steps 15-19 are user-driven. The agent guides but does not act directly.**
 
-## Step 14: Deploy branch to development environment and verify
+## Step 15: Deploy branch to development environment and verify
 
 - Deploy the feature branch to the dev environment using ArgoCD.
 - Verify the feature works as expected.
 
-## Step 15: Demo and collect feedback
+## Step 16: Demo and collect feedback
 
 - Demo the feature on the dev environment to stakeholders
   (requester, product, affected users).
@@ -226,18 +236,18 @@ The user may skim or edit this, but not as carefully as the high-level design.
   rather than reopening this one (unless the change is trivial).
 - Only proceed to merge after stakeholders confirm the feature works as expected.
 
-## Step 16: Merge and create release tag
+## Step 17: Merge and create release tag
 
 - Merge the PR after approval and successful demo.
 - Create a release tag on the merged commit.
 
-## Step 17: Deploy to production
+## Step 18: Deploy to production
 
 - Follow the project's production deployment process.
 - Run smoke tests or sanity checks if available.
 - Verify the feature works in production.
 
-## Step 18: Announce
+## Step 19: Announce
 
 - Slack: draft a reply in the feature thread with the release version
   and confirm the feature is live.
