@@ -33,6 +33,7 @@
     ]
   },
   "permissions": {
+    "defaultMode": "auto",
     "deny": [
       "Read(//**/.docker*)",
       "Read(//**/.netrc*)",
