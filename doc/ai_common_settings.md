@@ -109,6 +109,25 @@ Added servers are stored in `~/.claude.json` (not meant for manual editing).
 
 For project-shared servers, edit `.mcp.json` at the project root.
 
+### Telegram unofficial MCP
+
+A personal Telegram account exposed through the community MCP
+[chigwell/telegram-mcp](https://github.com/chigwell/telegram-mcp),
+code-reviewed before use and pinned to a release tag (currently `v3.1.13`).
+
+- At https://my.telegram.org/apps, log in with your phone and create an application,
+  then copy its `api_id` and `api_hash` into the cloned repo's `.env`.
+- Generate `TELEGRAM_SESSION_STRING` yourself by running
+  `uv run --directory <clone-path> session_string_generator.py --phone` (or `--qr`),
+  and let it write the value back into `.env`.
+  This step is interactive (phone number, then a login code from your Telegram app),
+  so the agent cannot run it for you.
+  If `uv` is not found (e.g. in git bash after a winget install),
+  prepend its install directory to `PATH` first.
+- Register at user scope with `claude mcp add` (Claude can help here)
+  pointing the command at `uv run main.py` in the clone.
+  The tools load after a session restart.
+
 ## Status Line (Claude Code)
 
 Claude Code can display a status line at the bottom of the terminal.
