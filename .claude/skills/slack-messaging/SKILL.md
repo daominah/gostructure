@@ -38,6 +38,9 @@ For any Slack send/reply/post request, **always create a draft first**
 After drafting, share the direct Slack channel clickable link,
 then ask the user whether they want the AI to send it or will send it themselves.
 
+The Slack MCP draft/send tools take standard Markdown and convert it.
+To emphasize things, always use bold `**bold**` (double asterisks), never italic.
+
 ## Reading and scanning
 
 For any "what am I working on", "who is waiting on me", "any update from X",
