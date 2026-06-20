@@ -18,7 +18,7 @@ Output the review with these sections in order:
 
 Omit Blockers, Suggestions, and Nitpicks if they have no items.
 
-For every item in any section, surface the problem, not the fix.
+For every item in any section, **surface the problem, not the fix.**
 State what is wrong and cite the function as `funcName (file:line)`;
 Do not prescribe how to fix it. The PR author can decide the fix themselves.
 

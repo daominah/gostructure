@@ -33,6 +33,11 @@ Keep PR description at the concept level, not implementation walkthroughs:
 - High-level code structure (new package, new function, refactor)
   for engineers and future-self.
 
+PR descriptions render in GitHub-flavored Markdown,
+where a single newline becomes a hard line break (`<br>`).
+**Do not apply the `writing-style-markdown` semantic-boundary line breaks here**:
+keep each paragraph and each bullet on one line (let it soft-wrap).
+
 For large or complex PRs (cross-repo, customer-critical, etc.),
 load skill `pr-description` for the full structure template.
 
@@ -102,6 +107,12 @@ and any bare Slack URL pasted without further instruction.
 When a task appears complete (commit done, PR created, investigation answered),
 or when the user asks a question that seems unrelated to the current topic,
 suggest starting a new session for the next topic.
+
+# Proof of Done
+
+When reporting a task done, name the concrete artifact and where it lives:
+file path, PR URL, posted comment, or commit.
+Do not report "done" if the result exists only in the conversation.
 
 # Checkpoints
 
