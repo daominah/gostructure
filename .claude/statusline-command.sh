@@ -74,13 +74,11 @@ if [ -n "$cwd" ]; then
   if [ -n "$session_id" ]; then
     state_file="${HOME}/.claude/statuslinewd/${session_id}.path"
     if [ -r "$state_file" ]; then
-      candidate=$(head -1 "$state_file")
-      # Only trust the recorded path if it's still under cwd; otherwise this
-      # session has edited a file in a different tree and the path would
-      # mislead the walk-up.
-      case "$candidate" in
-        "$cwd"/*|"$cwd") session_path="$candidate" ;;
-      esac
+      session_path=$(head -1 "$state_file")
+      # Convert Windows path to Unix path so dirname traversal works correctly.
+      if command -v cygpath >/dev/null 2>&1 && [[ "$session_path" == [A-Za-z]:* ]]; then
+        session_path=$(cygpath -u "$session_path" 2>/dev/null) || session_path=""
+      fi
     fi
   fi
   if [ -n "$session_path" ]; then
@@ -107,7 +105,7 @@ if [ -n "$cwd" ]; then
       right="$proj"
     fi
   else
-    right=$(basename "$cwd")
+    right=$(basename "$start_dir")
   fi
 fi
 
