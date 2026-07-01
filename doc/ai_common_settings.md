@@ -225,9 +225,9 @@ between Claude's 5-hour limit windows:
 
 ```
 /schedule create 3 routines:
-"Daily morning ping" at 05:50 Asia/Saigon
-"Daily midday ping" at 10:50 Asia/Saigon
-"Daily afternoon ping" at 15:50 Asia/Saigon
+"Daily morning ping" at 05:20 Asia/Saigon
+"Daily midday ping" at 10:20 Asia/Saigon
+"Daily afternoon ping" at 15:20 Asia/Saigon
 All 3 use:
 cheapest Haiku model,
 repo github.com/daominah/gostructure,
@@ -243,6 +243,9 @@ Notes:
   Prefer a public repo to skip GitHub auth setup;
   private repos need the Claude GitHub integration authorized.
 - Why the prompt is so strict: Haiku is dumb, needs specific instructions.
+- With these times the last window reset lands at 20:20
+  (the 15:20 ping plus its 5-hour window),
+  which leaves a fresh quota for a late-night session before a 22:00 bedtime.
 
 ## Analyzing Your Usage (Claude Code)
 
