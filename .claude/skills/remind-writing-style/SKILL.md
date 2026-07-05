@@ -45,9 +45,13 @@ Skip generated and vendored files and prose the user wrote by hand.
 3. Summarize per file what changed, one line for files already clean
    so the user knows they were checked.
 
-The failures that recur most, worth extra attention:
-semantic-boundary line breaks forgotten in code comments, in any language
+The failure that recurs most, worth extra attention:
+**line breaks placed at a fixed character count instead of at semantic boundaries.**
+It slips in both Markdown prose and code comments, in any language
 (mine are mostly Go, Python, and JavaScript).
+When in doubt, re-read every paragraph you touched and confirm each line ends
+at a clause or phrase boundary, not chopped mid-phrase just to stay under 80.
+See "Breaking Lines at Semantic Boundaries" below for the good and bad examples.
 
 ## Rules for every file
 
@@ -154,6 +158,19 @@ the push service verifies the signature before delivering.
 ```
 The VAPID key pair we generate proves that the push request comes from your server. Each push request is signed with the private key, the push service verifies the signature before delivering.
 ```
+
+**Avoid** the opposite failure just as much: wrapping strictly at a character
+count, which chops lines mid-phrase and splits a parenthetical from its phrase.
+This is the miss that slips through most often, so check for it explicitly:
+
+```
+The VAPID key pair we generate proves that the push request comes from your
+server. Each push request is signed with the private key, the push service
+verifies the signature before delivering.
+```
+
+Both bad versions render identically; the fix is to end each line at a clause
+or phrase boundary, as the good example above does.
 
 **Diagrams: Use Mermaid by Default**
 
