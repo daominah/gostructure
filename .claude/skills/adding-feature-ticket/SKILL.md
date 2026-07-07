@@ -204,8 +204,9 @@ The user may skim or edit this, but not as carefully as the high-level design.
 
 ## Step 12: Self-review the PR
 
-- Self-review the PR diff for correctness, regressions, and code quality.
-- Fix any blockers or suggestions before requesting external review.
+- Use the `reviewing-code-and-pr` skill to review our own changes in this PR.
+- Apply obvious improvements yourself without asking.
+  For anything uncertain or involving trade-offs, ask the user to decide.
 
 ## Step 13: Request review
 

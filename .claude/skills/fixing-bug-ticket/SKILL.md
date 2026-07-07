@@ -121,8 +121,9 @@ gives the user a single URL to track from any machine.
 
 ## Step 10: Self-review the PR
 
-- Use the `reviewing-code-and-pr` skill to review the fix
-- Fix any blockers or suggestions before requesting external review.
+- Use the `reviewing-code-and-pr` skill to review our own changes in this PR.
+- Apply obvious improvements yourself without asking.
+  For anything uncertain or involving trade-offs, ask the user to decide.
 
 ## Step 11: Update Linear and Slack
 
