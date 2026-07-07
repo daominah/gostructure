@@ -26,12 +26,20 @@ Structure it as:
 
 ## Step 1: Understand the report
 
+For a solo project with no tracker,
+follow "Steps 1-2 alternative: understand and confirm the report" below
+in place of this step.
+
 - Read the Slack thread or Linear issue linked by the reporter.
 - Identify the affected services, steps to reproduce.
 - If the bug may span multiple repositories, check project docs for
   related repos. If unclear, ask the user.
 
 ## Step 2: Reproduce and confirm root cause
+
+For a solo project with no tracker,
+follow "Steps 1-2 alternative: understand and confirm the report" below
+in place of this step.
 
 - Search for concise project documentation or agent context files (doc, memory, etc.)
   with feature overviews and diagrams. If found, load as guidance.
@@ -45,6 +53,39 @@ Structure it as:
   If neither is found, ask the user to provide. If the user skips, move on.
 - Summarize the root cause for the user before proceeding.
 - If the root cause is unclear, ask the user for help or insight.
+
+## Steps 1-2 alternative: understand and confirm the report
+
+For a solo project with no tracker, the repo itself is the source of truth,
+and this mostly changes Steps 1-2.
+The report usually arrives as a symptom, a code question, or a terse one-line ask,
+not a ticket. Read the repo top-down before asking anything, then reproduce:
+
+- Find where the project states its high-level, close-to-business goals
+  (an overview doc, a README section, etc.). If it is not obvious,
+  tell the user where you think they live and confirm before relying on it.
+- Locate the report against those goals: which behavior is expected,
+  so you can tell a real defect from an unbuilt or deferred feature.
+- Trust order: high-level goals and key decisions are the most reliable.
+  Long detailed spec docs may be stale or AI-generated and can conflict with the high-level docs,
+  so verify them against the goals and the actual code rather than taking them at face value.
+- Also read the decision records,
+  the agent context file (e.g. CLAUDE.md) for open follow-ups,
+  and the affected code and real logs. Grep before asserting.
+- Surface the gap between the reported symptom and what the goals, decisions,
+  and code imply. Confirm the root cause with logs or a reproduction before fixing.
+- Clarify the vague points with the user. When a point has distinct viable
+  options, use the `brainstorming` skill: it handles the multiple-choice
+  options with trade-offs and the answer-some / defer / re-frame loop.
+- Cross-check the report against the goals, decisions, and code.
+  If the fix reopens or adds a goal, update the goals doc;
+  record any reopened design decision alongside the existing decision records.
+- Mechanical substitutions for the later steps: name the branch and doc
+  `<short-description>` (no ticket prefix, doc slug same as branch slug);
+  keep the draft PR but skip the Linear/Slack steps,
+  marking them `(skipped: no ticket)` in the checklist;
+  deploy with the project's own script, keep merge and tag user-driven,
+  and confirm the fix yourself (no reporter), marked "not signed off".
 
 ## Step 3: Plan the fix
 

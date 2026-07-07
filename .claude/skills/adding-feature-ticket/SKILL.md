@@ -32,6 +32,10 @@ Structure it as:
 
 ## Step 1: Understand the requirements
 
+For a solo project with no tracker,
+follow "Steps 1-2 alternative: understand and clarify the requirement" below
+in place of this step.
+
 - Read the Linear issue, Slack thread, or spec linked by the requester.
 - **Search beyond the ticket to understand what the client actually needs.**
   Don't only read what's linked. Search Slack for the ticket ID, project name,
@@ -52,6 +56,10 @@ Structure it as:
 
 ## Step 2: Clarify what the ticket leaves vague
 
+For a solo project with no tracker,
+follow "Steps 1-2 alternative: understand and clarify the requirement" below
+in place of this step.
+
 - Search for project documentation or agent context files (doc, memory, etc.)
   with related feature overviews and diagrams. If found, load as guidance.
 - Read existing code in the affected area to understand current behavior.
@@ -67,6 +75,39 @@ Structure it as:
   or teammates (Slack threads, calls, etc.) and update the doc.
 - Once the what and why are clear, post the notes to the ticket
   (Linear comment) so the team has the context alongside the ticket.
+
+## Steps 1-2 alternative: understand and clarify the requirement
+
+For a solo project with no tracker, the repo itself is the source of truth,
+and this mostly changes Steps 1-2.
+The requirement usually arrives as a code question or a terse one-line ask, not a spec.
+Read the repo top-down before asking anything:
+
+- Find where the project states its high-level, close-to-business goals
+  (an overview doc, a README section, etc.). If it is not obvious,
+  tell the user where you think they live and confirm before relying on it.
+- Locate the ask against those goals: which goal does it serve,
+  or is it a new or changed goal?
+- Trust order: high-level goals and key decisions are the most reliable.
+  Long detailed spec docs may be stale or AI-generated and can conflict with the high-level docs,
+  so verify them against the goals and the actual code rather than taking them at face value.
+- Also read the decision records,
+  the agent context file (e.g. CLAUDE.md) for open follow-ups,
+  and the affected code and real logs. Grep before asserting.
+- Surface the gap between the terse ask and what the goals, decisions,
+  and code already imply. State it before proposing a design.
+- Clarify the vague points with the user. When a point has distinct viable
+  options, use the `brainstorming` skill: it handles the multiple-choice
+  options with trade-offs and the answer-some / defer / re-frame loop.
+- Cross-check the ask against the goals, decisions, and code.
+  If it reopens or adds a goal, update the goals doc;
+  record any reopened design decision alongside the existing decision records.
+- Mechanical substitutions for the later steps: name the branch and doc
+  `<short-description>` (no ticket prefix, doc slug same as branch slug);
+  keep the draft PR but skip the Linear/Slack steps,
+  marking them `(skipped: no ticket)` in the checklist;
+  deploy with the project's own script, keep merge and tag user-driven,
+  and replace the stakeholder demo with a local smoke test marked "not signed off".
 
 ## Step 3: Spike or demo (optional)
 
