@@ -79,6 +79,29 @@ sequenceDiagram
     Server -->> Client: Response
 ```
 
+### Before vs After: Side by Side with Subgraphs
+
+When comparing two states (before vs after a fix, current vs proposed design),
+prefer one flowchart with a `subgraph` per state, side by side:
+
+```mermaid
+flowchart LR
+    subgraph OLD["Before, manual deploy"]
+        direction TB
+        B1["push code"] --> B2["operator runs deploy script"]
+        B2 --> B3["service updated"]
+    end
+    subgraph NEW["After, auto deploy"]
+        direction TB
+        A1["push code"] --> A2["pipeline builds and deploys"]
+        A2 --> A3["service updated"]
+    end
+    OLD ~~~ NEW
+```
+
+This forgoes the sequence diagram (there is no side-by-side equivalent for it),
+trading the explicit time axis for the at-a-glance comparison.
+
 ### Avoid Common Syntax Errors
 
 In `sequenceDiagram` Note text and message labels, avoid `;`, `:`, `#`, and `|`.
