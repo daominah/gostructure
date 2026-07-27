@@ -8,7 +8,8 @@ description: Review code changes and pull requests for business fit, implementat
 Output the review with these sections in order:
 
 - Verdict: APPROVE or REQUEST_CHANGES.
-- Summary: describing what the change does and how it meets the review criteria.
+- Summary: the business need behind the change,
+  and what the change makes possible that was not possible before.
 - Blockers: issues that must be resolved before merging.
   Only present when verdict is REQUEST_CHANGES.
 - Suggestions: improvements worth tracking as follow-ups.
@@ -18,9 +19,43 @@ Output the review with these sections in order:
 
 Omit Blockers, Suggestions, and Nitpicks if they have no items.
 
-For every item in any section, **surface the problem, not the fix.**
-State what is wrong and cite the function as `funcName (file:line)`;
-Do not prescribe how to fix it. The PR author can decide the fix themselves.
+### Summary
+
+Keep it high level: any reader gets which problem the PR solves,
+whether or not they already know the details.
+Cover, in this order:
+
+- Why the PR exists: who was blocked or hurt,
+  and how the system behaved before.
+- What changed at the system level:
+  which service, job, or endpoint now does what,
+  and what business behavior that enables.
+- The trade-off, when there is one: what the change gives up for the benefit,
+  such as a slower path, one more moving part to run, or new state to keep correct.
+- How the result meets the review criteria, supporting the verdict.
+
+The business need may not live in this PR:
+it can sit in a linked ticket, a linked PR, or the change that this PR ships.
+Trace those links before writing the Summary.
+When no source establishes the need,
+say so in the Summary instead of guessing from the code.
+
+Translate ticket and code vocabulary into business words:
+codenames, table names, flag names.
+Leave file and function names to the finding sections.
+One paragraph for a small PR, a few short ones when the change spans repos.
+When the change reroutes a flow, prefer a before vs after diagram (skill `writing-style-markdown`).
+
+### Blockers, Suggestions, and Nitpicks
+
+Each finding cites where the problem is: `funcName (file:line)` (unlike the high-level Summary).
+Every finding must **surface the problem, not the fix**:
+state what is wrong and leave the fix to the PR author.
+
+**Name a shared cause when there is one.**
+Several findings can come from a single design decision:
+say which decision in each of those findings,
+so the author has one choice to revisit instead of many separate defects.
 
 ## Review Criteria
 
@@ -28,11 +63,11 @@ Do not prescribe how to fix it. The PR author can decide the fix themselves.
 
 - The PR must link to its problem source: ticket (Linear/Jira), Slack thread, plan, etc.
   If no source is linked, the PR description must state the problem being solved.
-  If neither is provided, flag as blocker and ask to provide one.
+  If neither is provided, flag as Blocker and ask to provide one.
 - Verify the sources (ticket, report message, plan) are clear,
   self-consistent, and consistent with each other.
 - For bugs: check whether we know how to reproduce it, how the root cause was confirmed,
-  and whether a test reproduces the bug. If not, flag as blocker.
+  and whether a test reproduces the bug. If not, flag as Blocker.
   Optional: symptom of a deeper issue? Check similar past bugs.
 
 ### Code Works as Intended
@@ -73,7 +108,7 @@ Do not prescribe how to fix it. The PR author can decide the fix themselves.
 - Batch operations (e.g. bulk data imports, bulk updates, send group emails, etc.)
   should provide a way to inspect progress
   through metrics, a dashboard, a status API, a summary table, periodic logs, etc.
-  If progress inspection or cancellation is missing, flag as suggestion.
+  If progress inspection or cancellation is missing, flag as Suggestion.
 
 ### Security Considerations
 
@@ -84,7 +119,6 @@ Do not prescribe how to fix it. The PR author can decide the fix themselves.
 
 ### Code Quality
 
-- Label nitpicks clearly so the author knows what is blocking vs optional.
 - Use descriptive names for wide-scope identifiers.
   Short names only for variables used within a few nearby lines.
 - Handle errors early and return immediately to keep the main path simple and avoid nesting.
@@ -103,7 +137,8 @@ Do not prescribe how to fix it. The PR author can decide the fix themselves.
   Keep cleanup in separate commits from feature work for easier review and revert.
 - For Go code only, run available analysis tools on the changed code:
   - `go vet`: detect suspicious or likely incorrect Go code.
-  - `go fix`: automatically update code to modern Go APIs and patterns.
+  - `go fix`: update code to modern Go APIs and patterns.
+    It rewrites files in place, so report what it changed as a Nitpick, then restore the code.
   - `staticcheck`: advanced static analysis for bugs, performance issues, and deprecated APIs.
 
 ### Process Feedback
