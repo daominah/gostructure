@@ -18,16 +18,22 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Idempotent file copy: skip when src and dst already match byte-for-byte,
-# otherwise copy preserving mode/timestamps and report what happened.
+# otherwise copy preserving mode/timestamps
+# and report whether it was created or overwrote an existing file.
 copy_file() {
     local src="$1" dst="$2" label="$3"
     if [[ -e "$dst" ]] && diff -q "$src" "$dst" > /dev/null 2>&1; then
         echo "unchanged $label (already identical)"
         return
     fi
+    if [[ -e "$dst" ]]; then
+        action="OVERWROTE"
+    else
+        action="CREATED"
+    fi
     mkdir -p "$(dirname "$dst")"
     cp -p "$src" "$dst"
-    echo "OVERWROTE $label"
+    echo "$action $label"
 }
 
 echo "----------------"
