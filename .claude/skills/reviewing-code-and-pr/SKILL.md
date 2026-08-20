@@ -76,6 +76,14 @@ so the author has one choice to revisit instead of many separate defects.
 - For bug fixes: a test that reproduces the bug and passes after the fix.
 - For new features: tests must cover the main use case.
   Edge cases are optional but encouraged.
+- Be careful with a new or newly-read nullable field.
+  A fixture with complete data passes, while real data that omits the field is NULL
+  and fails at runtime later, which the diff never shows.
+  Expect a test that exercises the NULL case; flag its absence as a Suggestion.
+- Prefer designing nullability out when the field never needs to be absent,
+  e.g. a `NOT NULL` column with a default.
+  Reach for a nullable or pointer type only when "not set" must stay distinct
+  from the zero value (e.g. an unwritten count versus a measured zero).
 - Test comments use GIVEN (precondition) / WHEN (action) / THEN (result)
   to describe business behavior, readable by non-technical stakeholders.
 - Verify docs, comments, and code stay consistent.
