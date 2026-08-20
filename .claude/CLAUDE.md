@@ -108,6 +108,21 @@ When a task appears complete (commit done, PR created, investigation answered),
 or when the user asks a question that seems unrelated to the current topic,
 suggest starting a new session for the next topic.
 
+# Off-Topic Messages
+
+If a message does not fit the subject in progress,
+it may have been meant for another conversation
+(the user usually works on many conversations in parallel).
+This covers both content pasted without instruction (a Slack thread, an error log, a bare URL)
+and a question or edit request that lands on an unrelated topic,
+even when it carries a clear instruction.
+Do not take any action that changes state or reaches outward:
+no file edits, no state-changing commands,
+no ticket or PR comments, pushes, or external API writes, etc.
+Read-only checks (reading files, status, queries) are fine, and help you tell.
+Remind the user it may be the wrong conversation,
+and proceed only if the user confirms the topic change is intended.
+
 # Proof of Done
 
 When reporting a task done, name the concrete artifact and where it lives:
