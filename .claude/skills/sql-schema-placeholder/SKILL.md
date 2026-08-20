@@ -15,13 +15,20 @@ do not rely on a preview or partial content,
 to understand the database structure, indexes, and foreign keys
 before writing or fixing SQL queries.
 
-If `schema.sql` is missing or invalid, ask the user to generate it with the command below.
+If `schema.sql` is missing or invalid, ask the user to regenerate it:
 
 ```bash
 pg_dump --dbname=placeholder --schema-only --lock-wait-timeout=2s \
     --schema=public --username=placeholder --host=127.0.0.1 --port=5432 \
-    --file=.claude/skills/sql-schema-placeholder/schema.sql
+    --no-owner --no-privileges \
+    --file=/tmp/placeholder_raw.sql \
+  && python3 $HOME/.claude/skills/sql-schema-placeholder/trim_schema.py \
+    /tmp/placeholder_raw.sql \
+    > $HOME/.claude/skills/sql-schema-placeholder/schema.sql
 ```
+
+The [trim_schema.py](trim_schema.py) script strips pg_dump noise the AI does not need,
+keeping the schema structure that helps generate correct queries.
 
 ## Conventions
 
