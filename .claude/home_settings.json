@@ -1,4 +1,6 @@
 {
+  "agentPushNotifEnabled": true,
+  "enableArtifact": false,
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,

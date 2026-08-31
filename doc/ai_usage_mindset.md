@@ -7,7 +7,9 @@
 3. Provide and maintain context through docs and tools so AI understands your domain and specific work.
 4. Repeated corrections likely mean a context gap. Fix the context, not the AI output.
 5. Get to a solid high-level plan before coding. Review it carefully to avoid big code changes later.
-6. When verifying each step, check critical lines and read the tests.
+6. Work from a checklist to see what is done and what remains.
+   Verify the end result yourself with an end-to-end run.
+   For risky changes, check critical lines and read the tests.
 
 ---
 
@@ -105,23 +107,32 @@ That is the long-term benefit of treating context as an asset.
 
 ---
 
-### 6. Work in Small Steps With Smart Reviews Focused on Critical Paths and Tests
+### 6. Work From a Checklist, Verify the End Result
 
-As you work through each step, focus your review on what matters most, not every line.
+Ask the agent for a checklist up front,
+so at any point you can see what is done and what remains.
 
-Check critical lines first:
+**No amount of AI review substitutes for one end-to-end run you verify yourself.**
+Reviewing the same change again mostly repeats the same blind spots:
+the reviewer shares the writer's understanding of what the code was meant to do.
+If that understanding was wrong, the review agrees with the bug,
+and so do the tests, because AI wrote those too.
+A human checking the real result is the only signal from outside that loop.
+We almost never read detailed code any more; spend that attention on the running result.
 
-- DB writes: inserts, updates, deletes.
+An end-to-end run tells you the feature works,
+not that it is safe, fast, or correct on edge cases you did not try.
+For risky changes, follow up with a detail review of critical lines:
+
+- Database writes: inserts, updates, deletes.
 - Auth and access checks: who is allowed to do what.
 - Input handling: anything that touches user-supplied data.
 - Error handling: what gets swallowed silently, what fails loudly.
 - What AI removed: it sometimes quietly refactors things you did not ask it to touch.
 
-**Then read the tests, not necessarily all the code.**
+**Read the tests, not necessarily all the code.**
 Tests are shorter and closer to what the code should do: given this input, expect this outcome.
-Better yet, have AI generate the tests too, then review those.
 If the tests are wrong or missing, that tells you where the real gaps are.
-You can also ask AI to explain any part of the output you are unsure about.
 
 **AI can hallucinate.**
 It can confidently produce wrong facts, incorrect API usage, or outdated information.
