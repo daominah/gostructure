@@ -21,14 +21,31 @@ Replace with the user's available tools.
 ## Working doc
 
 At the start, create `<ticket>-<short-description>.md` in the current working directory.
-This file captures context, clarifications, and design throughout the workflow.
-Structure it as:
+It carries the request, our findings, and the design through the workflow.
 
-1. **Context** (Step 1): business need, approach from ticket
-2. **Clarifications** (Step 2): findings from code, answers from team
-3. **Spike results** (Step 3, if applicable): what was tested, what was confirmed/rejected
-4. **High-level design** (Step 4): approach comparison, chosen design, trade-offs
-5. **Checklist**: list all steps; mark each complete at the end of every step.
+Order it for a reader who has not seen the ticket, from the highest level down.
+Use only the sections that have content; delete the rest instead of leaving a placeholder.
+
+- **Original**: the request in the requester's own words.
+  - **The request** (Step 1): the ticket text, then the requester's own wording
+    from email, chat, and calls, quoted verbatim in their language,
+    with speaker, date, and link.
+    Do not paraphrase the requester here: the doc owner reads this section
+    to check the ask itself, not our summary of it.
+- **High**: our reading of it and where the decision stands.
+  - **Our reading** (Steps 1 and 2): what we take the request to mean, labelled as ours;
+    where the decision stands: who decided what, when, and what is still open.
+- **Lower**: what the code and production already do, then what follows from it.
+  - **Findings** (Step 2): what the code, production data, and the team answered.
+    Each fact appears once with its number and source. Prefer a table for counts and routes.
+    Shorten wording, never facts: the working doc is the full record,
+    the Linear and Slack surfaces are the short ones.
+  - **Open questions** (Step 2): what nothing answered, for the user to decide.
+  - **Spike results** (Step 3): what was tested, what was confirmed or rejected.
+  - **High-level design** (Step 4): approach comparison, chosen design, trade-offs.
+- **Appendix** last: sources, related tickets, decision history, checklist.
+  - **Appendix**: sources and related tickets, decision history as dated one-line entries,
+    then the step checklist. Name each step and mark it complete at the end of that step.
 
 ## Step 1: Understand the requirements
 
@@ -37,6 +54,13 @@ follow "Steps 1-2 alternative: understand and clarify the requirement" below
 in place of this step.
 
 - Read the Linear issue, Slack thread, or spec linked by the requester.
+- If the ticket cites an email, read the original.
+  The ticket text is a paraphrase, often written or polished by an AI,
+  so the requester's wording can be lost or shifted in the retelling.
+  Look in the ticket attachments and the customer relationship management tool (e.g. HubSpot).
+  If it is attached but cannot be opened, or was never attached,
+  ask the user for it explicitly, and say in "The request" that the original is missing
+  until it arrives, rather than trusting the summary.
 - **Search beyond the ticket to understand what the client actually needs.**
   Don't only read what's linked. Search Slack for the ticket ID, project name,
   and customer name. Check for a dedicated deal/project channel. Read recent threads.
@@ -47,10 +71,14 @@ in place of this step.
   what's actually discussed in Slack and calls. Flag mismatches: is the ticket
   what the customer is actually asking for, or has the need shifted?
   If the goal has shifted, capture the shift explicitly in the working doc
-  (what the ticket says vs. what the team actually decided) and update the
-  context section with the new goal before proceeding.
+  (what the ticket says vs. what the team actually decided) and update
+  "Our reading" with the new goal before proceeding.
 - Surface related tickets. If Slack or the ticket references other tickets,
   note them. Assess whether they overlap, block, or should be prioritized first.
+- Note deadlines, explicit and implicit: a date in the ticket, a promise made
+  in chat or a call, the next meeting with the requester, the end of the cycle,
+  a departure of someone involved. Record each with its source in "Our reading".
+  If none was found, write that down too, so the reader knows it was looked for.
 - Identify the business need and the proposed approach.
   If they seem inconsistent, add that to the vague list in Step 2.
 
