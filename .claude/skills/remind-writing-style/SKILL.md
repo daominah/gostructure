@@ -1,7 +1,7 @@
 ---
 name: remind-writing-style
-description: Cleanup pass that rewrites recently edited docs, Markdown, and code comments to follow the user's personal writing-style rules.
-disable-model-invocation: true
+description: Cleanup pass that rewrites recently edited docs, Markdown, and code comments to follow the user's personal writing-style rules. Use when the user asks to respect, be aware of, or re-check the writing style rules in what the agent just wrote.
+disable-model-invocation: false
 ---
 
 # Remind Writing Style
