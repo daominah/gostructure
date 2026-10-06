@@ -62,6 +62,7 @@ for skill_dir in "$SCRIPT_DIR"/skills/*/; do
     excluded=(
         "*-workspace"
         "agent-conversation-analysis"
+        "reviewing-agent-skill"
         "sql-schema-placeholder"
     )
     skip=false
