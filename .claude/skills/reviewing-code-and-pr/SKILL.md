@@ -42,6 +42,8 @@ say so in the Summary instead of guessing from the code.
 
 Translate ticket and code vocabulary into business words:
 codenames, table names, flag names.
+Keep the terms the business itself uses, even when they look like code
+(e.g. a policy status `NB` from the customer's data, see `CLAUDE.md` "Writing Style").
 Leave file and function names to the finding sections.
 One paragraph for a small PR, a few short ones when the change spans repos.
 When the change reroutes a flow, prefer a before vs after diagram (skill `writing-style-markdown`).
