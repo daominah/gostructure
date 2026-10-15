@@ -68,10 +68,9 @@ Verbatim from `CLAUDE.md` "Writing Style":
 - Never introduce abbreviations (unless the user used that abbreviation first)
   on any writing surface (including docs, commits, PRs, conversations, etc.).
   Full words help the reader skip the mental step of mapping them to actual terms.
-  A short form that the code, the data, or the team's docs and tickets use as the name of a thing
-  (an enum value like `NB`, a service like `IdP`) is a name, not an abbreviation: keep it as is.
-  This holds only when you have seen that use; a short form you cannot trace there
-  (a shortened word like "w/o", a guessed team nickname) still gets spelled out.
+  A short form that you have seen the code, the data, or the team's docs and tickets use
+  as the name of a thing (an enum value like `NB`, a service like `IdP`)
+  is a name, not an abbreviation: keep it as is.
 
 Verbatim from `CLAUDE.md` "Naming":
 
