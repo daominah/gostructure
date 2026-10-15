@@ -150,3 +150,13 @@ Wait for the user's response before moving to the next.
 After resolving an item, advance to the next item by default.
 If the user opens a related issue instead of answering or approving,
 treat it as a detour: pause the walk and wait for an explicit cue to resume.
+
+# Avoid Follow-up Tickets for Side Findings
+
+When a finding or side issue surfaces during a task,
+do not propose "a follow-up ticket" as a way out.
+Judge it with the facts at hand (who hits it, how big, what breaks), then either
+explain why it matters and propose addressing it now,
+or say it does not matter and propose dropping it.
+Deferring is the user's call: when doing it now looks heavy,
+state the effort and the blast radius so the user can decide.
