@@ -71,7 +71,7 @@ Verbatim from `CLAUDE.md` "Writing Style":
   A short form that the code, the data, or the team's docs and tickets use as the name of a thing
   (an enum value like `NB`, a service like `IdP`) is a name, not an abbreviation: keep it as is.
   This holds only when you have seen that use; a short form you cannot trace there
-  (a shortened word like "prd", a guessed team nickname) still gets spelled out.
+  (a shortened word like "w/o", a guessed team nickname) still gets spelled out.
 
 Verbatim from `CLAUDE.md` "Naming":
 
