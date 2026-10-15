@@ -263,7 +263,9 @@ The user may skim or edit this, but not as carefully as the high-level design.
   document what needs to be set per environment.
 - Consider what would prevent similar gaps in the future
   (e.g. missing API fields, untestable code, misleading docs).
-  If the answer points to something beyond this feature, create a follow-up ticket.
+  If the answer points to something beyond this feature,
+  propose fixing it in this PR,
+  and create a follow-up ticket only if the user decides it is too heavy.
 
 ## Step 11: Commit the implementation and mark PR ready for review
 

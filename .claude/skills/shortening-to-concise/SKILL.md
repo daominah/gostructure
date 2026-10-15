@@ -175,7 +175,8 @@ Prefer the self-contained wording even when it runs a few words longer.
 When you do point to a ticket, carry its title alongside the number:
 a bare "ENG-145" leaves the reader asking what that is,
 where "ENG-145, cap webhook retries" costs a few words and saves the lookup.
-Same for jargon and acronyms: spell the term out on first use, or cut it.
+Same for jargon and acronyms: spell the term out on first use, or cut it,
+unless the short form is itself the name of a thing (`CLAUDE.md` "Writing Style").
 
 ## Break up what remains
 

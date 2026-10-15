@@ -150,7 +150,8 @@ gives the user a single URL to track from any machine.
 - Consider why this bug happened and what would prevent similar ones.
   If the answer points to something beyond this fix
   (e.g. untestable code structure, bad UI/UX, misleading docs, ineffective alerting),
-  create a follow-up ticket.
+  propose fixing it in this PR,
+  and create a follow-up ticket only if the user decides it is too heavy.
 
 ## Step 9: Commit the fix and mark PR ready for review
 
