@@ -78,6 +78,12 @@ so the author has one choice to revisit instead of many separate defects.
 - For bug fixes: a test that reproduces the bug and passes after the fix.
 - For new features: tests must cover the main use case.
   Edge cases are optional but encouraged.
+- For a change with user-facing or cross-service behavior,
+  check the PR or ticket says the author ran it end to end,
+  on their local machine or a dev environment
+  (browser, real service calls, not only unit tests).
+  A one-sentence claim ("tested locally", "tested on dev") is enough.
+  No mention at all is the first Suggestion, listed above the others.
 - Be careful with a new or newly-read nullable field.
   A fixture with complete data passes, while real data that omits the field is NULL
   and fails at runtime later, which the diff never shows.
