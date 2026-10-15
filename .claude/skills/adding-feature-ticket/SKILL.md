@@ -264,7 +264,6 @@ The user may skim or edit this, but not as carefully as the high-level design.
 - Consider what would prevent similar gaps in the future
   (e.g. missing API fields, untestable code, misleading docs).
   If the answer points to something beyond this feature,
-  handle it as a side finding (`CLAUDE.md` "Avoid Follow-up Tickets for Side Findings"):
   propose fixing it in this PR,
   and create a follow-up ticket only if the user decides it is too heavy.
 

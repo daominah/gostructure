@@ -150,7 +150,6 @@ gives the user a single URL to track from any machine.
 - Consider why this bug happened and what would prevent similar ones.
   If the answer points to something beyond this fix
   (e.g. untestable code structure, bad UI/UX, misleading docs, ineffective alerting),
-  handle it as a side finding (`CLAUDE.md` "Avoid Follow-up Tickets for Side Findings"):
   propose fixing it in this PR,
   and create a follow-up ticket only if the user decides it is too heavy.
 
