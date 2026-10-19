@@ -14,6 +14,24 @@ Use numbered lists only when:
 - You must reference a specific step later.
 - Explicit numbering is required for clarity.
 
+## Quotes: No Blockquote Syntax
+
+Do not use `> ` blockquotes: they clutter raw Markdown.
+
+Quote a short text inline with double quotes:
+`Alice, our CTO: "we should cache the results for one hour."`
+
+For a longer quote, write one lead-in line naming the source and saying it is verbatim,
+then copy the text without quotation marks.
+Make the end obvious: the list ends, or the next heading starts.
+
+```
+Feature request from Alice, our CTO, 2026-01-15, copied verbatim:
+
+- Users can export their data as CSV.
+- The export finishes within one minute for 10,000 rows.
+```
+
 ## Breaking Lines at Semantic Boundaries
 
 ### Goal
