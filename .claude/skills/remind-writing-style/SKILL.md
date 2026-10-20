@@ -63,8 +63,6 @@ Verbatim from `CLAUDE.md` "Writing Style":
 - Use standard straight quotes (`'` and `"`) instead of curly quotes.
 - When the user asks to correct grammar (e.g. "grammar?", "smooth?"),
   apply only the minimal change without rephrasing the rest of the sentence.
-- Use bold only to insist on a specific approach over a common alternative
-  or to warn about pitfalls the reader might skip past.
 - Never introduce abbreviations (unless the user used that abbreviation first)
   on any writing surface (including docs, commits, PRs, conversations, etc.).
   Full words help the reader skip the mental step of mapping them to actual terms.
@@ -127,6 +125,56 @@ Use numbered lists only when:
 - You must reference a specific step later.
 - Explicit numbering is required for clarity.
 
+**No Dense Paragraphs**
+
+When a text holds several points, write them as a list, not one dense text wall.
+Small separate points are easier to take in.
+
+**Avoid:**
+
+```
+The export works for CSV and JSON, the file size limit is 50 MB, and the export
+link expires after 7 days, which support should mention to customers.
+```
+
+**Prefer:**
+
+```
+- The export works for CSV and JSON.
+- The file size limit is 50 MB.
+- The export link expires after 7 days: support should mention it to customers.
+```
+
+**Bold: Key Phrases for Skimming**
+
+In a list of points (findings, review items, results),
+bold the phrase that carries each point,
+so a reader who only skims the bold text still gets the message.
+Bold a phrase, not a whole sentence.
+
+```
+- **The export link expires after 7 days**, so old links in emails stop working.
+- **Large files fail silently** above 50 MB: no error is shown.
+```
+
+**Quotes: No Blockquote Syntax**
+
+Do not use `> ` blockquotes: they clutter raw Markdown.
+
+Quote a short text inline with double quotes:
+`Alice, our CTO: "we should cache the results for one hour."`
+
+For a longer quote, write one lead-in line naming the source and saying it is verbatim,
+then copy the text without quotation marks.
+Make the end obvious: the list ends, or the next heading starts.
+
+```
+Feature request from Alice, our CTO, 2026-01-15, copied verbatim:
+
+- Users can export their data as CSV.
+- The export finishes within one minute for 10,000 rows.
+```
+
 **Breaking Lines at Semantic Boundaries**
 
 Goal: keep raw Markdown readable in editors and source view without relying on
@@ -179,6 +227,9 @@ or phrase boundary, as the good example above does.
 
 Always use Mermaid syntax for diagrams.
 Prefer sequence diagrams when they fit the purpose instead of other diagram types.
+Put a diagram in a Markdown file, never in a chat reply:
+a terminal does not render Mermaid, so the reader only sees the source.
+In chat, use a list or a table instead, and point to the file that holds the diagram.
 In `sequenceDiagram` Note text and message labels, avoid `;`, `:`, `#`, and `|`.
 Also avoid bare `<` and `>` in note and message text.
 For placeholders, use curly braces: `{id}`, `{src}`.

@@ -14,6 +14,38 @@ Use numbered lists only when:
 - You must reference a specific step later.
 - Explicit numbering is required for clarity.
 
+### No Dense Paragraphs
+
+When a text holds several points, write them as a list, not one dense text wall.
+Small separate points are easier to take in.
+
+**Avoid:**
+
+```
+The export works for CSV and JSON, the file size limit is 50 MB, and the export
+link expires after 7 days, which support should mention to customers.
+```
+
+**Prefer:**
+
+```
+- The export works for CSV and JSON.
+- The file size limit is 50 MB.
+- The export link expires after 7 days: support should mention it to customers.
+```
+
+## Bold: Key Phrases for Skimming
+
+In a list of points (findings, review items, results),
+bold the phrase that carries each point,
+so a reader who only skims the bold text still gets the message.
+Bold a phrase, not a whole sentence.
+
+```
+- **The export link expires after 7 days**, so old links in emails stop working.
+- **Large files fail silently** above 50 MB: no error is shown.
+```
+
 ## Quotes: No Blockquote Syntax
 
 Do not use `> ` blockquotes: they clutter raw Markdown.
@@ -88,6 +120,10 @@ The VAPID key pair we generate proves that the push request comes from your serv
 Always use Mermaid syntax for diagrams.
 
 Prefer sequence diagrams when they fit the purpose instead of other diagram types.
+
+Put a diagram in a Markdown file, never in a chat reply:
+a terminal does not render Mermaid, so the reader only sees the source.
+In chat, use a list or a table instead, and point to the file that holds the diagram.
 
 Example:
 

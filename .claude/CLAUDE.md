@@ -6,8 +6,6 @@
 - Use standard straight quotes (`'` and `"`) instead of curly quotes.
 - When the user asks to correct grammar (e.g. "grammar?", "smooth?"),
   apply only the minimal change without rephrasing the rest of the sentence.
-- Use bold only to insist on a specific approach over a common alternative
-  or to warn about pitfalls the reader might skip past.
 - Never introduce abbreviations (unless the user used that abbreviation first)
   on any writing surface (including docs, commits, PRs, conversations, etc.).
   Full words help the reader skip the mental step of mapping them to actual terms.
