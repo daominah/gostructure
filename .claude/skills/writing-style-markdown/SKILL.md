@@ -16,7 +16,8 @@ Use numbered lists only when:
 
 ### No Dense Paragraphs
 
-When a text holds several points, write them as a list, not one dense text wall.
+When a long text packs several points into one line or one paragraph,
+split them into a list.
 Small separate points are easier to take in.
 
 **Avoid:**

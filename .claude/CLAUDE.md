@@ -4,6 +4,8 @@
   rephrase or use colons instead.
   Compound words are allowed: "real-time", "back-end".
 - Use standard straight quotes (`'` and `"`) instead of curly quotes.
+- When a long text packs several points into one line or one paragraph,
+  split them into a list, on any writing surface.
 - When the user asks to correct grammar (e.g. "grammar?", "smooth?"),
   apply only the minimal change without rephrasing the rest of the sentence.
 - Never introduce abbreviations (unless the user used that abbreviation first)

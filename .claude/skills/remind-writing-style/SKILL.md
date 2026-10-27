@@ -15,7 +15,7 @@ after the work is done, re-read what was just written and make it conform.
 It does not invent new rules. It mirrors the existing ones in one place
 so the fix does not require opening five other files.
 
-The rule blocks below are copied verbatim from their source.
+The rule blocks below copy all or part of their source.
 Each block cites that source, which stays authoritative if the two ever diverge.
 
 The user triggers this on purpose, usually after glancing at the output
@@ -55,12 +55,15 @@ See "Breaking Lines at Semantic Boundaries" below for the good and bad examples.
 
 ## Rules for every file
 
-Verbatim from `CLAUDE.md` "Writing Style":
+From `CLAUDE.md` "Writing Style":
 
 - Avoid dashes (`-` or `—`) in the middle of sentences;
   rephrase or use colons instead.
   Compound words are allowed: "real-time", "back-end".
 - Use standard straight quotes (`'` and `"`) instead of curly quotes.
+- When a long text packs several points into one line or one paragraph,
+  split them into a list, on any writing surface.
+  Same rule as "No Dense Paragraphs" below, in more detail but only for Markdown.
 - When the user asks to correct grammar (e.g. "grammar?", "smooth?"),
   apply only the minimal change without rephrasing the rest of the sentence.
 - Never introduce abbreviations (unless the user used that abbreviation first)
@@ -70,7 +73,7 @@ Verbatim from `CLAUDE.md` "Writing Style":
   or the team's docs and tickets use as the name of a thing
   (an enum value like `NB`, a service like `IdP`) is a name, not an abbreviation: keep it as is.
 
-Verbatim from `CLAUDE.md` "Naming":
+From `CLAUDE.md` "Naming":
 
 When naming variables, sections, or concepts:
 prefer short, code-style terms over verbose descriptions,
@@ -79,7 +82,7 @@ Ask for confirmation before choosing names if the context is ambiguous.
 
 ## Rules for comments (code, config, scripts)
 
-Everything in "every file", plus this verbatim from `CLAUDE.md` "Code Comments":
+Everything in "every file", plus this from `CLAUDE.md` "Code Comments":
 
 Code comments should explain intent and non-obvious behavior.
 Avoid generating comments that just restate the function or variable name.
@@ -90,7 +93,7 @@ following skill `writing-style-markdown` section
 
 ## Rules for test comments
 
-Everything in "every file" and "comments", plus the following verbatim from skill `test-comments`.
+Everything in "every file" and "comments", plus the following from skill `test-comments`.
 
 Use the GIVEN/WHEN/THEN comment format in tests.
 Comments describe business behavior, not implementation,
@@ -114,7 +117,7 @@ require.True(t, ok)
 
 ## Rules for Markdown and documentation files
 
-Everything in "every file", plus the following verbatim from skill `writing-style-markdown`.
+Everything in "every file", plus the following from skill `writing-style-markdown`.
 
 **Lists: Use Bullet Points by Default**
 
@@ -127,7 +130,8 @@ Use numbered lists only when:
 
 **No Dense Paragraphs**
 
-When a text holds several points, write them as a list, not one dense text wall.
+When a long text packs several points into one line or one paragraph,
+split them into a list.
 Small separate points are easier to take in.
 
 **Avoid:**
