@@ -23,7 +23,7 @@ Structure it as:
 2. **Root cause** (Step 2): findings from reproduction and code trace
 3. **Plan** (Step 3): files to change, test strategy, verification steps
 4. **Observability** (Steps 3 and 15): one table of the stats to watch after deploy,
-   with columns signal, source and query, expected change, before, after, verdict
+   with header `| stat | source and query | expected change | before | after | verdict |`
 5. **Checklist**: list all steps below; mark each complete at the end of every step.
 
 ## Step 1: Understand the report
@@ -96,11 +96,11 @@ not a ticket. Read the repo top-down before asking anything, then reproduce:
   - Files to change
   - Test strategy (failing test first, then fix)
   - Verification steps
-  - Stats to watch after deploy: name each signal and its source
+  - Stats to watch after deploy: name each stat and its source
     (a log line, a metric, a dashboard, a database query).
     Start from the stats gathered in Step 2.
     Direction only (up, down, flat) when obvious; no target numbers yet.
-    If a signal does not exist yet, add the log line or metric to the files to change:
+    If a stat does not exist yet, add the log line or metric to the files to change:
     this is why the list is made now and not at deploy time.
 - Persist the plan in the working doc.
 - Get user approval before proceeding.
@@ -192,6 +192,8 @@ gives the user a single URL to track from any machine.
 
 **Steps 13-15 are user-driven. The agent guides but does not act directly.**
 
+Exception: the agent runs the read-only Observability queries itself.
+
 ## Step 13: Merge and create release tag
 
 - Merge the PR after approval.
@@ -205,19 +207,21 @@ gives the user a single URL to track from any machine.
 ## Step 15: Deploy to production
 
 - Before deploying, fill the "before" column of the Observability table:
-  the value, the time window, and the exact query for each signal,
+  the value, the time window, and the exact query for each stat,
+  using the window just before deploy
+  (or the same weekday and hours one week earlier if traffic has a weekly pattern),
   so the "after" run can repeat them unchanged.
   Query with the available tools (Grafana, Loki, Prometheus, database);
   otherwise ask the user.
   Fill "expected change" now too, since the code is known by this point.
-  A signal added in this PR has no "before": compare against an existing proxy,
+  A stat added in this PR has no "before": compare against an existing proxy,
   or mark it "new, no baseline" and only check that the "after" value looks sane.
 - Follow the project's production deployment process.
 - Run smoke tests or sanity checks if available.
 - Verify the bug is fixed in production.
-- After a comparable window (same weekday and hours as "before"),
+- After a window of the same length as "before", starting once the deploy is complete,
   rerun the same queries and fill the "after" column.
-  Verdict per signal: intended, unexpected but harmless, or regression.
+  Verdict per stat: intended, unexpected but harmless, or regression.
   Raise the unexpected and regression ones with the user before Step 16.
 
 ## Step 16: Announce the fix
