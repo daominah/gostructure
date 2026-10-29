@@ -24,16 +24,26 @@ call the GitHub API with `curl --netrc` instead.
 
 ## Create a pull request
 
-Write the description to a file, then execute [create_pr.sh](./create_pr.sh)
-from this skill directory (`{skill_dir}`, shown when the skill loads):
+Write the description to a file,
+then build the JSON body with `jq --rawfile`, so quotes and newlines are escaped.
+Do not inline the description as `"$(cat <<'EOF' ...)"`:
+an apostrophe in the text breaks the shell quoting.
 
 ```bash
-{skill_dir}/create_pr.sh \
-  {owner}/{repo} {head_branch} main "{title}" {body_file} [--draft]
+jq -n \
+  --arg title "{title}" \
+  --arg head "{branch}" \
+  --arg base "main" \
+  --rawfile body {body_file} \
+  '{title: $title, head: $head, base: $base, body: $body, draft: false}' |
+  curl -s --netrc -X POST \
+    -H "Accept: application/vnd.github+json" \
+    https://api.github.com/repos/{owner}/{repo}/pulls -d @- |
+  jq -r '.html_url // .message, (.errors // [] | .[] | tostring)'
 ```
 
-It prints the pull request URL, or the API error message and exits non-zero.
-Requires `jq` and `curl`.
+It prints the pull request URL, or the API error message and the failing fields.
+Set `draft: true` for a draft pull request.
 
 ## Other calls
 
@@ -54,9 +64,9 @@ jq -n --arg id "{node_id}" \
 
 ## Avoid repeated permission prompts
 
-Suggest the user allow the script in their user settings (`~/.claude/settings.json`),
-since the script is installed under `~/.claude/skills`:
+Suggest the user allow the create command for all repos
+in their user settings (`~/.claude/settings.json`):
 
 ```json
-"Bash(~/.claude/skills/github-api-fallback-for-gh/create_pr.sh *)"
+"Bash(curl -s --netrc -X POST -H \"Accept: application/vnd.github+json\" https://api.github.com/repos/*/pulls -d @-)"
 ```
