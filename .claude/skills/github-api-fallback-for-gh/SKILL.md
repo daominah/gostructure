@@ -45,11 +45,24 @@ jq -n \
 It prints the pull request URL, or the API error message and the failing fields.
 Set `draft: true` for a draft pull request.
 
+## Edit the description
+
+Edit the same body file, then send it again:
+
+```bash
+jq -n --rawfile body {body_file} '{body: $body}' |
+  curl -s --netrc -X PATCH \
+    -H "Accept: application/vnd.github+json" \
+    https://api.github.com/repos/{owner}/{repo}/pulls/{number} -d @- |
+  jq -r '.html_url // .message'
+```
+
+Add `title` to the JSON to change the title too.
+
 ## Other calls
 
 Same `curl -s --netrc -H "Accept: application/vnd.github+json"` prefix:
 
-- Edit title or body: `PATCH /repos/{owner}/{repo}/pulls/{number}`.
 - Comment on a pull request or issue: `POST /repos/{owner}/{repo}/issues/{number}/comments`
   with `{"body": "..."}`; build the JSON with `jq --rawfile` from a file.
 - Read a pull request: `GET /repos/{owner}/{repo}/pulls/{number}`.
