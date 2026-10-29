@@ -98,6 +98,9 @@ ask the user to fix the environment setup instead.
 When answering any "where is X" / "how does Y work" / "which file handles Z" question,
 cite concrete paths as `file_path:line_number` alongside the explanation.
 
+Refer to a pull request as `{repo}/pull/{number}` (the GitHub URL path),
+not `{repo} #{number}`, on any writing surface.
+
 # Slack
 
 **Always load** skill `slack-messaging` for anything that involves
