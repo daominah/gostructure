@@ -43,6 +43,8 @@ Use only the sections that have content; delete the rest instead of leaving a pl
   - **Open questions** (Step 2): what nothing answered, for the user to decide.
   - **Spike results** (Step 3): what was tested, what was confirmed or rejected.
   - **High-level design** (Step 4): approach comparison, chosen design, trade-offs.
+  - **Observability** (Steps 4 and 18): one table of the stats to watch after deploy,
+    with columns signal, source and query, expected change, before, after, verdict.
 - **Appendix** last: sources, related tickets, decision history, checklist.
   - **Appendix**: sources and related tickets, decision history as dated one-line entries,
     then the step checklist. Name each step and mark it complete at the end of that step.
@@ -178,6 +180,12 @@ This is the key artifact the user reviews carefully.
       caching, batching, or async handling?
     - Error handling strategy: if the new code fails, should the original
       operation still succeed? Should failures be silent or blocking?
+  - Stats to watch after deploy: name each signal and its source
+    (a log line, a metric, a dashboard, a database query).
+    Include the signals that should stay flat: error rate, latency, request volume.
+    Direction only (up, down, flat) when obvious; no target numbers yet.
+    If a signal does not exist yet, the design includes the log line or metric:
+    this is why the list is made now and not at deploy time.
 - Keep it high-level: no specific files or line numbers yet.
 - Persist the design in the working doc.
 - Get user approval before moving to the detailed plan.
@@ -204,6 +212,7 @@ The user may skim or edit this, but not as carefully as the high-level design.
 - Break the approved design into concrete steps:
   - Which files to create or modify
   - New functions, endpoints, DB queries, migrations, config
+  - Log lines or metrics for the Step 4 stats that do not exist yet
   - Edge cases and how to handle them
   - Execution order (what depends on what)
 - Append the plan to the end of the working doc with a note:
@@ -315,9 +324,21 @@ The user may skim or edit this, but not as carefully as the high-level design.
 
 ## Step 18: Deploy to production
 
+- Before deploying, fill the "before" column of the Observability table:
+  the value, the time window, and the exact query for each signal,
+  so the "after" run can repeat them unchanged.
+  Query with the available tools (Grafana, Loki, Prometheus, database);
+  otherwise ask the user.
+  Fill "expected change" now too, since the code is known by this point.
+  A signal added in this PR has no "before": compare against an existing proxy,
+  or mark it "new, no baseline" and only check that the "after" value looks sane.
 - Follow the project's production deployment process.
 - Run smoke tests or sanity checks if available.
 - Verify the feature works in production.
+- After a comparable window (same weekday and hours as "before"),
+  rerun the same queries and fill the "after" column.
+  Verdict per signal: intended, unexpected but harmless, or regression.
+  Raise the unexpected and regression ones with the user before Step 19.
 
 ## Step 19: Announce
 
@@ -325,4 +346,4 @@ The user may skim or edit this, but not as carefully as the high-level design.
   and confirm the feature is live.
 - Linear: append an implementation summary to the issue description
   (design decisions, PR link, release version, deployment status,
-  config changes needed) and move the issue to "Done".
+  config changes needed, stats comparison) and move the issue to "Done".
