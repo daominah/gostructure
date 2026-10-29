@@ -24,15 +24,18 @@ call the GitHub REST API with `curl --netrc` instead.
 
 ## Create a pull request
 
-Build the JSON body with `jq`, so quotes and newlines in the description are escaped,
-then read the URL from the response:
+Write the description to a file first,
+then build the JSON body with `jq --rawfile`, so quotes and newlines are escaped.
+Do not inline the description as `"$(cat <<'EOF' ...)"`:
+an apostrophe in the text breaks the shell quoting.
+Read the URL from the response:
 
 ```bash
 jq -n \
   --arg title "{title}" \
   --arg head "{branch}" \
   --arg base "main" \
-  --arg body "$(cat {body_file})" \
+  --rawfile body {body_file} \
   '{title: $title, head: $head, base: $base, body: $body, draft: false}' |
   curl -s --netrc -X POST \
     -H "Accept: application/vnd.github+json" \
