@@ -22,8 +22,8 @@ Structure it as:
 1. **Report** (Step 1): affected services, steps to reproduce, scope
 2. **Root cause** (Step 2): findings from reproduction and code trace
 3. **Plan** (Step 3): files to change, test strategy, verification steps
-4. **Observability** (Steps 3 and 15): one table of the stats to watch after deploy,
-   with header `| stat | source and query | expected change | before | after | verdict |`
+4. **Observability** (Steps 3 and 15): how we see the fix working and the bug recurring,
+   then the before and after deploy stats.
 5. **Checklist**: list all steps below; mark each complete at the end of every step.
 
 ## Step 1: Understand the report
@@ -96,12 +96,12 @@ not a ticket. Read the repo top-down before asking anything, then reproduce:
   - Files to change
   - Test strategy (failing test first, then fix)
   - Verification steps
-  - Stats to watch after deploy: name each stat and its source
-    (a log line, a metric, a dashboard, a database query).
-    Start from the stats gathered in Step 2.
-    Direction only (up, down, flat) when obvious; no target numbers yet.
-    If a stat does not exist yet, add the log line or metric to the files to change:
-    this is why the list is made now and not at deploy time.
+  - Observability: how we will see the fix working and the bug recurring,
+    starting from the signals gathered in Step 2.
+    Stay at the business level, not CPU or memory, and show progress:
+    for example, how many jobs succeed, fail, or stop progressing.
+    If no existing log or metric shows it, add one to the files to change:
+    it must exist in the code before deploy, so decide it now.
 - Persist the plan in the working doc.
 - Get user approval before proceeding.
 
@@ -191,9 +191,8 @@ gives the user a single URL to track from any machine.
 - Apply fixes, commit, push, and reply to the PR comment addressing each point.
 - Ask the user if they want to request re-review on Slack.
 
-**Steps 13-15 are user-driven. The agent guides but does not act directly.**
-
-Exception: the agent runs the read-only Observability queries itself.
+**Steps 13-15 are user-driven. The agent guides but does not act directly,
+except that it collects the before and after deploy stats itself (read-only queries).**
 
 ## Step 13: Merge and create release tag
 
@@ -207,21 +206,20 @@ Exception: the agent runs the read-only Observability queries itself.
 
 ## Step 15: Deploy to production
 
-- Before deploying, fill the "before" column of the Observability table:
-  the value, the time window, and the exact query for each stat,
-  using the window just before deploy
-  (or the same weekday and hours one week earlier if traffic has a weekly pattern),
-  so the "after" run can repeat them unchanged.
-  Query with the available tools (Grafana, Loki, Prometheus, database);
+- Before deploying, collect the stats to compare (stats: the business counts and durations
+  behind the Observability section, plus error rate and request volume to show nothing broke).
+  Query them with the available tools (Grafana, Loki, Prometheus, database),
   otherwise ask the user.
-  Fill "expected change" now too, since the code is known by this point.
-  A stat added in this PR has no "before": compare against an existing proxy,
-  or mark it "new, no baseline" and only check that the "after" value looks sane.
+  Record in the working doc, per stat: what it means, the value, the time window,
+  the exact query (so the "after" run repeats it unchanged), and the expected change.
+  Use the window just before deploy, or the same weekday and hours one week earlier
+  if traffic has a weekly pattern.
+  A stat added in this PR has no "before": mark it "new, no baseline".
 - Follow the project's production deployment process.
 - Run smoke tests or sanity checks if available.
 - Verify the bug is fixed in production.
 - After a window of the same length as "before", starting once the deploy is complete,
-  rerun the same queries and fill the "after" column.
+  rerun the same queries and record the "after" values.
   Verdict per stat: intended, unexpected but harmless, or regression.
   Raise the unexpected and regression ones with the user before Step 16.
 

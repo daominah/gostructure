@@ -88,18 +88,18 @@ following skill `writing-style-markdown` section
 
 For test comments, load skill `test-comments`.
 
-# Testing
-
-Do not weaken or remove test assertions when the error looks like an environment issue;
-ask the user to fix the environment setup instead.
-
-# Code Citations
+# Code and Pull Request Citations
 
 When answering any "where is X" / "how does Y work" / "which file handles Z" question,
 cite concrete paths as `file_path:line_number` alongside the explanation.
 
-Refer to a pull request as `{repo}/pull/{number}` (the GitHub URL path),
+Refer to a pull request as `{repo}/pull/{number}` (the GitHub URL path without the owner),
 not `{repo} #{number}`, on any writing surface.
+
+# Testing
+
+Do not weaken or remove test assertions when the error looks like an environment issue;
+ask the user to fix the environment setup instead.
 
 # Slack
 
