@@ -43,6 +43,8 @@ Use only the sections that have content; delete the rest instead of leaving a pl
   - **Open questions** (Step 2): what nothing answered, for the user to decide.
   - **Spike results** (Step 3): what was tested, what was confirmed or rejected.
   - **High-level design** (Step 4): approach comparison, chosen design, trade-offs.
+  - **Observability** (Steps 4 and 18): how we see the feature working and failing,
+    then the before and after deploy stats.
 - **Appendix** last: sources, related tickets, decision history, checklist.
   - **Appendix**: sources and related tickets, decision history as dated one-line entries,
     then the step checklist. Name each step and mark it complete at the end of that step.
@@ -178,6 +180,12 @@ This is the key artifact the user reviews carefully.
       caching, batching, or async handling?
     - Error handling strategy: if the new code fails, should the original
       operation still succeed? Should failures be silent or blocking?
+  - Observability: how we will see the feature working normally and failing.
+    Stay at the business level, not CPU or memory, and show progress:
+    for example, a client submits 100 jobs, we can see them progressing (60 done, 40 remaining),
+    and how long each takes. Failing: which jobs failed and why.
+    If no existing log or metric shows it, the design adds one:
+    it must exist in the code before deploy, so decide it now.
 - Keep it high-level: no specific files or line numbers yet.
 - Persist the design in the working doc.
 - Get user approval before moving to the detailed plan.
@@ -205,6 +213,7 @@ The user may skim or edit this, but not as carefully as the high-level design.
 - Break the approved design into concrete steps:
   - Which files to create or modify
   - New functions, endpoints, DB queries, migrations, config
+  - Log lines or metrics that the Step 4 observability needs and that do not exist yet
   - Edge cases and how to handle them
   - Execution order (what depends on what)
 - Append the plan to the end of the working doc with a note:
@@ -292,7 +301,8 @@ The user may skim or edit this, but not as carefully as the high-level design.
 - Apply fixes, commit, push, and reply to the PR comment addressing each point.
 - Ask the user if they want to request re-review on Slack.
 
-> **Steps 15-19 are user-driven. The agent guides but does not act directly.**
+> **Steps 15-19 are user-driven. The agent guides but does not act directly,**
+> **except that it collects the before and after deploy stats itself (read-only queries).**
 
 ## Step 15: Deploy branch to development environment and verify
 
@@ -316,9 +326,22 @@ The user may skim or edit this, but not as carefully as the high-level design.
 
 ## Step 18: Deploy to production
 
+- Before deploying, collect the stats to compare (stats: the business counts and durations
+  behind the Observability section, plus error rate and request volume to show nothing broke).
+  Query them with the available tools (Grafana, Loki, Prometheus, database),
+  otherwise ask the user.
+  Record in the working doc, per stat: what it means, the value, the time window,
+  the exact query (so the "after" run repeats it unchanged), and the expected change.
+  Use the window just before deploy, or the same weekday and hours one week earlier
+  if traffic has a weekly pattern.
+  A stat added in this PR has no "before": mark it "new, no baseline".
 - Follow the project's production deployment process.
 - Run smoke tests or sanity checks if available.
 - Verify the feature works in production.
+- After a window of the same length as "before", starting once the deploy is complete,
+  rerun the same queries and record the "after" values.
+  Verdict per stat: intended, unexpected but harmless, or regression.
+  Raise the unexpected and regression ones with the user before Step 19.
 
 ## Step 19: Announce
 
@@ -326,4 +349,4 @@ The user may skim or edit this, but not as carefully as the high-level design.
   and confirm the feature is live.
 - Linear: append an implementation summary to the issue description
   (design decisions, PR link, release version, deployment status,
-  config changes needed) and move the issue to "Done".
+  config changes needed, stats comparison) and move the issue to "Done".
