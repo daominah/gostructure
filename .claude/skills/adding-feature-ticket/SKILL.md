@@ -202,6 +202,7 @@ gives the user a single URL to track from any machine.
 - Push the branch.
 - Open a **draft PR** with the high-level design from Step 4 in the description
   (and the working doc linked or quoted) plus a test plan checklist.
+  If `gh` lacks access to the repo, use the `github-api-fallback-for-gh` skill.
 - Linear: add a comment with the draft PR link.
 - Slack: share the draft PR link in the feature thread.
 
